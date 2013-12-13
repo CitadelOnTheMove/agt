@@ -150,7 +150,7 @@
                                 Database::commit();                            
                                 echo '<div class="success">Your application was created successfully!';
                                 echo '<br><br>';
-                                echo ' <a href="index.php?uid=' . $newUid . '" target="_blank">Click here to see it!</a>';
+                                echo ' <a href="index.php?uid=' . $newUid . '" target="_blank" rel="external">Click here to see it!</a>';
                                 echo ' <a style="float:right" href="appForm.php" target="_blank">Create a new app</a></div>';                               
                             }
                         }           

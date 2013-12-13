@@ -158,7 +158,7 @@
                                 Database::commit();
                                 echo '<div class="success">Your dataset was imported successfully!';
                                 echo '<br><br>';                              
-                                echo ' <a href="appForm.php" >Back to the app creation form</a></div>';  
+                                echo ' <a href="appForm.php" rel="external" >Back to the app creation form</a></div>';  
                             } 
                         }
                         Database::disconnect();
