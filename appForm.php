@@ -192,7 +192,7 @@
                         </div>
 
                         <br>
-                        <a href="#">Click here if you want to import a new dataset</a>
+                        <a href="/app-generator/importDatasets.php">Click here if you want to import a new dataset</a>
                         <br><br>
 
 

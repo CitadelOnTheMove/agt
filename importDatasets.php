@@ -7,10 +7,7 @@
         <!--------------- CSS files ------------------->    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
-
-        <style>
-            .error {color: #FF0000;}
-        </style>
+        <link rel="stylesheet" href="css/my.css" />         
 
         <!-- jQuery Library --> 
         <script src="js/jquery-1.8.2.min.js"></script>
@@ -105,7 +102,7 @@
                         return $data;
                     }
                     ?>
-                    <div id="testResponse"></div>
+                    <?php if ($_SERVER["REQUEST_METHOD"] != "POST") { ?>
                     <form id="importNewDataset" data-ajax="false"  method="post" action="importDatasets.php" enctype='multipart/form-data'>
  
                         <p><span class="error">* required field.</span></p>
@@ -145,27 +142,27 @@
                             }
                             ?>
                         </div>
-
-                        <br><br>
+                       
                         <br><br>
                         <input type="submit" name="import" value="Import">
                         <br><br>
-                        <?php
+                        <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a></div>'; ?>        
+                    </form>
+                   <?php } // end if?>
+
+                   <?php
                         if (isset($_POST['import'])) {
                             if (!$error) {
 
                                 Dataset::saveNewDataset($datasetName, $datasetUrl, $datasetType, $city);
                                 Database::commit();
-                                echo '<span class="error">Your data were submitted successfully!</span>';
+                                echo '<div class="success">Your dataset was imported successfully!';
+                                echo '<br><br>';                              
+                                echo ' <a href="appForm.php" >Back to the app creation form</a></div>';  
                             } 
                         }
-
                         Database::disconnect();
-                        ?>
-                        <br><br>
-                        <a href="appForm.php<?php echo $newUid; ?>">Go back</a>
-                    </form>
-
+                  ?>             
                 </div>
             </div>
         </div>
