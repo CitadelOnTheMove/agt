@@ -44,7 +44,6 @@
                     $error = false;
                     // $formState = 'pending';
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
                         if (empty($_POST["city"])) {
                             $cityErr = "City is required";
                             $error = true;
@@ -58,17 +57,17 @@
                         } else {
                             $datasetName = clear_input($_POST["datasetName"]);
                         }
-
-                        if (empty($_POST["datasetUrl"]) && empty($_FILES["userFile"])) {
+                      
+                        if (empty($_POST["datasetUrl"]) && empty($_FILES["userFile"]["name"])) {
                             $datasetUrlErr = "Dataset Url or Dataset file is required";
-                            $error = true;
+                            $error = true; 
                         } 
-                        else if(!empty($_POST["datasetUrl"]) && !empty($_FILES["userFile"])){
+                        else if(!empty($_POST["datasetUrl"]) && !empty($_FILES["userFile"]["name"])){
                             $datasetUrlErr = "Only one of a Dataset Url OR a Dataset file must be given";
                             $error = true;
                         }                        
                         else if(!empty($_POST["datasetUrl"])){
-                              $datasetUrl = clear_input($_POST["datasetUrl"]);
+                              $datasetUrl = clear_input($_POST["datasetUrl"]);                              
                         }
                         else
                         { 
@@ -102,7 +101,7 @@
                         return $data;
                     }
                     ?>
-                    <?php if ($_SERVER["REQUEST_METHOD"] != "POST") { ?>
+                    <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
                     <form id="importNewDataset" data-ajax="false"  method="post" action="importDatasets.php" enctype='multipart/form-data'>
  
                         <p><span class="error">* required field.</span></p>
@@ -153,7 +152,7 @@
                    <?php
                         if (isset($_POST['import'])) {
                             if (!$error) {
-
+                               
                                 Dataset::saveNewDataset($datasetName, $datasetUrl, $datasetType, $city);
                                 Database::commit();
                                 echo '<div class="success">Your dataset was imported successfully!';

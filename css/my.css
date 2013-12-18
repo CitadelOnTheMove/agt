@@ -824,7 +824,7 @@ header.ui-header, footer.ui-footer {
    text-shadow:none;
 }
 #createNewAppWrapper, #importNewDatasetWrapper {
-    padding:40px;
+    padding:0 40px 40px 40px;
 }
 
 .ui-icon, .ui-icon-searchfield:after {
