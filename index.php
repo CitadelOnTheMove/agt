@@ -5,7 +5,9 @@ include_once CLASSES . 'Database.class.php';
 include_once 'defineColor.php';
 
 $currentAppName = "Loading app...";
-$colors = printColors($_GET['uid']);
+$appID = isset($_GET['uid'])?'?uid='.$_GET['uid']:'';
+
+$colors = printColors($appID);
 
 ?>
 <!DOCTYPE html>
@@ -255,15 +257,9 @@ $colors = printColors($_GET['uid']);
             var meta = {};
             /* Holds all markers */
             var markersArray = [];
-            /* Define filters - get them from db */
-
-            var filters = <?php
-include_once CLASSES . 'filters.php';
-if (isset($_GET['uid'])) {
-    printFilters($_GET['uid']);
-}
-?>;
-
+            /* Holds filters */
+            var filters = [];
+            
             /* Define cities - get them from db */
             var cities = <?php include_once CLASSES . 'cities.php'; ?>;
 
@@ -290,7 +286,9 @@ if (isset($_GET['uid'])) {
             var mapZoom = <?php echo MAP_ZOOM; ?>;
 
             /* The url of the dataset */
-            var datasetUrl = "<?php echo DATASET_URL; ?>";
+           
+            
+            var datasetUrl = "<?php echo DATASET_URL.$appID; ?>";
 
             var insertNewPoiScript = "<?php echo SERVERNAME . BASE_DIR . CLASSES_DIR . "insert.php"; ?>";
             var insertNewVoteScript = "<?php echo SERVERNAME . BASE_DIR . CLASSES_DIR . "voteManager.php"; ?>";

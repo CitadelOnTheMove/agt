@@ -12,6 +12,7 @@ include_once CLASSES . 'App.class.php';
  */
 function printColors($uid) {
 
+  if (isset($_GET['uid'])) {
     Database::connect();
 
     $sql = "SELECT apps_available_colors.value
@@ -34,6 +35,11 @@ function printColors($uid) {
 
     Database::disconnect();
     return $colors;
+  }
+  else{
+    $colors = array("color"=>"#F8545B","darkColor"=>"#4980AE");
+    return $colors;
+  }
 }
 
 ?>

@@ -38,28 +38,31 @@ function getPoisFromDataset(resultCallback)
     $.getJSON(datasetUrl, function(data) {
 
         pois = new Array();
-        var k = 0;
+        
+        if(data.status == "success")
+        {            
+            var k = 0;
+            filters = data.filters;
+            $.each(data.applicationData, function(i, datasetObject) {
+                meta['id'] = datasetObject.dataset.id;
+                meta['updated'] = datasetObject.dataset.updated;
+                meta['created'] = datasetObject.dataset.created;
+                meta['lang'] = datasetObject.dataset.lang;
+                meta['author_id'] = datasetObject.dataset.author.id;
+                meta['author_value'] = datasetObject.dataset.author.value;
+                $('.ui-title').html(datasetObject.appName);
 
-        $.each(data, function(i, datasetObject) {
-            console.log("i = " + i + " datasetObject = " + datasetObject);
-            console.log(datasetObject.dataset.id);
-
-            meta['id'] = datasetObject.dataset.id;
-            meta['updated'] = datasetObject.dataset.updated;
-            meta['created'] = datasetObject.dataset.created;
-            meta['lang'] = datasetObject.dataset.lang;
-            meta['author_id'] = datasetObject.dataset.author.id;
-            meta['author_value'] = datasetObject.dataset.author.value;
-            $('.ui-title').html(datasetObject.appName);
-
-            $.each(datasetObject.dataset.poi, function(j, poi) {
-                poi.id = k;
-                k++;
-                pois[poi.id] = poi;            
-            }); 
-        });
-
-        resultCallback(pois);
+                $.each(datasetObject.dataset.poi, function(j, poi) {
+                    poi.id = k;
+                    k++;
+                    pois[poi.id] = poi;
+                });
+            });           
+        }
+        else{
+            //TODO: Message that app id is missing
+        }
+         resultCallback(pois);
     });
 }
 
