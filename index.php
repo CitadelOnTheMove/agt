@@ -24,7 +24,7 @@ $colors = printColors($_GET['uid']);
         <!--------------- Facebook metatags------------>
         <meta property="og:title" content="Citadel... on the move"/>
         <meta property="og:site_name" content="Citadel Application generation Tool"/>
-        
+        <meta property="og:image" content="<?php echo SERVERNAME . BASE_DIR ?>images/logoCitadel.png"/>
         
         <!--------------- CSS files ------------------->    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />        
@@ -243,85 +243,6 @@ $colors = printColors($_GET['uid']);
                     <!-- dynamically filled with data -->
                 </ul> 
             </article> 
-        </div> 
-
-        <!-- New poi Page: Provides form elements to add a new poi or remove the marker -->  
-        <div data-role="dialog" id="newPoiDialog">
-
-            <header data-role="header">
-                <span class="ui-title">Add a new POI</span>	
-            </header>
-            <form id="insertForm">
-                <div data-role="content">
-                    <div data-role="fieldcontain">
-                        <label for="poiTitle">POI Title<span class="asterisk">*</span></label>
-                        <input type="text" name="poiTitle" id="poiTitle" required placeholder="Enter a title"/>
-                    </div>	
-                    <div data-role="fieldcontain">
-                        <label for="poiDesc">POI Description</label>
-                        <textarea name="poiDesc" id="poiDesc"></textarea>
-                    </div>	
-                    <div data-role="fieldcontain">
-                        <label for="poiCategory">POI Category<span class="asterisk">*</span></label>
-                        <select name="poiCategory" id="poiCategory" required value="" placeholder="Choose a category">
-                            <!-- dynamically filled with data -->
-                        </select>
-                    </div>
-
-                    <div class="hidden" data-role="fieldcontain">
-                        <label for="poiLat">POI Latitude</label>
-                        <input type="text" name="poiLat" id="poiLat" value=""  />
-                    </div>
-                    <div class="hidden"  data-role="fieldcontain">
-                        <label for="poiLng">POI Longitude</label>
-                        <input type="text" name="poiLng" id="poiLng" value=""  />
-                    </div>
-
-                    <div data-role="fieldcontain">
-                        <label for="poiAddress">POI Address<span class="asterisk">*</span></label>
-                        <input type="text" name="poiAddress" id="poiAddress" value="" />                  
-                    </div>	                    
-
-                    <!-- Extra fields recongised by the geocoder
-                         Should be added to the database if needed
-                    -->
-                    <!--<div data-role="fieldcontain">
-                            <label for="poiStreet">POI Street:</label>
-                            <input type="text" name="poiStreet" id="poiStreet" value=""  />
-                     </div>	
-                    <div data-role="fieldcontain">
-                            <label for="poiStreetNum">POI Street Number:</label>
-                            <input type="text" name="poiStreetNum" id="poiStreetNum" value=""  />
-                     </div>
-                    <div data-role="fieldcontain">
-                            <label for="poiCountry">POI Country:</label>
-                            <input type="text" name="poiCountry" id="poiCountry" value=""  />
-                    </div>	-->
-                    <div data-role="fieldcontain">
-                        <label for="poiCity">POI City<span class="asterisk">*</span></label>
-                        <input type="text" name="poiCity" id="poiCity" value=""  />
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="poiPostal">POI Postal<span class="asterisk">*</span></label>
-                        <input type="text" name="poiPostal" id="poiPostal" value=""  />
-                    </div>
-
-                    <div data-role="fieldcontain">
-                        <label for="poiPhone">POI Phone</label>
-                        <input type="tel" name="poiPhone" id="poiPhone" value=""  />
-                    </div>	
-                    <div data-role="fieldcontain">
-                        <label for="poiUrl">POI URL</label>
-                        <input type="url" name="poiUrl" id="poiUrl" placeholder="Enter a url starting with http://"/>
-                    </div>
-
-                </div>
-
-                <footer data-role="footer" data-posistion="fixed" data-fullscreen="true" class="newPoiDialogFooter">
-                    <button id="submit" type="submit" data-icon="check" data-theme="a" title="Save" class="ui-btn-right">Save</button>
-                    <a href="" id="addNewPoiDelete" data-icon="delete" data-theme="a" title="Delete" class="ui-btn-left">Cancel</a>
-                </footer>
-            </form>
         </div> 
 
         <script type="text/javascript">
