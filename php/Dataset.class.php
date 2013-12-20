@@ -14,7 +14,6 @@ class Dataset {
      */
 
     public $id;
-    public $identifier;
     public $updated;
     public $created;
     public $lang;
@@ -34,8 +33,8 @@ class Dataset {
      * @param Link $link the link of the source of the dataset
      * @param string $updateFrequency a description of the update frequency e.g. "semester"
      */
-    public function __construct($identifier, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url) {
-        $this->identifier = $identifier;
+    public function __construct($id, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url) {
+        $this->id = $id;
         $this->updated = $updated;
         $this->created = $created;
         $this->lang = $lang;
