@@ -71,19 +71,22 @@
                         }
                         else
                         { 
-                          $datasetFile = $_FILES['userFile'];
-                          
-                          if($datasetFile['type'] != "application/json")
+
+                          $datasetFile = $_FILES['userFile'];                          
+                       
+
+                          /*if($datasetFile['type'] != "application/json")
                           {
-                            $datasetFileErr = "Dataset file must be in json format (.json)";
+ 				$datasetFileErr = "Dataset file must be in json format (.json)";
                             $error = true;
                           }
-                          else{
+                          else{*/
+					
                             $target_Path =  HTDOCS_ROOT.BASE_DIR."data/";
                             $target_Path = $target_Path.basename( $datasetFile['name'] );
                             move_uploaded_file( $datasetFile['tmp_name'], $target_Path );
                             $datasetUrl = SERVERNAME . BASE_DIR."data/".$datasetFile['name'];
-                          }
+                         /* }*/
                         }                                  
                         
                         if (empty($_POST["datasetType"])) {
