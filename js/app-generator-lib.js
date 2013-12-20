@@ -42,9 +42,9 @@ function getPoisFromDataset(resultCallback)
 
         $.each(data, function(i, datasetObject) {
             console.log("i = " + i + " datasetObject = " + datasetObject);
-            console.log(datasetObject.dataset.identifier);
+            console.log(datasetObject.dataset.id);
 
-            meta['id'] = datasetObject.dataset.identifier;
+            meta['id'] = datasetObject.dataset.id;
             meta['updated'] = datasetObject.dataset.updated;
             meta['created'] = datasetObject.dataset.created;
             meta['lang'] = datasetObject.dataset.lang;
@@ -265,9 +265,9 @@ function setInfoWindowPoi(poi)
 function resetVoteLoader()
 {
     $('#downVoteScore').html("<img  src='images/loader.GIF'  />");
-    $('#upVoteScore').html("<img  src='images/loader.GIF'  />");
-    //$('#voteScore').html("<img  src='images/loader.GIF'  />");
+    $('#upVoteScore').html("<img  src='images/loader.GIF'  />");   
 }
+
 /* Sets the content of the details page for the given 
  * poi
  */
@@ -276,25 +276,17 @@ function setDetailPagePoi(poi)
     resetVoteLoader();
     currentPoiId = poi.id;
     /* Get the Event specific attributes of the POI */
-    var image = getCitadel_attr(poi, "#Citadel_image").text;
-    var telephone = getCitadel_attr(poi, "#Citadel_telephone").text;
-    var website = getCitadel_attr(poi, "#Citadel_website").text;
-    var email = getCitadel_attr(poi, "#Citadel_email").text;
-    var openHours = getCitadel_attr(poi, "#Citadel_openHours").text;
-    var nearTransport = getCitadel_attr(poi, "#Citadel_nearTransport").text;
-    var eventStart = getCitadel_attr(poi, "#Citadel_eventStart").text;
-    var eventEnd = getCitadel_attr(poi, "#Citadel_eventEnd").text;
-    var eventPlace = getCitadel_attr(poi, "#Citadel_eventPlace").text;
-    var eventDuration = getCitadel_attr(poi, "#Citadel_eventDuration").text;
-    var otherAttributes = getCitadel_attrs(poi, "");
+    var image = getCitadel_attr(poi, "#Citadel_image").text;    
 
     var contentTemplate =
             "<div class='poi-data'>" +
             "<ul>";
 
+    /* If an image exists,print it first. */
     if (image)
         contentTemplate += "<li class='image'><img src='" + image + "' alt='Event image' /></li>";
 
+    /* Print standard poi details */
     contentTemplate += "<li><h1>" + poi.title + "</h1></li>";
     if (poi.description) {
         contentTemplate += "<li>" + poi.description + "</li>";
@@ -305,34 +297,14 @@ function setDetailPagePoi(poi)
     if (poi.category) {
         contentTemplate += "<li>" + poi.category + "</li>";
     }
-
-    /* Display the Event specific attributes of the POI if they exist */
-    if (telephone)
-        contentTemplate += "<li><span class='image-icon'><img src='images/small-phone.png' alt='Telephone' /></span><span class='image-text'><a href='tel:" + telephone + "'>" + telephone + "</a></span></li>";
-    if (website)
-        contentTemplate += "<li><span class='image-icon'><img src='images/small-website.png' alt='Telephone' /></span><span class='image-text'><a href='" + website + "' target='_blank'>" + website + "</a></span></li>";
-    if (email)
-        contentTemplate += "<li><span class='image-icon'><img src='images/small-email.png' alt='Telephone' /></span><span class='image-text'><a href='mailto:" + email + "'>" + email + "</a></span></li>";
-    if (openHours)
-        contentTemplate += "<li><span class='image-icon'><img src='images/small-openhours.png' alt='Telephone' /></span><span class='image-text'>" + openHours + "</span></li>";
-    if (nearTransport)
-        contentTemplate += "<li><span class='image-icon'><img src='images/small-transportation.png' alt='Telephone' /></span><span class='image-text'>" + nearTransport + "</span></li>";
-    if (eventStart)
-        contentTemplate += "<li><span>" + getCitadel_attr(poi, "#Citadel_eventStart").term + "</span>" + eventStart + "</li>";
-    if (eventEnd)
-        contentTemplate += "<li><span>" + getCitadel_attr(poi, "#Citadel_eventEnd").term + "</span>" + eventEnd + "</li>";
-    if (eventDuration)
-        contentTemplate += "<li><span>" + getCitadel_attr(poi, "#Citadel_eventDuration").term + "</span>" + eventDuration + "</li>";
-    if (eventPlace)
-        contentTemplate += "<li><span>" + getCitadel_attr(poi, "#Citadel_eventPlace").term + "</span>" + eventPlace + "</li>";
-
-    /* Display the rest attributes of the POI */
-    for (i = 0; i < otherAttributes.length; i++) {
-        contentTemplate += "<li><span>" + otherAttributes[i].term + "</span>" + otherAttributes[i].text + "</li>";
-    }
-
+    
+    /* Print further poi details found in the attribute array */
+    $.each(poi.attribute, function(i, attr) {  
+       if(attr.text != "") 
+        contentTemplate += "<li><span>" + attr.term + "</span>" + attr.text + "</li>";
+    });
+   
     // Voting system ui
-    //contentTemplate += "<li><div class='votePanel'><img id='voteUpButton'  class='voting-icon'  src='images/like-32.png'  onclick='votePoi(\"" + poi.id + "\", 1);' alt='Vote up' /><span id='voteScore'>46</span><img  class='voting-icon'  id='voteDownButton' onclick='votePoi(\"" + poi.id + "\", -1);' src='images/dislike-32.png' alt='Vote down' /></div></li>";
     $('#poiIdForVote').val(currentPoiId);
 
     contentTemplate += "</ul>" +
@@ -341,20 +313,6 @@ function setDetailPagePoi(poi)
     return contentTemplate;
 }
 
-/* Sets the content of the category 
- * dropdown at the add new marker window 
- */
-function setAddNewMarkerCategory()
-{
-    var categorySelect = "<option value=''></option>";
-    //var categorySelect = "";
-
-    $.each(filters, function(k, v) {
-        categorySelect += "<option value='" + v.name + "'>" + v.name + "</option>";
-    });
-
-    $('#poiCategory').html(categorySelect);
-}
 
 /* Sets the content of the Listing Page         */
 function setListPagePois()
@@ -405,48 +363,12 @@ function setInfoPage()
     return contentTemplate;
 }
 
-/*  Returns the attribute with the given tplIdentifer
- *  or an empty object if there is no such an atttibute
- *  Expected values for the tplIdentifer are:
- * 
- *     #Citadel_telephone                 
- *     #Citadel_website                                      
- *     #Citadel_email                                                           
- *     #Citadel_parkType                                                                                
- *     #Citadel_parkFloors                                                                                                      
- *     #Citadel_parkCapacity                                                                                                                          
- *     #Citadel_image                                                                                                                                               
- *     #Citadel_eventStart                                                                                                                                                                    
- *     #Citadel_eventEnd
- *     #Citadel_eventPlace
- *     #Citadel_eventDuration 
- *     #Citadel_openHours 
- *     #Citadel_nearTransport                                                                                                                                                                                                                                                                                                                                                                                               
- */
-function getCitadel_attr(poi, tplIdentifer) {
-    var attribute = {
-        "term": "",
-        "type": "",
-        "text": ""
-    };
-    $.each(poi.attribute, function(i, attr) {
-        if (attr.tplIdentifier === tplIdentifer)
-        {
-            attribute = {
-                "term": attr.term,
-                "type": attr.type,
-                "text": attr.text
-            };
-            return false;
-        }
-    });
-    return attribute;
-}
 
-/*  Returns an array of all the attributes with 
- *  the given tplIdentifer.    
+
+/*  Returns an array of all the attributes of 
+ *  the given poi.    
  */
-function getCitadel_attrs(poi, tplIdentifer) {
+function get_all_attrs(poi) {
     var attributes = new Array();
     $.each(poi.attribute, function(i, attr) {
         if (attr.tplIdentifier === tplIdentifer)
@@ -534,7 +456,6 @@ $(document).ready(function() {
             if (!map)
             {
                 initializeMap();
-
             }
             else
             {
@@ -549,9 +470,7 @@ $(document).ready(function() {
             $.mobile.changePage("#page1", {transition: "none"});
             $('.navbar > ul > li > a').removeClass('ui-btn-active');
             $('.pois-nearme').addClass('ui-btn-active');
-
         }
-
     });
 
 
@@ -691,110 +610,7 @@ $(document).ready(function() {
             $('.favourite').removeClass('ui-screen-hidden');
         }
     });
-
-    /* Used to add a new poi on the map. It creates
-     * a draggable marker and user can select a place 
-     * on the map for his/her new poi
-     */
-    $('#addPoi').click(function() {
-        if (newMarker == null) {
-            var current_latlon = map.getCenter();
-            var newMarkerIcon = 'images/big-flag.png';
-            newMarker = new google.maps.Marker({
-                map: map,
-                draggable: true,
-                position: current_latlon,
-                icon: newMarkerIcon,
-                title: 'My new POI'
-            });
-
-            var contentTemplate =
-                    "<div id='flagBubble'>" +
-                    "<a><div class='title'>Drag and drop the flag to the desired location. Then click on it to fill the necessary information.</div></a></div>" +
-                    "<div id='bubbleClose'><a href='' onclick='return overrideBubbleCloseClick();'><img src='images/close.png' width='25' height='25' alt='close'/></a></div>";
-
-            infoBubble.setContent(contentTemplate);
-            infoBubble.open(map, newMarker);
-
-
-            // Register Custom "click" Event
-            google.maps.event.addListener(newMarker, 'click', function() {
-                //close flag info window
-                overrideBubbleCloseClick();
-                // Get the Current position, where the pointer was dropped
-                point = newMarker.getPosition();
-                // Center the map at given point
-                map.panTo(point);
-                setAddNewMarkerCategory();
-                geocoder = new google.maps.Geocoder();
-                codeLatLng();
-                $.mobile.changePage('#newPoiDialog', 'pop', true, true);
-            });
-
-        } else {
-            alert("A new marker is already placed on the map. Either delete this marker or drag n drop it at the desired location");
-        }
-
-        return false;
-    });
-
-    /* Uses the Google geocoder to find the address
-     * of the new Poi
-     */
-    function codeLatLng() {
-        var lat = parseFloat(point.lat());
-        $('#poiLat').val(lat);
-        var lng = parseFloat(point.lng());
-        $('#poiLng').val(lng);
-        console.log(lat, lng);
-        var latlng = new google.maps.LatLng(lat, lng);
-        geocoder.geocode({
-            'latLng': latlng
-        }, function(results, status) {
-
-            if (results[0].formatted_address != null) {
-                var address = results[0].formatted_address;
-                var index = address.indexOf(",");
-                var substr = address.substr(0, index);
-                console.log("substr = " + substr);
-                $('#poiAddress').val(substr);
-            }
-
-            var route;
-            var streetNum;
-            for (var i = 0; i < results[0].address_components.length; i++) {
-
-
-                if (results[0].address_components[i].types[0] == "postal_code") {
-                    $('#poiPostal').val(results[0].address_components[i].long_name);
-                }
-                else if (results[0].address_components[i].types[0] == "locality") {
-                    $('#poiCity').val(results[0].address_components[i].long_name);
-                }        
-            }
-        });
-
-    }
-
-    /*Submit form handler*/
-    $("#insertForm").bind("submit", function() {
-        var formData = $("#insertForm").serialize();
-
-        // Post the form to the corresponding php script so
-        // as to insert the new POI in the database
-        $.ajax({
-            type: "POST",
-            url: insertNewPoiScript,
-            cache: false,
-            data: formData,
-            success: onSuccess,
-            error: onError
-        });
-        return false;
-    });
-
-
-
+  
     $("#voteUpButton").bind("click", function() {
         // Checking if user has voted before
         if (typeof(Storage) !== "undefined") {
@@ -830,8 +646,6 @@ $(document).ready(function() {
     /*Submit form handler*/
     $("#voteDownButton").bind("click", function() {
         if (typeof(Storage) !== "undefined") {
-
-
             if (!localStorage.getItem('votedPoi' + currentPoiId))
             {
                 resetVoteLoader();
@@ -862,14 +676,6 @@ $(document).ready(function() {
     });
 
 
-    /* Triggered when user deletes previously 
-     * added new marker 
-     */
-    $('#addNewPoiDelete').click(function() {
-        deleteMarkerNCloseDialog();
-    });
-
-
 }); // end $(document).ready
 
 function refreshPoiVotes(poiId)
@@ -882,13 +688,6 @@ function refreshPoiVotes(poiId)
         error: onRefreshPoiVotesFailure
     });
 
-}
-/*Called after a successful poi insertion*/
-function onSuccess(data, status)
-{
-    $('#insertForm')[0].reset();
-    deleteMarkerNCloseDialog();
-    globalInit();
 }
 
 function onRefreshBubblePoiVotesSuccess(data, status)
@@ -937,16 +736,6 @@ function onVoteFailure(data, status)
 {
     console.log('vote failed', data, status);
     alert('There was a problem submitting your vote, please try again later.');
-}
-
-/* Delete the new marker and close dialog window */
-function deleteMarkerNCloseDialog() {
-    if (newMarker != null) {
-        newMarker.setMap(null);
-        newMarker = null;
-    }
-
-    $('#newPoiDialog').dialog('close');
 }
 
 
