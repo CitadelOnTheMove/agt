@@ -1,10 +1,10 @@
 <?php
 /**
- * A simple enum helper class that contains all available dataset types
+ * A simple enum helper class that contains all the settings of an application
  */
 class AppSettingsDefinitions {
-	const City = 1;
-	const Dataset = 2;	
-        const Color = 3;
-        const DarkColor = 4;
+	const CITY = 1;
+	const DATASET = 2;	
+  const COLOR = 3;
+  const DARKCOLOR = 4;
 }
