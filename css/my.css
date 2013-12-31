@@ -823,6 +823,16 @@ header.ui-header, footer.ui-footer {
    border-radius: 5px;
    text-shadow:none;
 }
+
+.failure {
+   background-color:#FCD1D7;
+   border: 2px solid #FF0000;
+   color:#FF0000;
+   padding:10px;
+   border-radius: 5px;
+   text-shadow:none;
+}
+
 #createNewAppWrapper, #importNewDatasetWrapper {
     padding:0 40px 40px 40px;
 }
