@@ -21,14 +21,18 @@ $filters = array();
 $keys = array();
 if (isset($_GET['uid'])) {
   Database::connect();
-  if (App::initialiseFromDb($_GET['uid'])) {    
-    $app_datasets = array();
-    $name = App::$name;
 
-    foreach (App::$datasets as $key => $value) {
+  if ($app = App::createFromDb($_GET['uid'])) {
+    $app_datasets = array();
+    $name = $app->name;
+
+    foreach ($app->datasetIds as $key => $value) {
 
       $sql = "SELECT * FROM datasets WHERE id =" . $value;
 
+      /* If we are behind a proxy, we need to
+       * setup a context for file_get_contents
+       */
       if (PROXYUSE) {
         $aContext = array(
           'http' => array(
@@ -58,8 +62,10 @@ if (isset($_GET['uid'])) {
     }    
     Util::printJsonObj(new Response($app_datasets, $name, $filters));
   }
+  else
+    Util::printJsonObj(new ResponseError("failed", "invalid application id"));
   Database::disconnect();
 }
 else
-  Util::printJsonObj(new ResponseError("failed", "invalid/missing application id"));
+  Util::printJsonObj(new ResponseError("failed", "missing application id"));
 ?>

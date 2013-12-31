@@ -27,7 +27,7 @@ if
                 $labelName = $row['identifier']." - <div class='dataset_info'>city: <b>".
                              $row['name']."</b>, url: <a href='".$row['url']."' target='_blank'>".$row['url']."</a></div>";
                 $echoString .= '<input class="city'.$row['cID'] .'" type="checkbox"  id="dataset' . $row['id'] . 
-                    '"  name="dataset[]" value="' . $row['id'] 
+                    '"  name="datasetIds[]" value="' . $row['id'] 
                     . '"/> <label for="dataset' . $row['id'] . '">' .$labelName. '</label>';                
             }
             if ($echoString == "") {
