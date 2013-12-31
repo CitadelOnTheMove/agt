@@ -35,8 +35,8 @@ function globalInit() {
  */
 function getPoisFromDataset(resultCallback)
 {
-    $.getJSON(datasetUrl, function(data) {
-
+    $.getJSON(datasetUrl, function(data) {       
+        console.log(data);
         pois = new Array();
         
         if(data.status == "success")
@@ -752,8 +752,7 @@ function setFilters() {
 
         var filterName = filter.name;
         var filterType = filter.type;
-
-        console.log("filter type = " + filterType);
+       
         if (filterName == "Parking") {
 
             filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterName + "\" />" +
@@ -783,9 +782,6 @@ function setCityFilters() {
         var filterLon = city.lon;
         var coords = filterLat + "/" + filterLon;
 
-        console.log("city type = " + filterName);
-
-        //console.log("filter name = " + filterName);
         filters_html += "<input type='radio' " + " name='city' id='city-filter" + i + "' class='city-filter' value=\"" + coords + "\" />" +
                 "<label for='city-filter" + i + "'>\n\
  " + filterName + " </label>";
@@ -795,13 +791,11 @@ function setCityFilters() {
     $('#city-filter > div > fieldset > input').checkboxradio({mini: true});
 
     $('input[type=radio][name=city]').click(function() {
-        console.log("pressed");
+       
         if ($('#city-filter').is(":visible")) {
             $('#city-filter').slideUp();
-            var val = $('input[name=city]:checked').val();
-            console.log("val = ", val);
-            var coordsCity = val.split("/");
-            console.log(coordsCity);
+            var val = $('input[name=city]:checked').val();           
+            var coordsCity = val.split("/");          
             mapLat = coordsCity[0];
             mapLon = coordsCity[1];
 
