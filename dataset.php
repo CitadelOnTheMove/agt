@@ -17,8 +17,8 @@ include_once CLASSES . 'Filter.class.php';
 include_once CLASSES . 'Database.class.php';
 
 $filters = array();
-
 $keys = array();
+
 if (isset($_GET['uid'])) {
   Database::connect();
 
@@ -59,7 +59,7 @@ if (isset($_GET['uid'])) {
         }
         array_push($app_datasets, new ResponseDataset($poisDataset, $name));
       }
-    }    
+    }
     Util::printJsonObj(new Response($app_datasets, $name, $filters));
   }
   else
