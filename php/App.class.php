@@ -11,157 +11,190 @@ class App {
      * Member variables are public in order 
      * to be serialized properly by json_encode
      */
-    public static $uid = null;
-    public static $name = null;
-    public static $datasets = array();
-    public static $city = null;
-    public static $color = null;
-    public static $darkColor = null;    
+    public $uid;
+    public $name;
+    public $datasetIds;
+    public $cityIds;
+    public $color;
+    public $darkColor;    
 
+     /**
+     * @param string $uid the unique identifier of the app
+     * @param string $name the name of the app
+     * @param string $datasetIds the array of dataset Ids for this application
+     * @param string $cityIds  the array of city Ids for this application
+     * @param string $color the main color of the app
+     * @param string $darkColor the secondary color of the app
+     */
+    public function __construct($uid, $name, $datasetIds, $cityIds, $color, $darkColor) {
+       $this->uid = $uid;
+       $this->name = $name;
+       $this->datasetIds = $datasetIds;
+       $this->cityIds = $cityIds;
+       $this->color = $color;
+       $this->darkColor = $darkColor;
+    }
+    
     /**
      *
      * @param int $datasetId th id of the dataset
      * @return Author|boolean a new Author object or false if not found
      */
-    public static function initialiseFromDb($uid) {
-     
-        $sql = "SELECT * FROM apps where uid = :uid";
-        $sqlParams[":uid"] = $uid;
+    public static function createFromDb($uid) {
 
+    $sql = "SELECT * FROM apps where uid = :uid";
+    $sqlParams[":uid"] = $uid;
+
+    try {
+      $sth = Database::$dbh->prepare($sql);
+      $sth->execute($sqlParams);
+      if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
+        $uid = $result['uid'];
+        $name = $result['name'];
+        $datasetIds = array();
+        $cityIds = array();
+
+        // App found in database, now we load its settings
+        $sql = "SELECT * FROM apps_settings WHERE app_uid = :uid";
         try {
-            $sth = Database::$dbh->prepare($sql);
-            $sth->execute($sqlParams);
-            if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
-                self::$uid = $result['uid'];
-                self::$name = $result['name'];
-
-                // App found in database, now we load its settings
-                $sql = "SELECT * FROM apps_settings WHERE app_uid = :uid";
-                $sth = Database::$dbh->prepare($sql);
-                $sth->execute($sqlParams);
-                while ($row = $sth->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
-                    if($row["apps_settings_definition_id"] == AppSettingsDefinitions::City)
-                    {
-                        self::$city = $row['value'];
-                    }
-                    // Each app can have more than 1 dataset
-                    else if($row["apps_settings_definition_id"] == AppSettingsDefinitions::Dataset)
-                    {
-                        array_push(self::$datasets, $row['value']);
-                    }
-                     else if($row["apps_settings_definition_id"] == AppSettingsDefinitions::Color)
-                    {
-                        self::$color = $row['value'];
-                    }
-                    else if($row["apps_settings_definition_id"] == AppSettingsDefinitions::DarkColor)
-                    {
-                        self::$darkColor = $row['value'];
-                    }
-                   
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+          $sth = Database::$dbh->prepare($sql);
+          $sth->execute($sqlParams);
+          while ($row = $sth->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {            
+            switch($row["apps_settings_definition_id"]){
+              case AppSettingsDefinitions::CITY:  array_push($cityIds, $row['value']);break;
+              case AppSettingsDefinitions::DATASET:  array_push($datasetIds, $row['value']);break;
+              case AppSettingsDefinitions::COLOR:   $color = $row['value'];break;
+              case AppSettingsDefinitions::DARKCOLOR:  $darkColor = $row['value'];break;  
+              default: ;//Do nothing
+            }           
+          }
+          return new App($uid, $name, $datasetIds, $cityIds, $color, $darkColor);
         } catch (Exception $e) {
-            if (DEBUG)
-                $sth->debugDumpParams();
-            Util::throwException(__FILE__, __LINE__, __METHOD__, "select from links failed", $e->getMessage(), $e);
-        }  
+          if (DEBUG)
+            $sth->debugDumpParams();
+          Util::throwException(__FILE__, __LINE__, __METHOD__, "select app settings failed", $e->getMessage(), $e);
+          return false;
+        }
+      }
+      else {
+        return false;
+      }
+    } catch (Exception $e) {
+      if (DEBUG)
+        $sth->debugDumpParams();
+      Util::throwException(__FILE__, __LINE__, __METHOD__, "select app uid failed", $e->getMessage(), $e);
+    }
+  }
+  
+  /**
+     * Factory method that returns a new instance of an App
+     * @param array $assocArray an associative array representation of the object
+     * @return App|boolean an App instance or false on failure
+     */
+    public static function createFromArray($assocArray) {
+      if(!empty($assocArray))
+        return new App(null, $assocArray['name'], $assocArray['datasetIds'], $assocArray['cityIds'], $assocArray['color'], $assocArray['darkColor']);  
+      return false;
     }
     
     
     // CityId, AppName, DatasetIds[], ColorId. 
-     public static function createNewApp($cityId, $appName, $datasetIds, $colorId) {
-       
-    $uid = trim(App::getGUID(), '{}');
-    $sql = "INSERT INTO apps VALUES(:uid, :name, Now())";
-		$sqlParams = array(':uid' => $uid, ':name' => $appName);		
+  public function save() {
 
-		try {
-			$sth = Database::$dbh->prepare($sql);
-			$sth->execute($sqlParams);
-		} catch (Exception $e) {
-			if (DEBUG) $sth->debugDumpParams();
-			Util::throwException(__FILE__, __LINE__, __METHOD__, "insert dataset failed", $e->getMessage(), $e);
-			return false;
-		}
-                
-          $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
-         $sqlParams = array(':uid' => $uid,
-             ':apps_settings_definition_id' => AppSettingsDefinitions::City,
-             ':value' => $cityId);
-         try {
-			$sth = Database::$dbh->prepare($sql);
-			$sth->execute($sqlParams);
-		} catch (Exception $e) {
-			if (DEBUG) $sth->debugDumpParams();
-			Util::throwException(__FILE__, __LINE__, __METHOD__, "insert city failed", $e->getMessage(), $e);
-			return false;
-		}
-                
-         $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
-         $sqlParams = array(':uid' => $uid,
-             ':apps_settings_definition_id' => AppSettingsDefinitions::Color,
-             ':value' => $colorId);
-         try {
-			$sth = Database::$dbh->prepare($sql);
-			$sth->execute($sqlParams);
-		} catch (Exception $e) {
-			if (DEBUG) $sth->debugDumpParams();
-			Util::throwException(__FILE__, __LINE__, __METHOD__, "insert color failed", $e->getMessage(), $e);
-			return false;
-		}
-                
-         $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
-         $sqlParams = array(':uid' => $uid,
-             ':apps_settings_definition_id' => AppSettingsDefinitions::DarkColor,
-             ':value' => $colorId);
-         try {
-			$sth = Database::$dbh->prepare($sql);
-			$sth->execute($sqlParams);
-		} catch (Exception $e) {
-			if (DEBUG) $sth->debugDumpParams();
-			Util::throwException(__FILE__, __LINE__, __METHOD__, "insert dark color  failed", $e->getMessage(), $e);
-			return false;
-		}
-                
-    foreach ($datasetIds as &$datasetId) {
-                    
-         $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
-         $sqlParams = array(':uid' => $uid,
-             ':apps_settings_definition_id' => AppSettingsDefinitions::Dataset,
-             ':value' => $datasetId);
-         try {
-			$sth = Database::$dbh->prepare($sql);
-			$sth->execute($sqlParams);
-		} catch (Exception $e) {
-			if (DEBUG) $sth->debugDumpParams();
-			Util::throwException(__FILE__, __LINE__, __METHOD__, "insert dataset failed", $e->getMessage(), $e);
-			return false;
-		}                
-    }       
-         return $uid;         
+    $this->uid = trim(App::getGUID(), '{}');
+    $sql = "INSERT INTO apps VALUES(:uid, :name, Now())";
+    $sqlParams = array(':uid' => $this->uid, ':name' => $this->name);
+
+    try {
+      $sth = Database::$dbh->prepare($sql);
+      $sth->execute($sqlParams);
+    } catch (Exception $e) {
+      if (DEBUG)
+        $sth->debugDumpParams();
+      Util::throwException(__FILE__, __LINE__, __METHOD__, "insert dataset failed", $e->getMessage(), $e);
+      return false;
+    }
+      
+    foreach ($this->datasetIds as &$datasetId) {
+      $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
+      $sqlParams = array(':uid' => $this->uid,
+        ':apps_settings_definition_id' => AppSettingsDefinitions::DATASET,
+        ':value' => $datasetId);
+      try {
+        $sth = Database::$dbh->prepare($sql);
+        $sth->execute($sqlParams);
+      } catch (Exception $e) {
+        if (DEBUG)
+          $sth->debugDumpParams();
+        Util::throwException(__FILE__, __LINE__, __METHOD__, "insert dataset failed", $e->getMessage(), $e);
+        return false;
+      }
+    }
+    
+    foreach ($this->cityIds as &$cityId) {
+      $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
+      $sqlParams = array(':uid' => $this->uid,
+        ':apps_settings_definition_id' => AppSettingsDefinitions::CITY,
+        ':value' => $cityId);
+      try {
+        $sth = Database::$dbh->prepare($sql);
+        $sth->execute($sqlParams);
+      } catch (Exception $e) {
+        if (DEBUG)
+          $sth->debugDumpParams();
+        Util::throwException(__FILE__, __LINE__, __METHOD__, "insert city failed", $e->getMessage(), $e);
+        return false;
+      }
     }
 
-    /* Generate GUID in every environment*/
-    public static function getGUID(){
-    if (function_exists('com_create_guid')){
-        return com_create_guid(); /*windows*/
-    }else{
-        mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
-        $charid = strtoupper(md5(uniqid(rand(), true)));
-        $hyphen = chr(45);// "-"
-        $uuid = chr(123)// "{"
-            .substr($charid, 0, 8).$hyphen
-            .substr($charid, 8, 4).$hyphen
-            .substr($charid,12, 4).$hyphen
-            .substr($charid,16, 4).$hyphen
-            .substr($charid,20,12)
-            .chr(125);// "}"
-        return $uuid;
+    $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
+    $sqlParams = array(':uid' => $this->uid,
+      ':apps_settings_definition_id' => AppSettingsDefinitions::COLOR,
+      ':value' => $this->color);
+    try {
+      $sth = Database::$dbh->prepare($sql);
+      $sth->execute($sqlParams);
+    } catch (Exception $e) {
+      if (DEBUG)
+        $sth->debugDumpParams();
+      Util::throwException(__FILE__, __LINE__, __METHOD__, "insert color failed", $e->getMessage(), $e);
+      return false;
+    }
+
+    $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
+    $sqlParams = array(':uid' => $this->uid,
+      ':apps_settings_definition_id' => AppSettingsDefinitions::DARKCOLOR,
+      ':value' => $this->darkColor);
+    try {
+      $sth = Database::$dbh->prepare($sql);
+      $sth->execute($sqlParams);
+    } catch (Exception $e) {
+      if (DEBUG)
+        $sth->debugDumpParams();
+      Util::throwException(__FILE__, __LINE__, __METHOD__, "insert dark color  failed", $e->getMessage(), $e);
+      return false;
+    }
+    
+    return true;
+  }
+
+   /* Generate GUID in every environment */
+  public static function getGUID() {
+    if (function_exists('com_create_guid')) {
+      return com_create_guid(); /* windows */
+    }
+    else {
+      mt_srand((double) microtime() * 10000); //optional for php 4.2.0 and up.
+      $charid = strtoupper(md5(uniqid(rand(), true)));
+      $hyphen = chr(45); // "-"
+      $uuid = chr(123)// "{"
+          . substr($charid, 0, 8) . $hyphen
+          . substr($charid, 8, 4) . $hyphen
+          . substr($charid, 12, 4) . $hyphen
+          . substr($charid, 16, 4) . $hyphen
+          . substr($charid, 20, 12)
+          . chr(125); // "}"
+      return $uuid;
     }
   }
 
