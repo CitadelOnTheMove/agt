@@ -7,11 +7,10 @@ class ResponseDataset {
 
     public $dataset;
     public $appName;
-    
-       public function __construct($dataset, $appName) {
+
+    public function __construct($dataset, $appName) {
         $this->dataset = $dataset;
-         $this->appName = $appName;
-     
+        $this->appName = $appName;
     }
 
     public static function createFromDb($type, $datasetId) {
@@ -42,7 +41,7 @@ class ResponseDataset {
      * @return Ambigous <PoisDataset, boolean>|boolean
      */
     public static function createFromArray($type, $assocArray) {
-         if (isset($assocArray)) {
+        if (isset($assocArray)) {
             switch ($type) {
                 case DatasetTypes::Poi:
                     return PoisDataset::createFromArray($assocArray['dataset']);

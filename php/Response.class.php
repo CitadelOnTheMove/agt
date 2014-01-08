@@ -9,13 +9,14 @@ class Response {
     public $applicationData;
     public $appName;
     public $filters;
-    
-       public function __construct($applicationData, $appName,$filters,$status="success") {
-         $this->status = $status;
-         $this->applicationData = $applicationData;
-         $this->appName = $appName;
-         $this->filters = $filters;     
-    }  
+
+    public function __construct($applicationData, $appName, $filters, $status = "success") {
+        $this->status = $status;
+        $this->applicationData = $applicationData;
+        $this->appName = $appName;
+        $this->filters = $filters;
+    }
+
 }
 
 ?>
