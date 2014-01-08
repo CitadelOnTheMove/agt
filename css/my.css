@@ -314,13 +314,6 @@ header.ui-header, footer.ui-footer {
 }
 #poiBubble
 {
-    padding:11px;
-    width:168px;
-    text-shadow:none;
-    float:left;
-}
-#flagBubble
-{
     padding:15px;
     width:175px;
     text-shadow:none;
@@ -331,11 +324,12 @@ header.ui-header, footer.ui-footer {
 {
     text-decoration: none;
 }
-#poiBubble a .title, #flagBubble a .title
+#poiBubble a .title
 {
     font-size:14px;
     color:#fff;  
     font-weight: bold;
+    max-width: 170px;
 }
 
 #poiBubble a .address
@@ -394,7 +388,9 @@ header.ui-header, footer.ui-footer {
     display:none;
 }*/
 #page1 footer {
-    text-align: center;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    text-align: right;
 }
 /*Overload jquery ui css*/
 
@@ -831,10 +827,6 @@ header.ui-header, footer.ui-footer {
    padding:10px;
    border-radius: 5px;
    text-shadow:none;
-}
-
-#createNewAppWrapper, #importNewDatasetWrapper {
-    padding:0 40px 40px 40px;
 }
 
 .ui-icon, .ui-icon-searchfield:after {
