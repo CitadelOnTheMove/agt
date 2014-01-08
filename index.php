@@ -3,13 +3,14 @@ include_once 'Config.php';
 include_once CLASSES . 'App.class.php';
 include_once CLASSES . 'Database.class.php';
 include_once 'defineColor.php';
+include_once CLASSES . 'cities.php';
 
 $currentAppName = "Loading app...";
-$appID = isset($_GET['uid'])?'?uid='.$_GET['uid']:'';
 
+$appID = isset($_GET['uid']) ? $_GET['uid'] : '';
 $colors = printColors($appID);
-
 ?>
+
 <!DOCTYPE html>
 <html>
     <head> 
@@ -34,7 +35,6 @@ $colors = printColors($appID);
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
         <link rel="stylesheet" href="css/my.css" />
         <!--<link rel="stylesheet" href="css/validationForm.css" />-->
-
 
         <style>
             .ui-btn-up-a  {
@@ -70,16 +70,14 @@ $colors = printColors($appID);
         <!--------------- Javascript dependencies -------------------> 
         <!-- Google Maps JavaScript API v3 -->    
         <script type="text/javascript"
-                src="https://maps.googleapis.com/maps/api/js?sensor=false">
+                src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry">
         </script>
         <!-- Google Maps Utility Library - Infobubble -->     
         <script type="text/javascript"
                 src = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js">
         </script>
 
-        <script type="text/javascript">var switchTo5x = true;</script>
-        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-        <script type="text/javascript" src="http://s.sharethis.com/loader.js"></script>
+
 
         <!-- Overlapping markers Library: Deals with overlapping markers in Google Maps -->
         <script src="js/oms.min.js"></script>  
@@ -92,12 +90,9 @@ $colors = printColors($appID);
         <!-- Template specific functions and handlers -->    
         <script src="js/app-generator-lib.js"></script>  
 
-        <script type="text/javascript">stLight.options({publisher: "77101cb0-7047-4fe8-bf1f-9b5ba746dd1a", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
-        <script type="text/javascript">stLight.options({publisher: "77101cb0-7047-4fe8-bf1f-9b5ba746dd1a", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
-        <script>
-            var options = {"publisher": "77101cb0-7047-4fe8-bf1f-9b5ba746dd1a", "position": "right", "ad": {"visible": false, "openDelay": 5, "closeDelay": 0}, "chicklets": {"items": ["facebook", "twitter", "linkedin", "email", "sharethis"]}};
-            var st_hover_widget = new sharethis.widgets.hoverbuttons(options);
-        </script>
+        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+        <script type="text/javascript">stLight.options({publisher: "ur-cf1bb4ba-7f06-2a05-b666-52afb3356a9c", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>    
+
     </head> 
 
     <body>
@@ -105,8 +100,9 @@ $colors = printColors($appID);
         <div data-role="page" id="page1" class="page">
             <header data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
                 <span class="ui-title"><?php echo $currentAppName ?></span>
-                <a href="" id="filter" data-icon="gear" data-iconpos="notext" data-theme="a" title="Settings" class="ui-btn-left">&nbsp;</a>
-                <a href="" id="city" data-icon="search" data-iconpos="notext" data-theme="b" title="Settings" class="ui-btn-right">&nbsp;</a>
+                <a href="" id="filter" data-icon="search" data-iconpos="notext" data-theme="a" title="Filter Items" class="ui-btn-left">&nbsp;</a>
+                <a href="" id="city" data-icon="bars" data-iconpos="notext" data-theme="b" title="Select City" class="ui-btn-right">&nbsp;</a>              
+
                 <!--a href="#info" data-rel="dialog" data-icon="info" data-iconpos="notext" data-theme="b" title="Info" class="ui-btn-right">&nbsp;</a-->
                 <div data-role="navbar" class="navbar">
                     <ul>
@@ -116,6 +112,7 @@ $colors = printColors($appID);
                     </ul>
                 </div><!-- /navbar -->
             </header>
+
 
             <div data-role="content" id="map-filter">
                 <div class="filters-list" id="mapFilterList">
@@ -137,15 +134,18 @@ $colors = printColors($appID);
                 <!--footer data-role="footer" data-posistion="fixed" data-fullscreen="true" class="filter-footer">
                     <a href="" id="cityApply" data-icon="gear" data-theme="a" title="Apply" class="ui-btn-right">Apply</a>
                 </footer-->
-            </div><!--map-filter-->
+            </div><!--city-filter-->
+
 
             <div data-role="content" id="map-container">
                 <div id="map_canvas" class="map_canvas"></div>
             </div>
 
-            <!--footer data-role="footer" data-posistion="fixed" data-fullscreen="true">
-                <a href="" id="addPoi" data-icon="plus" data-theme="a" title="Add new POI" data-rel="plus" class="ui-btn-center">Add new POI</a>
-            </footer-->
+            <footer data-role="footer" data-posistion="fixed" data-fullscreen="true">
+                <span class='st_facebook_large' displayText='Facebook'></span>
+                <span class='st_twitter_large' displayText='Tweet'></span>
+                <!--a href="" id="addPoi" data-icon="plus" data-theme="a" title="Add new POI" data-rel="plus" class="ui-btn-center">Add new POI</a-->
+            </footer>
 
         </div>
 
@@ -202,10 +202,10 @@ $colors = printColors($appID);
                                 <p>Rate this POI</p>
                                 <span class="voteScoreWrapper">
                                     <img id='voteUpButton'  class='voting-icon'  src='images/like-32.png'  alt='Vote up' />
-                                    <span id='upVoteScore'><img  src='images/loader.GIF'  /></span>
+                                    <span id='upVoteScore'><img  src='images/loader.png'  /></span>
                                 </span><span  class="voteScoreWrapper" id="voteDownScoreWrapper">
                                     <img  class='voting-icon'  id='voteDownButton'  src='images/dislike-32.png' alt='Vote down' />
-                                    <span id='downVoteScore'><img  src='images/loader.GIF'  /></span>
+                                    <span id='downVoteScore'><img  src='images/loader.png'  /></span>
                                 </span>
                             </div>
                         </li>
@@ -259,9 +259,9 @@ $colors = printColors($appID);
             var markersArray = [];
             /* Holds filters */
             var filters = [];
-            
+
             /* Define cities - get them from db */
-            var cities = <?php include_once CLASSES . 'cities.php'; ?>;
+            var cities = <?php printSelectedCities($appID); ?>;
 
             /* Remember if a page has been opened at least once */
             var lastLoaded = '';
@@ -286,9 +286,9 @@ $colors = printColors($appID);
             var mapZoom = <?php echo MAP_ZOOM; ?>;
 
             /* The url of the dataset */
-           
-            
-            var datasetUrl = "<?php echo DATASET_URL.$appID; ?>";
+
+
+            var datasetUrl = "<?php echo DATASET_URL . '?uid=' . $appID; ?>";
 
             var insertNewPoiScript = "<?php echo SERVERNAME . BASE_DIR . CLASSES_DIR . "insert.php"; ?>";
             var insertNewVoteScript = "<?php echo SERVERNAME . BASE_DIR . CLASSES_DIR . "voteManager.php"; ?>";
