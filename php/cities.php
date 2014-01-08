@@ -4,28 +4,43 @@ include_once 'Config.php';
 include_once CLASSES . 'Util.class.php';
 include_once CLASSES . 'Database.class.php';
 include_once CLASSES . 'City.class.php';
-
+include_once CLASSES . 'App.class.php';
 
 /**
- * echoes a javascript array with the filters of the active dataset (from Config.php)
+ *  echoes a javascript array with the cities stored in the database
  */
-//function printCities() {
-$cities = array();
+function printSelectedCities($uid) {
+  $cities = array();
 
-Database::connect();
+  if (!empty($uid)) {
+    Database::connect();
+
+    if ($app = App::createFromDb($uid)) {
 
 
-$sql1 = 'SELECT * FROM cities ORDER BY name';
+      foreach ($app->datasetIds as $datasetId) {
+        //  echo " key = " . $key  . " value = " . $value;
+        //  $sql = "SELECT id FROM datasets WHERE id =" . $value;
 
-foreach (Database::$dbh->query($sql1) as $row) {
-    $name = $row['name'];
-    $lat = $row['latitude'];
-    $lon = $row['longitude'];
 
-    $cities[] = new City($name, $lat, $lon);
+        $sqlCity = "SELECT * FROM cities JOIN city_datasets ON city_datasets.city_id=cities.id 
+            WHERE dataset_id=" . $datasetId;
+
+        //echo 'sqlCity = ' . $sqlCity;
+        foreach (Database::$dbh->query($sqlCity) as $city) {
+          $id = $city['city_id'];
+          $name = $city['name'];
+          $lat = $city['latitude'];
+          $lon = $city['longitude'];
+          // $cityDataset = $city['dataset_id'];
+
+          $cities[] = new City($id, $name, $lat, $lon);
+        }
+      }
+    }
+    Database::disconnect();   
+  }
+   Util::printJsonObj($cities);
 }
 
-Database::disconnect();
-
-Util::printJsonObj($cities);
 ?>
