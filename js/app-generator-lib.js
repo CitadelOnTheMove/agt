@@ -4,6 +4,8 @@ var point = null;
 var geocoder;
 var currentPoiId;
 var myLatlng;
+// timeout for geolocation failure
+var location_timeout;
 
 /****************** Functions *****************************/
 
@@ -11,13 +13,14 @@ var myLatlng;
  * It is called once when the page is load
  */
 function globalInit() {
+    $.mobile.showPageLoadingMsg();
     getPoisFromDataset(function(pois) {
         setFilters();
         setCityFilters();
         hideAddressBar();
         setTimeout(function() {
             fixMapHeight();
-            initializeMap(mapLat, mapLon);
+            initializeMap();         
         }, 500);
         loadListPageData();
         refreshListPageView();
@@ -35,12 +38,12 @@ function globalInit() {
  */
 function getPoisFromDataset(resultCallback)
 {
-    $.getJSON(datasetUrl, function(data) {       
-        console.log(data);
+    $.getJSON(datasetUrl, function(data) {
+
         pois = new Array();
-        
-        if(data.status == "success")
-        {            
+
+        if (data.status == "success")
+        {
             var k = 0;
             filters = data.filters;
             $.each(data.applicationData, function(i, datasetObject) {
@@ -57,61 +60,144 @@ function getPoisFromDataset(resultCallback)
                     k++;
                     pois[poi.id] = poi;
                 });
-            });           
+            });
         }
-        else{
-            //TODO: Message that app id is missing
+        else {
+            console.log("Error loading data:" + data.error);
         }
-         resultCallback(pois);
+        resultCallback(pois);
     });
 }
 
 /* Initialises a google map using map api v3 */
 function initializeMap() {
-    var customZoom = 0;
-    var geolocationSuccessful = false;
+
     var mapOptions = {
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     //instantiate the map wih the options and put it in the div holder, "map-canvas"
-    map = new google.maps.Map(document.getElementById("map_canvas"),
-            mapOptions);
-    if (navigator.geolocation) {
-        console.log('geolocation supported');
-        navigator.geolocation.getCurrentPosition(function(position) {
+    map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
 
-            geolocationSuccessful = true;
-            myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            var currentMarker = new google.maps.Marker({
-                position: myLatlng,
-                map: map
-            });
-            //define the map options
-            customZoom = 12;
-            mapOptions = {
-                center: myLatlng
-               // zoom: mapZoom + 10
-            };
-        });
+    if (navigator.geolocation) {   
+        // Set timeout to 15 secs
+        location_timeout = setTimeout("geolocFail()", 15000);
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {      
+       showDefaultMap();
     }
+}
 
-    if (!geolocationSuccessful)
-    {
-        customZoom = 2;
+function geolocFail(){   
+   showDefaultMap();
+}
+
+function showDefaultMap(){
+     $.mobile.hidePageLoadingMsg();
         myLatlng = new google.maps.LatLng(mapLat, mapLon);
         mapOptions = {
             center: myLatlng,
-            //zoom: mapZoom
-        };
+            zoom: mapZoom
+        };  
+        map.setOptions(mapOptions);
+        map.setCenter(myLatlng);
+        alert("Geolocation not available, please select a city from the upper right corner");
+}
 
+function showPosition(position) {
+    
+    clearTimeout(location_timeout);
+    $.mobile.hidePageLoadingMsg();  
+    myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    console.log("position.coords.latitude = ", position.coords.latitude);
+    console.log("position.coords.longitude = ", position.coords.longitude);
+
+    var p1 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    var datasetFound = false;
+    for (i = 0; i < cities.length; i++) {
+        var city = cities[i];
+        var cityId = city.id;      
+        var p2 = new google.maps.LatLng(city.lat, city.lon);
+        var distance = calcDistance(p1, p2);
+        if (distance < 50) {
+            setFiltersByCityId(cityId);
+            datasetFound = true;
+            break;
+        }
     }
+    if(cities.length == 0)
+        alert("Missing application id. No data is loaded.");
+    else if (!datasetFound) {
+        alert("There is no dataset available near your current position, please select a city on the right corner");
+    }
+    var currentMarker = new google.maps.Marker({
+        position: myLatlng,
+        map: map
+    });
+
+    //define the map options
     mapOptions = {
         center: myLatlng,
-        zoom: customZoom
+        zoom: mapZoom + 10
     };
-
     map.setOptions(mapOptions);
     map.setCenter(myLatlng);
+    addMarkers();    
+}
+
+function showError(error) {
+    clearTimeout(location_timeout);
+    console.warn('ERROR(' + error.code + '): ' + error.message);
+    $.mobile.hidePageLoadingMsg();
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            alert("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("An unknown error occurred.");
+            break;
+    }    
+    showDefaultMap();
+}
+
+
+/**calculates distance between two points in km's */
+function calcDistance(p1, p2) {
+    return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+}
+
+
+/**markers of one category will be added on the map 
+ * based on the selected city*/
+function setFiltersByCityId(cityId) {
+
+    var currentCityId = cityId;
+    //console.log("currentCityId = ", currentCityId);
+
+    var selected = false;
+    for (i = 0; i < filters.length; i++) {
+
+        var filter = filters[i];
+
+        //console.log("filter.cityId = ", filter.cityId);
+        if (filter.cityId === currentCityId) {
+            filter.isVisible = true;
+            if (!selected) {
+                filter.selected = true;
+                selected = true;
+                             }
+          
+        }
+        else
+            filter.isVisible = false;
+    }
+    setFilters();
     addMarkers();
 }
 
@@ -145,7 +231,7 @@ function addMarkers()
         borderWidth: 2,
         maxWidth: 300,
         maxHeight: 400,
-        minHeight: 150,
+        minHeight: 90,
         borderColor: '#3A3A3A',
         disableAutoPan: false,
         arrowPosition: 30,
@@ -267,8 +353,8 @@ function setInfoWindowPoi(poi)
 
 function resetVoteLoader()
 {
-    $('#downVoteScore').html("<img  src='images/loader.GIF'  />");
-    $('#upVoteScore').html("<img  src='images/loader.GIF'  />");   
+    $('#downVoteScore').html("<img  src='images/loader.png'  />");
+    $('#upVoteScore').html("<img  src='images/loader.png'  />");
 }
 
 /* Sets the content of the details page for the given 
@@ -279,7 +365,7 @@ function setDetailPagePoi(poi)
     resetVoteLoader();
     currentPoiId = poi.id;
     /* Get the Event specific attributes of the POI */
-    var image = getCitadel_attr(poi, "#Citadel_image").text;    
+    var image = getCitadel_attr(poi, "#Citadel_image").text;
 
     var contentTemplate =
             "<div class='poi-data'>" +
@@ -300,13 +386,13 @@ function setDetailPagePoi(poi)
     if (poi.category) {
         contentTemplate += "<li>" + poi.category + "</li>";
     }
-    
+
     /* Print further poi details found in the attribute array */
-    $.each(poi.attribute, function(i, attr) {  
-       if(attr.text != "") 
-        contentTemplate += "<li><span>" + attr.term + "</span>" + attr.text + "</li>";
+    $.each(poi.attribute, function(i, attr) {
+        if (attr.text != "")
+            contentTemplate += "<li><span>" + attr.term + "</span>" + attr.text + "</li>";
     });
-   
+
     // Voting system ui
     $('#poiIdForVote').val(currentPoiId);
 
@@ -387,7 +473,25 @@ function get_all_attrs(poi) {
     return attributes;
 }
 
-
+function getCitadel_attr(poi, tplIdentifer) {
+    var attribute = {
+        "term": "",
+        "type": "",
+        "text": ""
+    };
+    $.each(poi.attribute, function(i, attr) {
+        if (attr.tplIdentifier === tplIdentifer)
+        {
+            attribute = {
+                "term": attr.term,
+                "type": attr.type,
+                "text": attr.text
+            };
+            return false;
+        }
+    });
+    return attribute;
+}
 
 /* Bubble on click poi listener */
 function overrideDetailClick(id) {
@@ -547,6 +651,41 @@ $(document).ready(function() {
     });
 
 
+    /* Click handler for the city radio button inside the city filters.
+     * The map will be recentered to the center of the selected city
+     *  and markers of one category will be added on the map.
+     */
+    $('input[type=radio][name=city]').live("change", function() {
+        //console.log("pressed");
+
+        //console.log("$(this).attr('id') = ", $(this).attr('id'));
+        var selectedCityId = $(this).attr('id').substring(11);
+        //console.log("selectedCityId = ", selectedCityId);
+
+        setFiltersByCityId(selectedCityId);
+
+        if ($('#city-filter').is(":visible")) {
+            $('#city-filter').slideUp();
+            var val = $('input[name=city]:checked').val();
+            //console.log("val = ", val);
+
+            var coordsCity = val.split("/");
+            //console.log(coordsCity);
+            mapLat = coordsCity[0];
+            mapLon = coordsCity[1];
+
+            var center = new google.maps.LatLng(mapLat, mapLon);
+            // using global variable:
+            map.panTo(center);
+            map.setZoom(14);
+
+        } else {
+            $('#city-filter').slideDown();
+        }
+        return false;
+    });
+
+
     /* Click handler for the aply button inside the filters page. 
      * The markers on the map will be updated according to the 
      * selected filters.
@@ -569,7 +708,7 @@ $(document).ready(function() {
         return false;
     });
 
-   
+
     /* Adds a poi to favourites list and use
      * local storage to remember my favourites
      */
@@ -613,7 +752,7 @@ $(document).ready(function() {
             $('.favourite').removeClass('ui-screen-hidden');
         }
     });
-  
+
     $("#voteUpButton").bind("click", function() {
         // Checking if user has voted before
         if (typeof(Storage) !== "undefined") {
@@ -723,7 +862,7 @@ function onRefreshPoiVotesFailure(data, status)
 /*Called after a successful poi insertion*/
 function onVoteSuccess(data, status)
 {
-    console.log("Vote success");
+    //console.log("Vote success");
     alert('Vote submitted!');
     $('#insertVote')[0].reset();
     localStorage.setItem('votedPoi' + currentPoiId, "1");
@@ -737,7 +876,7 @@ function onError(data, status)
 
 function onVoteFailure(data, status)
 {
-    console.log('vote failed', data, status);
+   // console.log('vote failed', data, status);
     alert('There was a problem submitting your vote, please try again later.');
 }
 
@@ -748,24 +887,17 @@ function setFilters() {
 
     for (i = 0; i < filters.length; i++) {
         var filter = filters[i];
-        var checked = filter.selected ? ' checked' : '';
+        if (filter.isVisible) {
+            //console.log("filter.isVisible = " + filter.isVisible);
 
-        var filterName = filter.name;
-        var filterType = filter.type;
-       
-        if (filterName == "Parking") {
+            var checked = filter.selected ? ' checked' : '';
+            var filterName = filter.name;
+            var filterType = filter.type;
 
-            filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterName + "\" />" +
-                    "<label for='map-filter" + i + "'><img id='img_style' src='images/blue.png'/> " + filterName + " , (" + filterType + ")</label>";
-
-        }
-        else {
-            //console.log("filter name = " + filterName);
             filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterName + "\" />" +
                     "<label for='map-filter" + i + "'><img id='img_style' src='images/pin" + i % 16 + ".png'/> " + filterName + " , (" + filterType + ")</label>";
         }
     }
-
     $('#map-filter > div > fieldset').html(filters_html);
     $('#map-filter > div > fieldset > input').checkboxradio({mini: true});
 }
@@ -782,33 +914,14 @@ function setCityFilters() {
         var filterLon = city.lon;
         var coords = filterLat + "/" + filterLon;
 
-        filters_html += "<input type='radio' " + " name='city' id='city-filter" + i + "' class='city-filter' value=\"" + coords + "\" />" +
-                "<label for='city-filter" + i + "'>\n\
+        filters_html += "<input type='radio' " + " name='city' id='city-filter" + city.id + "' class='city-filter' value=\"" + coords + "\" />" +
+                "<label for='city-filter" + city.id + "'>\n\
  " + filterName + " </label>";
     }
 
     $('#city-filter > div > fieldset').html(filters_html);
     $('#city-filter > div > fieldset > input').checkboxradio({mini: true});
 
-    $('input[type=radio][name=city]').click(function() {
-       
-        if ($('#city-filter').is(":visible")) {
-            $('#city-filter').slideUp();
-            var val = $('input[name=city]:checked').val();           
-            var coordsCity = val.split("/");          
-            mapLat = coordsCity[0];
-            mapLon = coordsCity[1];
-
-            var center = new google.maps.LatLng(mapLat, mapLon);
-            // using global variable:
-            map.panTo(center);
-            map.setZoom(10);
-
-        } else {
-            $('#city-filter').slideDown();
-        }
-        return false;
-    });
 }
 
 
