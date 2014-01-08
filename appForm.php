@@ -24,8 +24,8 @@
               $('.ui-checkbox a').bind("click", function( event, data ){
                 event.stopPropagation();             
                 window.open($this.attr('href'), $this.attr('target'));     
-              });
-  
+              }); 
+
              $("input[type=checkbox][id^=city]").click(function() {
                
                /* The id attribute is of the form "cityXX"
@@ -140,7 +140,7 @@
                     Database::commit();
                     echo '<div class="success">Your application was created successfully!';
                     echo '<br><br>';
-                    echo ' <a href="index.php?uid=' . $newApp->uid . '" target="_blank" rel="external">Click here to see it!</a>';
+                    echo ' <a href="index.php?uid=' . $newApp->uid . '" target="_blank" rel="external">See my app!</a>';
                     echo ' <a style="float:right" href="appForm.php" target="_blank">Create a new app</a></div>';
                   }
                   else {
