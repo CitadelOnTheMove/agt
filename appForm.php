@@ -16,17 +16,46 @@ $username = $user['username'];
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
         <link rel="stylesheet" href="css/my.css" />  
-       
+        <link rel="stylesheet" href="css/spectrum.css" />
 
         <!-- jQuery Library --> 
         <script src="js/jquery-1.8.2.min.js"></script>
         <!-- jQuery Mobile Library -->
         <script src="js/jquery.mobile-1.2.0.min.js"></script>  
+
+        <script src="js/spectrum.js"></script> 
+
         <script lang="text/javascript">
-        
-        var counter=0;
-        var counterMax = 0;
-                    
+
+            $(".full").spectrum({
+                color: "#ECC",
+                showInput: true,
+                className: "full-spectrum",
+                showInitial: true,
+                showPalette: true,
+                showSelectionPalette: true,
+                maxPaletteSize: 10,
+                preferredFormat: "hex",
+                move: function(color) {
+
+                },
+                show: function() {
+
+                },
+                beforeShow: function() {
+
+                },
+                hide: function() {
+
+                },
+                change: function() {
+
+                }
+            });
+
+            var counter = 0;
+            var counterMax = 0;
+
             $(document).ready(function() {
               
               $('.ui-checkbox a').bind("click", function( event, data ){
@@ -102,7 +131,6 @@ $username = $user['username'];
         <div data-role="content"> 
 
           <div id="createNewAppWrapper">
-            <p><?php echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.' ?></p>
             <?php
             include_once 'Config.php';
             include_once CLASSES . 'Database.class.php';
@@ -172,7 +200,7 @@ $username = $user['username'];
 
             <?php if ($_SERVER["REQUEST_METHOD"] != "POST") { ?>
               <form id="createNewAppForm"  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-
+                             <p><?php echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.' ?></p>
                 <p><span class="error">* required field.</span></p>                        
 
                 <legend><b>Select cities:</b> <span class="error">* <?php echo $cityIdsErr; ?></span></legend><br/>
@@ -198,32 +226,16 @@ $username = $user['username'];
                 </div>
 
                 <br>
-                <a href="/app-generator/importDatasets.php">Click here if you want to import a new dataset</a>
+                <a href="/<?php echo BASE_DIR?>importDatasets.php">Click here if you want to import a new dataset</a>
                 <br><br>
 
-
                 <legend><b>Select the basic color of your app:</b><span class="error">* <?php echo $colorErr; ?></span></legend><br/>
-                <div id="colorCheckboxes" data-role="controlgroup">
-                  <?php
-                  $sql2 = 'SELECT * FROM apps_available_colors order by name';
-                  foreach (Database::$dbh->query($sql2) as $row) {
-                    echo '<input type="radio" name="color" id="color' . $row['id'] . '" value="' . $row['id'] . '">
-                                                         <label for="color' . $row['id'] . '">' . $row['name'] . '</label>';
-                  }
-                  ?>
-                </div>
+                <input type="color" class="full" name="color">
+
                 <br><br>
 
                 <legend><b>Select the secondary color (active/hovered buttons):</b><span class="error">* <?php echo $darkColorErr; ?></span></legend><br/>
-                <div id="darkColorCheckboxes" data-role="controlgroup">
-                  <?php
-                  $sql3 = 'SELECT * FROM apps_available_darker_colors order by name';
-                  foreach (Database::$dbh->query($sql3) as $row) {
-                    echo '<input type="radio" name="darkColor" id="darkColor' . $row['id'] . '" value="' . $row['id'] . '">
-                                    <label for="darkColor' . $row['id'] . '">' . $row['name'] . '</label>';
-                  }
-                  ?>
-                </div>
+                <input type="color" class="full" name="darkColor">
                 <br><br>
 
                 <legend><b>Application Name:</b> <span class="error">* <?php echo $nameErr; ?></span></legend><br/>
