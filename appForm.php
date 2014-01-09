@@ -1,3 +1,11 @@
+<?php
+include_once 'Config.php';
+require CLASSES . 'init.php';
+$general->logged_out_protect();
+$user = $users->userdata($_SESSION['id']);
+$username = $user['username'];
+?>
+
 <!DOCTYPE HTML>
 <html>
     <head>
@@ -94,6 +102,7 @@
         <div data-role="content"> 
 
           <div id="createNewAppWrapper">
+            <p><?php echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.' ?></p>
             <?php
             include_once 'Config.php';
             include_once CLASSES . 'Database.class.php';
