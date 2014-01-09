@@ -355,7 +355,8 @@ header.ui-header, footer.ui-footer {
 #poiBubble a .category
 {
     font-size:11px;
-    color:#000000;    
+    color:#8D8D8D;  
+    margin-bottom: 8px;
 }
 .favourites-button {
     position:absolute;
@@ -813,21 +814,21 @@ header.ui-header, footer.ui-footer {
 }
 
 .success {
-   background-color:#D4EFD2;
-   border: 2px solid #234600;
-   color:#234600;
-   padding:10px;
-   border-radius: 5px;
-   text-shadow:none;
+    background-color:#D4EFD2;
+    border: 2px solid #234600;
+    color:#234600;
+    padding:10px;
+    border-radius: 5px;
+    text-shadow:none;
 }
 
 .failure {
-   background-color:#FCD1D7;
-   border: 2px solid #FF0000;
-   color:#FF0000;
-   padding:10px;
-   border-radius: 5px;
-   text-shadow:none;
+    background-color:#FCD1D7;
+    border: 2px solid #FF0000;
+    color:#FF0000;
+    padding:10px;
+    border-radius: 5px;
+    text-shadow:none;
 }
 
 .ui-icon, .ui-icon-searchfield:after {

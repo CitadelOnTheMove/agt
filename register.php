@@ -114,7 +114,7 @@ if (isset($_GET['success']) && empty($_GET['success'])) {
                         <h4>Password:</h4>
                         <input type="password" name="password" />
                         <h4>Email:</h4>
-                        <input type="text" name="email" />	
+                        <input type="email" name="email" />	
                         <br>
                         <input type="submit" name="submit" value="Register" />
                     </form>
