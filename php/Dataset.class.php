@@ -64,16 +64,35 @@ class Dataset {
         }
         return $categories;
     }
+    
+    public static function getDatasetsOfUser($userId) {
+        $sql = "SELECT * FROM datasets where createdBy = :userId";
+        $sqlParams[":userId"] = $userId;
+        $userDatasetsCount;
+        try {
+            $sth = Database::$dbh->prepare($sql);
+            $sth->execute($sqlParams);
+            $userDatasetsCount = $sth->rowCount();
+            return $userDatasetsCount;
+           
+        } catch (Exception $e) {
+            if (DEBUG)
+                $sth->debugDumpParams();
+            Util::throwException(__FILE__, __LINE__, __METHOD__, "getDatasetsOfUser query failed", $e->getMessage(), $e);
+        }
+       // return $userDatasetsCount;
+    }
 
-    public static function saveNewDataset($datasetName, $url, $type, $city) {
+    public static function saveNewDataset($datasetName, $url, $type, $city, $userId) {
 
-        $sql = "INSERT INTO datasets VALUES(null, :identifier, :type , :update, Now(), :lang, :updateFrequency, :url)";
+        $sql = "INSERT INTO datasets VALUES(null, :identifier, :type , :update, Now(),  :userId, :lang, :updateFrequency, :url)";
         $sqlParams = array(':identifier' => $datasetName,
             ':type' => $type,
             ':update' => '',
             ':lang' => '',
             ':updateFrequency' => '',
-            ':url' => $url);
+            ':url' => $url,
+            ':userId' => $userId);
 
 
         try {
