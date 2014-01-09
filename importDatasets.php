@@ -182,8 +182,7 @@ $userId = $user['id'];
                             Dataset::saveNewDataset($datasetName, $datasetUrl, $datasetType, $city, $userId);
                             Database::commit();
                             echo '<div class="success">Your dataset was imported successfully!';
-                            echo '<br><br>'.$datasetName.'<br><br>'. $datasetUrl. '<br><br>'.
-                                $datasetType.'<br><br>'. $city. '<br><br>'.$userId.'<br><br>';
+                            echo '<br><br>';
                             echo ' <a href="appForm.php" rel="external" >Back to the app creation form</a></div>';
                         }
                     }
