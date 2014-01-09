@@ -5,14 +5,16 @@ $general->logged_out_protect();
 $user = $users->userdata($_SESSION['id']);
 $username = $user['username'];
 $userId = $user['id'];
+$userDatasetUploadLimitReached = false;
 ?>
 <!DOCTYPE HTML>
 <html>
     <head>
-        <!--------------- Metatags ------------------->   
+        <!--  Metatags -->  
+        <title>Import Dataset</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--------------- CSS files ------------------->    
+        <!-- CSS files -->    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
         <link rel="stylesheet" href="css/my.css" />         
@@ -32,6 +34,7 @@ $userId = $user['id'];
         ?>
         <?php
         if ($userDatasetsCount + 1 > MAX_DATASETS_PER_USER) {
+            $userDatasetUploadLimitReached = true;
             ?>
             <script>
                 $(document).ready(function() {
@@ -44,16 +47,12 @@ $userId = $user['id'];
         }
         ?>
     </head>       
-
     <body>
-
         <div data-role="page">
             <div data-role="header">
                 <h1>Import Dataset</h1>
             </div>
-
             <div data-role="content"> 
-
                 <div id="importNewDatasetWrapper">
                     <?php
                     // define variables and set to empty values
@@ -79,16 +78,12 @@ $userId = $user['id'];
                         if (empty($_POST["datasetUrl"]) && empty($_FILES["userFile"]["name"])) {
                             $datasetUrlErr = "Dataset Url or Dataset file is required";
                             $error = true;
-                        } 
-                        else if(!empty($_POST["datasetUrl"]) && !empty($_FILES["userFile"]["name"])){
+                        } else if (!empty($_POST["datasetUrl"]) && !empty($_FILES["userFile"]["name"])) {
                             $datasetUrlErr = "Only one of a Dataset Url OR a Dataset file must be given";
                             $error = true;
-                        }                        
-                        else if(!empty($_POST["datasetUrl"])){
+                        } else if (!empty($_POST["datasetUrl"])) {
                             $datasetUrl = clear_input($_POST["datasetUrl"]);
-                        }
-                        else
-                        { 
+                        } else {
 
                             $datasetFile = $_FILES['userFile'];
 
@@ -123,7 +118,19 @@ $userId = $user['id'];
                     }
                     ?>
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
-                        <form id="importNewDataset" data-ajax="false"  method="post" action="importDatasets.php" enctype='multipart/form-data'>
+                        <?php
+                        if ($userDatasetUploadLimitReached) {
+                            echo '<p>Hi <b>' . $username . '</b>! You have uploaded <b>' . $userDatasetsCount . '</b> dataset(s) so far. You are not allowed to upload any more datasets.</p>';
+                            echo '<br/><a data-ajax="false" class="ui-link" href="appForm.php" >Back to the app creation form</a>';
+                        }
+                        ?>
+                        <form id="importNewDataset" data-ajax="false"
+                        <?php
+                        if ($userDatasetUploadLimitReached) {
+                            echo 'style="display:none;"';
+                        }
+                        ?>
+                              method="post" action="importDatasets.php" enctype='multipart/form-data'>
                             <p>
                                 <?php
                                 echo 'Hi <b>' . $username . '</b>! You have uploaded <b>' . $userDatasetsCount . '</b> dataset(s) so far. You are allowed to upload a maximum of <b>' . MAX_DATASETS_PER_USER . '</b> datasets.';
@@ -132,7 +139,7 @@ $userId = $user['id'];
 
                             <p><span class="error">* required field.</span></p>
 
-                            <b>Dataset Name:</b> <span class="error">* <?php echo $datasetNameErr; ?></span><br/>
+                            <b>Dataset Name:</b> <span class="error">* <?php echo $datasetNameErr; ?></span><br/><br/>
                             <input type="text" name="datasetName" required>
 
                             <br><br>
@@ -147,17 +154,16 @@ $userId = $user['id'];
                                 <input type='file' name='userFile'>
                                 <a href="http://www.rbox.tv/citadel/converter/php/" target="_blank" rel="external">
                                     Click here to easily convert your dataset in the Citadel Json format!</a>
-                                </a>
                             </div>                        
 
                             <br><br>
 
-                            <b>Dataset Type:</b> (e.g. Pois, Parking, Events, etc) <span class="error">* <?php echo $datasetTypeErr; ?></span><br/>
-                            <input type="text" name="datasetType" required
+                            <b>Dataset Type:</b> (e.g. Pois, Parking, Events, etc) <span class="error">* <?php echo $datasetTypeErr; ?></span><br/><br/>
+                            <input type="text" name="datasetType" required>
 
-                                   <br><br>
-
-                            <legend><b>Select a city:</b> <span class="error">* <?php echo $cityErr; ?></span></legend><br/>
+                                   <br>
+                                   
+                            <b>Select a city:</b> <span class="error">* <?php echo $cityErr; ?></span><br/><br/>
                             <div id="datasetsCheckboxes" data-role=controlgroup>                       
                                 <?php
                                 $sql = 'SELECT * FROM cities ORDER BY name';
@@ -171,7 +177,7 @@ $userId = $user['id'];
                             <br><br>
                             <input type="submit" name="import" value="Import">
                             <br><br>
-                            <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a></div>'; ?>        
+                        <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a>'; ?>        
                         </form>
                     <?php } // end if ?>
 
