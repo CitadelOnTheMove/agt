@@ -37,5 +37,5 @@ define("DATASET_FILE", HTDOCS_ROOT . BASE_DIR ."data/POI_athens.json");
 define("DATASET_ID", 36);
 define("DATASET_URL", SERVERNAME . BASE_DIR . "dataset.php");
 define("USE_DATABASE", true);
-
+define("MAX_DATASETS_PER_USER", 5);
 ?>
