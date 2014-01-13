@@ -38,4 +38,5 @@ define("DATASET_ID", 36);
 define("DATASET_URL", SERVERNAME . BASE_DIR . "dataset.php");
 define("USE_DATABASE", true);
 define("MAX_DATASETS_PER_USER", 5);
+define("MAX_CITY_DISTANCE_KM", 50);
 ?>
