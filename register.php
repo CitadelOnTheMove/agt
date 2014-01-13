@@ -79,7 +79,7 @@ if (isset($_POST['submit'])) {
 
 // Registration successful 
 if (isset($_GET['success']) && empty($_GET['success'])) {
-    header('Location: appForm.php?success');
+    header('Location: login.php?success');
     exit();
 }
 ?>
@@ -104,7 +104,7 @@ if (isset($_GET['success']) && empty($_GET['success'])) {
                 <h1>Register</h1>
             </div>
 
-            <div id="registrationWrapper">
+            <div id="registrationWrapper"  class="ui-content">
                 <?php if ($userLoggedIn) { ?>
                     <h3><?php echo 'You are currently logged in as ' . $username ?>. To register, you first need to <a href="logout.php" data-ajax="false">log out</a></h3>
                 <?php } else { ?>
