@@ -3,6 +3,7 @@ include_once 'Config.php';
 require CLASSES . 'init.php';
 $general->logged_out_protect();
 $user = $users->userdata($_SESSION['id']);
+$userId = $user['id'];
 $username = $user['username'];
 ?>
 
@@ -172,7 +173,7 @@ $username = $user['username'];
                     (isset($_POST["darkColor"]))) {
 
                   Database::begin();
-                  $newApp = App::createFromArray($_POST);
+                                $newApp = App::createFromArray($_POST, $userId);
                   if ($newApp->save()) {
                     Database::commit();
                     echo '<div class="success">Your application was created successfully!';
