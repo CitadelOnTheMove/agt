@@ -2,6 +2,14 @@
 include_once 'Config.php';
 require CLASSES . 'init.php';
 $userLoggedIn = false;
+// When a user register's sucessfully, he is redirected to the login page to log in
+// If this is the case, a "Registration complete" message is displayed to the user.
+$fromRegistraton = false;
+
+
+if (isset($_GET['success']) && empty($_GET['success'])) {
+    $fromRegistraton = true;
+}
 
 // Checking if the user is already logged in
 if (isset($_SESSION['id'])) {
@@ -68,7 +76,11 @@ if (empty($_POST) === false) {
             <div data-role="header">
                 <h1>Log in</h1>
             </div>
-            <div id="loginWrapper">
+            <div id="loginWrapper" class="ui-content">
+                  <?php if ($fromRegistraton && !$userLoggedIn) { ?>
+                    <p>Your registration was <b>successful</b>! Use the form below to log in.</p>
+                <?php }?>
+                
                 <?php if ($userLoggedIn) { ?>
                     <h3><?php echo 'You are currently logged in as ' . $username ?>. To log in as a different user, you first need to <a href="logout.php" data-ajax="false">log out</a></h3>
                 <?php } else { ?>
