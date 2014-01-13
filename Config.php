@@ -26,11 +26,11 @@ define("DB_NAME", "citadel_app_generator");
 
 define("DEBUG", true);
 
-// views
+// Center of Europe
  
-define("MAP_CENTER_LATITUDE", 37.957243);
-define("MAP_CENTER_LONGITUDE", 23.721521);
-define("MAP_ZOOM", 2);
+define("MAP_CENTER_LATITUDE", 48.387598);
+define("MAP_CENTER_LONGITUDE", 13.723521);
+define("MAP_ZOOM", 5);
 
 // dataset
 define("DATASET_FILE", HTDOCS_ROOT . BASE_DIR ."data/POI_athens.json");
