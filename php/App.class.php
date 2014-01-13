@@ -13,6 +13,7 @@ class App {
      */
     public $uid;
     public $name;
+    public $userId;
     public $datasetIds;
     public $cityIds;
     public $color;
@@ -21,14 +22,16 @@ class App {
      /**
      * @param string $uid the unique identifier of the app
      * @param string $name the name of the app
+     * @param string $userId the unique identifier of the user
      * @param string $datasetIds the array of dataset Ids for this application
      * @param string $cityIds  the array of city Ids for this application
      * @param string $color the main color of the app
      * @param string $darkColor the secondary color of the app
      */
-    public function __construct($uid, $name, $datasetIds, $cityIds, $color, $darkColor) {
+    public function __construct($uid, $name, $userId, $datasetIds, $cityIds, $color, $darkColor) {
        $this->uid = $uid;
        $this->name = $name;
+       $this->userId = $userId;
        $this->datasetIds = $datasetIds;
        $this->cityIds = $cityIds;
        $this->color = $color;
@@ -51,6 +54,7 @@ class App {
       if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
         $uid = $result['uid'];
         $name = $result['name'];
+        $userId = $result['userId'];
         $datasetIds = array();
         $cityIds = array();
 
@@ -68,7 +72,7 @@ class App {
               default: ;//Do nothing
             }           
           }
-          return new App($uid, $name, $datasetIds, $cityIds, $color, $darkColor);
+          return new App($uid, $name, $userId, $datasetIds, $cityIds, $color, $darkColor);
         } catch (Exception $e) {
           if (DEBUG)
             $sth->debugDumpParams();
@@ -91,9 +95,9 @@ class App {
      * @param array $assocArray an associative array representation of the object
      * @return App|boolean an App instance or false on failure
      */
-    public static function createFromArray($assocArray) {
+    public static function createFromArray($assocArray , $userId) {
       if(!empty($assocArray))
-        return new App(null, $assocArray['name'], $assocArray['datasetIds'], $assocArray['cityIds'], $assocArray['color'], $assocArray['darkColor']);  
+        return new App(null, $assocArray['name'], $userId, $assocArray['datasetIds'], $assocArray['cityIds'], $assocArray['color'], $assocArray['darkColor']);  
       return false;
     }
 
@@ -101,8 +105,8 @@ class App {
     public function save() {
 
     $this->uid = trim(App::getGUID(), '{}');
-    $sql = "INSERT INTO apps VALUES(:uid, :name, Now())";
-    $sqlParams = array(':uid' => $this->uid, ':name' => $this->name);
+    $sql = "INSERT INTO apps VALUES(:uid, :name, :userId, Now())";
+    $sqlParams = array(':uid' => $this->uid, ':name' => $this->name, ':userId' => $this->userId);
 
     try {
       $sth = Database::$dbh->prepare($sql);
