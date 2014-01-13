@@ -32,15 +32,17 @@ function printSelectedCities($uid) {
           $name = $city['name'];
           $lat = $city['latitude'];
           $lon = $city['longitude'];
-          // $cityDataset = $city['dataset_id'];
 
-          $cities[] = new City($id, $name, $lat, $lon);
+                    $city = new City($id, $name, $lat, $lon);
+                    if (!in_array($city, $cities)) {
+                        $cities[] = $city;
+                    }
+                }
+            }
         }
-      }
+        Database::disconnect();
     }
-    Database::disconnect();   
-  }
-   Util::printJsonObj($cities);
+    Util::printJsonObj($cities);
 }
 
 ?>
