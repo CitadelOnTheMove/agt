@@ -47,12 +47,12 @@ function getPoisFromDataset(resultCallback)
             var k = 0;
             filters = data.filters;
             $.each(data.applicationData, function(i, datasetObject) {
-                meta['id'] = datasetObject.dataset.id;
+               /* meta['id'] = datasetObject.dataset.id;
                 meta['updated'] = datasetObject.dataset.updated;
                 meta['created'] = datasetObject.dataset.created;
                 meta['lang'] = datasetObject.dataset.lang;
                 meta['author_id'] = datasetObject.dataset.author.id;
-                meta['author_value'] = datasetObject.dataset.author.value;
+                meta['author_value'] = datasetObject.dataset.author.value;*/
                 $('.ui-title').html(datasetObject.appName);
 
                 $.each(datasetObject.dataset.poi, function(j, poi) {
@@ -78,7 +78,14 @@ function initializeMap() {
     //instantiate the map wih the options and put it in the div holder, "map-canvas"
     map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
 
-    if (navigator.geolocation) {   
+    /* If the app has only one city, set it directly as the active one */
+    if(cities.length == 1){
+        $.mobile.hidePageLoadingMsg();
+        setFiltersByCityId(cities[0].id);        
+        $('input[id=city-filter' + cities[0].id +']').attr('checked','checked').checkboxradio("refresh");
+        centerToCity($('input[id=city-filter' + cities[0].id +']').val());        
+    }
+    else if (navigator.geolocation) {
         // Set timeout to 15 secs
         location_timeout = setTimeout("geolocFail()", 15000);
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -106,27 +113,30 @@ function showDefaultMap(){
 function showPosition(position) {
     
     clearTimeout(location_timeout);
-    $.mobile.hidePageLoadingMsg();  
-    myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    console.log("position.coords.latitude = ", position.coords.latitude);
-    console.log("position.coords.longitude = ", position.coords.longitude);
-
-    var p1 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-    var datasetFound = false;
-    for (i = 0; i < cities.length; i++) {
-        var city = cities[i];
-        var cityId = city.id;      
-        var p2 = new google.maps.LatLng(city.lat, city.lon);
-        var distance = calcDistance(p1, p2);
-        if (distance < 50) {
-            setFiltersByCityId(cityId);
-            datasetFound = true;
-            break;
+    $.mobile.hidePageLoadingMsg();
+    myLatlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
+        
+    var datasetFound = false;    
+    if (cities.length == 0){
+        alert("Missing application id. No data is loaded.");
+    }
+   
+    /* Check if any of the app cities is close to the user's current location
+     * and if found make it active */
+    else if (cities.length > 1) {
+        var p1 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        for (i = 0; i < cities.length; i++) {
+            var city = cities[i];
+            var cityId = city.id;
+            var p2 = new google.maps.LatLng(city.lat, city.lon);
+            var distance = calcDistance(p1, p2);            
+            if (distance < MAX_CITY_DISTANCE_KM) {
+                setFiltersByCityId(cityId);
+                datasetFound = true;
+                break;
+            }
         }
     }
-    if(cities.length == 0)
-        alert("Missing application id. No data is loaded.");
     else if (!datasetFound) {
         alert("There is no dataset available near your current position, please select a city on the right corner");
     }
@@ -184,7 +194,7 @@ function setFiltersByCityId(cityId) {
     for (i = 0; i < filters.length; i++) {
 
         var filter = filters[i];
-
+        filter.selected = false;
         //console.log("filter.cityId = ", filter.cityId);
         if (filter.cityId === currentCityId) {
             filter.isVisible = true;
@@ -199,6 +209,8 @@ function setFiltersByCityId(cityId) {
     }
     setFilters();
     addMarkers();
+    loadListPageData();
+    refreshListPageView();
 }
 
 /* Adds all the markers on the global map object */
@@ -344,7 +356,7 @@ function setInfoWindowPoi(poi)
             "<div id='poiBubble'><a href='#page3' onclick='overrideDetailClick(\"" + poi.id + "\"); return false;'>" +
             "<div class='title'>" +
             poi.title +
-            "</div>" + "<div class='address'>" + poi.location.address.value + "</div>\n" +
+            "</div>" + "<div class='address'>" + poi.location.address.value + "</div>\n" + category +
             "<span class='bubbleUpVoteWrapper'><img src='images/like-32.png'/><span id='bubbleUpVotes'></span></span><span  class='bubbleDownVoteWrapper'><img src='images/dislike-32.png'/><span id='bubbleDownVotes'></span></span>" +
             "</a></div><div id='bubbleClose'><a href='' onclick='return overrideBubbleCloseClick();'><img src='images/close.png' width='25' height='25' alt='close' /></a></div>";
 
@@ -557,50 +569,55 @@ $(document).ready(function() {
 
     /* Click handler for the 'near me' button */
     $('.pois-nearme').click(function() {
-        if (lastLoaded != 'nearme') {
-            lastLoaded = 'nearme';
-            /* Check if we can get geolocation from the browser */
-            if (!map)
-            {
-                initializeMap();
-            }
-            else
-            {
-                var mapOptions = {
-                    zoom: mapZoom + 10,
-                    center: myLatlng
-                };
-                map.setOptions(mapOptions);
-            }
-
-            google.maps.event.trigger(map, 'resize');
-            $.mobile.changePage("#page1", {transition: "none"});
-            $('.navbar > ul > li > a').removeClass('ui-btn-active');
-            $('.pois-nearme').addClass('ui-btn-active');
-        }
+//        if (lastLoaded != 'nearme') {
+//            lastLoaded = 'nearme';
+//            /* Check if we can get geolocation from the browser */
+//            if (!map)
+//            {
+//                initializeMap();
+//            }
+//            else
+//            {
+//               /* var mapOptions = {
+//                    zoom: mapZoom + 10,
+//                    center: myLatlng
+//                };
+//                map.setOptions(mapOptions);*/
+//                initializeMap();
+//            }
+//
+//            google.maps.event.trigger(map, 'resize');
+//            $.mobile.changePage("#page1", {transition: "none"});
+//            $('.navbar > ul > li > a').removeClass('ui-btn-active');
+//            $('.pois-nearme').addClass('ui-btn-active');
+//        }
+        
+        $('.navbar > ul > li > a').removeClass('ui-btn-active');
+        $('.pois-nearme').addClass('ui-btn-active');
+        $.mobile.changePage("#page1", {transition: "none"});
     });
 
 
     /* Click handler for the 'show all' button */
-    $('.pois-showall').click(function() {
-
-        $.mobile.changePage("#page1", {transition: "none"});
-        $('.navbar > ul > li > a').removeClass('ui-btn-active');
-        $('.pois-showall').addClass('ui-btn-active');
-
-        //if (lastLoaded != 'showall') {
-        lastLoaded = 'showall';
-        var myLocalLatlng = new google.maps.LatLng(mapLat, mapLon);
-        //define the map options
-        var mapOptions = {
-            center: myLocalLatlng,
-            zoom: mapZoom,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        map.setOptions(mapOptions);
-        //  }
-
-    });
+    /*  $('.pois-showall').click(function() {
+     
+     $.mobile.changePage("#page1", {transition: "none"});
+     $('.navbar > ul > li > a').removeClass('ui-btn-active');
+     $('.pois-showall').addClass('ui-btn-active');
+     
+     //if (lastLoaded != 'showall') {
+     lastLoaded = 'showall';
+     var myLocalLatlng = new google.maps.LatLng(mapLat, mapLon);
+     //define the map options
+     var mapOptions = {
+     center: myLocalLatlng,
+     zoom: mapZoom,
+     mapTypeId: google.maps.MapTypeId.ROADMAP
+     };
+     map.setOptions(mapOptions);
+     //  }
+     
+     });*/
 
 
     /* Click handler for the 'list' button */
@@ -656,29 +673,14 @@ $(document).ready(function() {
      *  and markers of one category will be added on the map.
      */
     $('input[type=radio][name=city]').live("change", function() {
-        //console.log("pressed");
-
-        //console.log("$(this).attr('id') = ", $(this).attr('id'));
+        
         var selectedCityId = $(this).attr('id').substring(11);
-        //console.log("selectedCityId = ", selectedCityId);
-
         setFiltersByCityId(selectedCityId);
 
         if ($('#city-filter').is(":visible")) {
             $('#city-filter').slideUp();
-            var val = $('input[name=city]:checked').val();
-            //console.log("val = ", val);
-
-            var coordsCity = val.split("/");
-            //console.log(coordsCity);
-            mapLat = coordsCity[0];
-            mapLon = coordsCity[1];
-
-            var center = new google.maps.LatLng(mapLat, mapLon);
-            // using global variable:
-            map.panTo(center);
-            map.setZoom(14);
-
+            var val = $('input[name=city]:checked').val();               
+            centerToCity(val);  
         } else {
             $('#city-filter').slideDown();
         }
@@ -921,7 +923,17 @@ function setCityFilters() {
 
     $('#city-filter > div > fieldset').html(filters_html);
     $('#city-filter > div > fieldset > input').checkboxradio({mini: true});
+}
 
+/*  Centers the map to the given coordinates
+ *  coordinatesString: string of the form "lat/long"
+ */
+function centerToCity(coordinatesString) {   
+    var coordsCity = coordinatesString.split("/");
+    mapLat = coordsCity[0];
+    mapLon = coordsCity[1];
+    map.panTo(new google.maps.LatLng(mapLat, mapLon));
+    map.setZoom(14);
 }
 
 
