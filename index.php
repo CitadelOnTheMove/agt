@@ -106,8 +106,8 @@ $colors = printColors($appID);
                 <!--a href="#info" data-rel="dialog" data-icon="info" data-iconpos="notext" data-theme="b" title="Info" class="ui-btn-right">&nbsp;</a-->
                 <div data-role="navbar" class="navbar">
                     <ul>
-                        <li><a href="#" class="pois-nearme ui-btn-active" data-theme="a">Near me</a></li>
-                        <li><a href="#" class="pois-showall" data-theme="a">Show all</a></li>
+                        <li><a href="#" class="pois-nearme ui-btn-active" data-theme="a">Map</a></li>
+                        <!--li><a href="#" class="pois-showall" data-theme="a">Show all</a></li-->
                         <li><a href="#page2" class="pois-list" data-theme="a">List</a></li>
                     </ul>
                 </div><!-- /navbar -->
@@ -161,8 +161,8 @@ $colors = printColors($appID);
                 <a href="" data-icon="back" data-iconpos="notext" data-theme="a" title="Back" data-rel="back" class="ui-btn-right">&nbsp;</a>
                 <div data-role="navbar" class="navbar">
                     <ul>
-                        <li><a href="#" class="pois-nearme" data-theme="a">Near me</a></li>
-                        <li><a href="#" class="pois-showall" data-theme="a">Show all</a></li>
+                        <li><a href="#" class="pois-nearme" data-theme="a">Map</a></li>
+                        <!--li><a href="#" class="pois-showall" data-theme="a">Show all</a></li-->
                         <li><a href="#page2" class="pois-list ui-btn-active" data-theme="a">List</a></li>
                     </ul>
                 </div><!-- /navbar -->
@@ -186,8 +186,8 @@ $colors = printColors($appID);
                 <a href="" data-icon="back" data-iconpos="notext" data-theme="a" title="Back" data-rel="back" class="ui-btn-right">&nbsp;</a>
                 <div data-role="navbar" class="navbar">
                     <ul>
-                        <li><a href="#" class="pois-nearme" data-theme="a">Near me</a></li>
-                        <li><a href="#" class="pois-showall" data-theme="a">Show all</a></li>
+                        <li><a href="#" class="pois-nearme" data-theme="a">Map</a></li>
+                        <!--li><a href="#" class="pois-showall" data-theme="a">Show all</a></li-->
                         <li><a href="#page2" class="pois-list" data-theme="a">List</a></li>
                     </ul>
                 </div><!-- /navbar --> 
