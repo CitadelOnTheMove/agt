@@ -20,7 +20,7 @@ function globalInit() {
         hideAddressBar();
         setTimeout(function() {
             fixMapHeight();
-            initializeMap();         
+            initializeMap();
         }, 500);
         loadListPageData();
         refreshListPageView();
@@ -76,7 +76,7 @@ function initializeMap() {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     //instantiate the map wih the options and put it in the div holder, "map-canvas"
-    map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
     /* If the app has only one city, set it directly as the active one */
     if(cities.length == 1){
@@ -89,29 +89,29 @@ function initializeMap() {
         // Set timeout to 15 secs
         location_timeout = setTimeout("geolocFail()", 15000);
         navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {      
-       showDefaultMap();
+    } else {
+        showDefaultMap();
     }
 }
 
-function geolocFail(){   
-   showDefaultMap();
+function geolocFail() {
+    showDefaultMap();
 }
 
-function showDefaultMap(){
-     $.mobile.hidePageLoadingMsg();
-        myLatlng = new google.maps.LatLng(mapLat, mapLon);
-        mapOptions = {
-            center: myLatlng,
-            zoom: mapZoom
-        };  
-        map.setOptions(mapOptions);
-        map.setCenter(myLatlng);
-        alert("Geolocation not available, please select a city from the upper right corner");
+function showDefaultMap() {
+    $.mobile.hidePageLoadingMsg();
+    myLatlng = new google.maps.LatLng(mapLat, mapLon);
+    mapOptions = {
+        center: myLatlng,
+        zoom: mapZoom
+    };
+    map.setOptions(mapOptions);
+    map.setCenter(myLatlng);
+    alert("Geolocation not available, please select a city from the upper right corner");
 }
 
 function showPosition(position) {
-    
+
     clearTimeout(location_timeout);
     $.mobile.hidePageLoadingMsg();
     myLatlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
@@ -130,7 +130,7 @@ function showPosition(position) {
             var cityId = city.id;
             var p2 = new google.maps.LatLng(city.lat, city.lon);
             var distance = calcDistance(p1, p2);            
-            if (distance < MAX_CITY_DISTANCE_KM) {
+            if (distance < maxCityDistance) {
                 setFiltersByCityId(cityId);
                 datasetFound = true;
                 break;
@@ -152,7 +152,7 @@ function showPosition(position) {
     };
     map.setOptions(mapOptions);
     map.setCenter(myLatlng);
-    addMarkers();    
+    addMarkers();
 }
 
 function showError(error) {
@@ -172,7 +172,7 @@ function showError(error) {
         case error.UNKNOWN_ERROR:
             alert("An unknown error occurred.");
             break;
-    }    
+    }
     showDefaultMap();
 }
 
@@ -201,8 +201,8 @@ function setFiltersByCityId(cityId) {
             if (!selected) {
                 filter.selected = true;
                 selected = true;
-                             }
-          
+            }
+
         }
         else
             filter.isVisible = false;
@@ -242,12 +242,8 @@ function addMarkers()
         arrowSize: 10,
         borderWidth: 2,
         maxWidth: 300,
-        maxHeight: 400,
-        minHeight: 90,
         borderColor: '#3A3A3A',
         disableAutoPan: false,
-        arrowPosition: 30,
-        arrowStyle: 2,
         hideCloseButton: true
     });
 
@@ -258,7 +254,7 @@ function addMarkers()
              *  The first two are lat and lon
              */
             var coords = poi.location.point.pos.posList.split(" ");
-            var current_markerpos = new google.maps.LatLng(coords[0], coords[1]);
+            var current_markerpos = new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
             var marker_image = getFavouriteValue(poi.id) ? "images/star.png" : getMarkerImage(poi.category[0]);
             var current_marker = new google.maps.Marker({
                 position: current_markerpos,
@@ -388,7 +384,7 @@ function setDetailPagePoi(poi)
         contentTemplate += "<li class='image'><img src='" + image + "' alt='Event image' /></li>";
 
     /* Print standard poi details */
-    contentTemplate += "<li><h1>" + poi.title + "</h1></li>";
+    contentTemplate += "<li><h1>" + poi.title + "</h1></li>"; 
     if (poi.description) {
         contentTemplate += "<li>" + poi.description + "</li>";
     }
@@ -421,8 +417,8 @@ function setListPagePois()
     var contentTemplate = "";
 
     $.each(pois, function(i, poi) {
-        if (isFilterSelected(poi.category)) {
 
+        if (isFilterSelected(poi.category)) {
             var category = "";
             if (poi.category) {
                 category = "<p>" +
@@ -443,6 +439,7 @@ function setListPagePois()
                     "</a>" +
                     "</li>";
         }
+
     });
     return contentTemplate;
 }
@@ -878,7 +875,6 @@ function onError(data, status)
 
 function onVoteFailure(data, status)
 {
-   // console.log('vote failed', data, status);
     alert('There was a problem submitting your vote, please try again later.');
 }
 
@@ -935,7 +931,6 @@ function centerToCity(coordinatesString) {
     map.panTo(new google.maps.LatLng(mapLat, mapLon));
     map.setZoom(14);
 }
-
 
 /* Refreshes the map when the mobile device
  *  orientation changes

@@ -27,37 +27,10 @@ $username = $user['username'];
         <script src="js/spectrum.js"></script> 
 
         <script lang="text/javascript">
-
-            $(".full").spectrum({
-                color: "#ECC",
-                showInput: true,
-                className: "full-spectrum",
-                showInitial: true,
-                showPalette: true,
-                showSelectionPalette: true,
-                maxPaletteSize: 10,
-                preferredFormat: "hex",
-                move: function(color) {
-
-                },
-                show: function() {
-
-                },
-                beforeShow: function() {
-
-                },
-                hide: function() {
-
-                },
-                change: function() {
-
-                }
-            });
-
-            var counter = 0;
-            var counterMax = 0;
-
             $(document).ready(function() {
+
+                var counter = 0;
+                var counterMax = 0;
 
                 $('.ui-checkbox a').bind("click", function(event, data) {
                     event.stopPropagation();
@@ -166,6 +139,7 @@ $username = $user['username'];
                             $darkColorErr = "Dark Color is required";
                             $error = true;
                         }
+                       
 
                         if (!$error) {
                             if ((isset($_POST["cityIds"])) && (isset($_POST["name"])) &&
@@ -198,9 +172,9 @@ $username = $user['username'];
                     }
                     ?>
 
-                    <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error ) { ?>
-                        <form id="createNewAppForm"  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                             <p><?php echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.' ?></p>
+                    <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
+                        <form id="createNewAppForm" data-ajax="false" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                            <p><?php echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.' ?></p>
                             <p><span class="error">* required field.</span></p>                        
 
                             <legend><b>Select cities:</b> <span class="error">* <?php echo $cityIdsErr; ?></span></legend><br/>
@@ -226,9 +200,8 @@ $username = $user['username'];
                             </div>
 
                             <br>
-                <a href="/<?php echo BASE_DIR?>importDatasets.php">Click here if you want to import a new dataset</a>
+                            <a rel="external" href="/<?php echo BASE_DIR ?>importDatasets.php">Click here if you want to import a new dataset</a>
                             <br><br>
-
 
                             <legend><b>Select the basic color of your app:</b><span class="error">* <?php echo $colorErr; ?></span></legend><br/>
                             <input type="color" class="full" name="color" required>
@@ -247,7 +220,8 @@ $username = $user['username'];
                             <input type="submit" name="submit" value="Create the app">
                         </form>
 
-                    <?php } // end if 
+                    <?php
+                    } // end if 
                     Database::disconnect();
                     ?>
                 </div>

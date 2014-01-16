@@ -282,8 +282,8 @@ $colors = printColors($appID);
             /* The coordinates of the center of the map */             //Issy
             var mapLat = <?php echo MAP_CENTER_LATITUDE; ?>;
             var mapLon = <?php echo MAP_CENTER_LONGITUDE; ?>;
-
             var mapZoom = <?php echo MAP_ZOOM; ?>;
+            var maxCityDistance = <?php echo MAX_CITY_DISTANCE_KM; ?>;
 
             /* The url of the dataset */
 
