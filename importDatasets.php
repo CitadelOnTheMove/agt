@@ -17,15 +17,74 @@ $userDatasetUploadLimitReached = false;
         <!-- CSS files -->    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />    
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
-        <link rel="stylesheet" href="css/my.css" />         
+        <link rel="stylesheet" href="css/my.css" />   
+        <!-- Google Maps JavaScript API v3 --> 
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
         <!-- jQuery Library --> 
         <script src="js/jquery-1.8.2.min.js"></script>
         <!-- jQuery Mobile Library -->
         <script src="js/jquery.mobile-1.2.0.min.js"></script>  
+
+        <script>
+
+            function validateForm(form)
+            {
+                if ($('input[name=city]:checked').val() === "0")
+                {
+                    getCoordinates(form);
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            function getCoordinates(form) {
+                if ($("#cityName").val() !== "" && $("#country").val() !== "") {
+                    $.mobile.showPageLoadingMsg();
+                    var cityName = "'" + $("#cityName").val() + "," + $("#country").val() + "'";
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({'address': cityName}, function(results,
+                            status) {
+                        if (status === google.maps.GeocoderStatus.OK) {                            
+                            $("#lat").val(results[0].geometry.location.lat());
+                            $("#lon").val(results[0].geometry.location.lng());
+                            form.submit();
+                        } else {
+                            alert("This city could not be found." + status);                            
+                            $.mobile.hidePageLoadingMsg();
+                            return false;
+                        }
+                    });
+
+
+                }
+                 else if ($("#country").val() === "") {
+                    alert("Please give a country");
+                }
+                else if ($("#cityName").val() === "") {
+                    alert("Please give a city");
+                }
+                return false;
+            }
+
+            $(document).ready(function() {
+                $('input[type=radio][name=city]').change(function() {
+                    if ($(this).attr('id') === "city0") {
+                        $('#addNewCity').fadeIn();
+                    }
+                    else
+                        $('#addNewCity').fadeOut();
+                });
+            });
+        </script>
+
         <?php
         include_once 'Config.php';
         include_once CLASSES . 'Database.class.php';
         include_once CLASSES . 'App.class.php';
+        include_once CLASSES . 'City.class.php';
         include_once CLASSES . 'Dataset.class.php';
 
         Database::connect();
@@ -42,7 +101,8 @@ $userDatasetUploadLimitReached = false;
                     $("input[type='text']").textinput('disable');
                     $("input[type='url']").textinput('disable');
                     $("input[type='radio']").checkboxradio('disable');
-                });</script>
+                });
+            </script>
             <?php
         }
         ?>
@@ -57,15 +117,25 @@ $userDatasetUploadLimitReached = false;
                     <?php
                     // define variables and set to empty values
                     $datasetTypeErr = $datasetUrlErr = $datasetNameErr = $datasetFileErr = $cityErr = "";
-                    $newUid = $datasetName = $city = $datasetUrl = $datasetType = $datasetFile = "";
+                    $latitude = $longitude = $cityName = $newUid = $datasetName = $city = $datasetUrl = $datasetType = $datasetFile = "";
 
                     $error = false;
+                    $creatingNewCity = false;
+
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                        if (empty($_POST["city"])) {
+                        if (empty($_POST["city"]) && empty($_POST["newCity"])) {
                             $cityErr = "City is required";
                             $error = true;
-                        } else {
+                        } else if (!empty($_POST["city"]) && !empty($_POST["newCity"])) {
+                            $cityErr = "Only one city must be selected";
+                            $error = true;
+                        } else if (!empty($_POST["city"])) {
                             $city = $_POST["city"];
+                        } else {
+                            $creatingNewCity = true;
+                            $cityName = clear_input($_POST["newCity"]);
+                            $latitude = $_POST["latitude"];
+                            $longitude = $_POST["longitude"];
                         }
 
                         if (empty($_POST["datasetName"])) {
@@ -124,7 +194,7 @@ $userDatasetUploadLimitReached = false;
                             echo '<br/><a data-ajax="false" class="ui-link" href="appForm.php" >Back to the app creation form</a>';
                         }
                         ?>
-                        <form id="importNewDataset" data-ajax="false"
+                        <form id="importNewDataset" data-ajax="false" onsubmit="return validateForm(this);"
                         <?php
                         if ($userDatasetUploadLimitReached) {
                             echo 'style="display:none;"';
@@ -140,7 +210,7 @@ $userDatasetUploadLimitReached = false;
                             <p><span class="error">* required field.</span></p>
 
                             <b>Dataset Name:</b> <span class="error">* <?php echo $datasetNameErr; ?></span><br/><br/>
-                            <input type="text" name="datasetName" required>
+                            <input type="text" id="dat" name="datasetName" required>
 
                             <br><br>
 
@@ -161,8 +231,11 @@ $userDatasetUploadLimitReached = false;
                             <b>Dataset Type:</b> (e.g. Pois, Parking, Events, etc) <span class="error">* <?php echo $datasetTypeErr; ?></span><br/><br/>
                             <input type="text" name="datasetType" required>
 
-                                   <br>
-                                   
+
+                            <br><br>
+
+                            <!--div style="border:1px solid #CCC;padding:0 20px 20px;border-radius:10px;">
+                                <h3>You must either select a city or add a new one </h3-->
                             <b>Select a city:</b> <span class="error">* <?php echo $cityErr; ?></span><br/><br/>
                             <div id="datasetsCheckboxes" data-role=controlgroup>                       
                                 <?php
@@ -172,20 +245,38 @@ $userDatasetUploadLimitReached = false;
                                 <label for="city' . $row['id'] . '">' . $row['name'] . '</label>';
                                 }
                                 ?>
+                                <input type="radio" name="city" id="city0" value="0">
+                                <label for="city0">Add a new city</label>
                             </div>
 
                             <br><br>
+
+                            <div id="addNewCity" style="display:none;">   
+                                <b>Country:</b><span class="error">*</span>
+                                <input type="text" id="country" name="country" value="">
+                                <b>City:</b><span class="error">*</span>
+                                <input type="text" id="cityName" name="newCity" value="">
+
+                                <input type="text" style="display:none;" id="lat" name="latitude" value="">
+                                <input type="text" style="display:none;" id="lon" name="longitude" value="">
+                            </div> 
+
+                            <!--/div-->      
+                            <br><br>
+
                             <input type="submit" name="import" value="Import">
                             <br><br>
-                        <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a>'; ?>        
+                            <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a>'; ?>        
                         </form>
-                    <?php } // end if ?>
+                    <?php } // end if    ?>
 
                     <?php
-                    if (isset($_POST['import'])) {
-                        if (!$error && ($userDatasetsCount < MAX_DATASETS_PER_USER)) {
-
-                            Dataset::saveNewDataset($datasetName, $datasetUrl, $datasetType, $city, $userId);
+                    if (isset($_POST['import']) || $_SERVER["REQUEST_METHOD"] == "POST") {
+                        if (!$error && ($userDatasetsCount < MAX_DATASETS_PER_USER)) {                        
+                            if ($creatingNewCity) {
+                                $city = City::saveNewCity($cityName, $latitude, $longitude);
+                            }
+                            Dataset::saveNewDataset($datasetName, $datasetUrl, $datasetType, $city, $userId, $latitude, $longitude);
                             Database::commit();
                             echo '<div class="success">Your dataset was imported successfully!';
                             echo '<br><br>';
