@@ -87,7 +87,7 @@ header.ui-header, footer.ui-footer {
     z-index:99;
     padding-top:85px;
     padding-bottom:60px;
-    height:160px;
+    height:145px;
 }
 
 #city-filter {
@@ -95,11 +95,11 @@ header.ui-header, footer.ui-footer {
     display:none;
     position: absolute;
     width:100%;
-    overflow:hidden;
+    overflow:auto;
     z-index:99;
     padding-top:85px;
     padding-bottom:22px;
-    height:82px;
+    height:150px;
 }
 
 #map-filter div.filters-list, #city-filter div.filters-list {
@@ -107,6 +107,7 @@ header.ui-header, footer.ui-footer {
     overflow:auto;
     height:160px;
 }
+
 #map-filter div.filters-list fieldset, #city-filter div.filters-list fieldset  {
     padding-left: 5%;
     width: 90%;
