@@ -30,6 +30,7 @@ function globalInit() {
 
     //Enable scroll for older versions of android
     touchScroll('mapFilterList');
+    touchScroll('cityFilterList');
 }
 
 /* Returns an array of poi objects.

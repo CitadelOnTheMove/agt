@@ -126,7 +126,7 @@ $colors = printColors($appID);
             </div><!--map-filter-->
 
             <div data-role="content" id="city-filter">
-                <div class="filters-list" >
+                <div class="filters-list" id="cityFilterList">
                     <fieldset data-role="controlgroup" data-mini="true" data-theme="a">
 
                     </fieldset>
