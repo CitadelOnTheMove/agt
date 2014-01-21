@@ -851,3 +851,20 @@ header.ui-header, footer.ui-footer {
 }
 
 .dataset_info{display:inline-block;color:#858585;font-size:12px;}
+
+.ui-icon-logout {
+	background-image: url("images/logout.png");        
+}
+.ui-icon-documents {
+	background-image: url("images/documents.png");        
+}
+
+.beta{
+    background-image: url("images/beta.png"); 
+    display:block;
+    width:33px;
+    height:14px;
+    position:absolute;
+    top: 28px;
+    left: 55%;
+}

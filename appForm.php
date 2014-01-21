@@ -112,7 +112,9 @@ else // use built-in login functionality
         <div data-role="page">
             <div data-role="header">
                 <h1>Create your app</h1>
-                <a href="logout.php" id="logout" data-icon="bars" data-iconpos="notext" data-theme="b" title="Log out" class="ui-btn-right">&nbsp;</a> 
+                <div class="beta"></div>
+                <a href="http://www.citadelonthemove.eu/en-us/innovate/templateapps.aspx" id="documentsLink" data-icon="documents" data-iconpos="left" data-theme="c" title="Documentation" rel="external" class="ui-btn-left">Resources</a> 
+                <a href="logout.php" id="logoutLink" data-icon="logout" data-iconpos="left" data-theme="c" title="Log out" class="ui-btn-right">Log out</a> 
             </div>
 
             <div data-role="content"> 
@@ -191,7 +193,7 @@ else // use built-in login functionality
                           <p>
                             <?php if(!$general->logged_in()){?>
                           <div class="warning">
-                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before creating an app!</a>
+                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
                             </div>
                                 <?php } else { 
                             echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.';
@@ -243,7 +245,7 @@ else // use built-in login functionality
                             
                             <br/><br/>
                             <?php if(!$general->logged_in()){?>
-                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before creating an app!</a>
+                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
                             <?php } 
                              else { ?>
                               <input type="submit" name="submit" value="Create the app">
