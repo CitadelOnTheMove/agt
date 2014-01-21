@@ -5,11 +5,43 @@ $userLoggedIn = false;
 // When a user register's sucessfully, he is redirected to the login page to log in
 // If this is the case, a "Registration complete" message is displayed to the user.
 $fromRegistraton = false;
-
+$loggedUser = '';
 
 if (isset($_GET['success']) && empty($_GET['success'])) {
     $fromRegistraton = true;
 }
+
+if (PROXYUSE) {
+  $aContext = array(
+    'http' => array(
+      'proxy' => 'tcp://' . PROXYNAME . ':' . PROXYPORT,
+      'request_fulluri' => true,
+    ),
+  );
+  $cxContext = stream_context_create($aContext);
+}
+else
+  $cxContext = null;
+/* If user logs in from citadel website, the link here(login page) will contain
+ * his details
+ */
+if (isset($_GET['userName']) && !empty($_GET['userName'])&& isset($_GET['userID']) && !empty($_GET['userID'])) {
+  $isLoggedin = file_get_contents( CHECKLOGINSERVICE. "?userName=".$_GET['userName'], False, $cxContext);
+   
+  if($isLoggedin == "true")
+  {
+    $_SESSION['id'] = $_GET['userID']; // The user's id is now set into the user's session in the form of $_SESSION['id']
+    $_SESSION['username'] = $_GET['userName'];
+    header('Location: appForm.php');
+    exit();
+  }
+  else // user is not in website, go back to the form without logging in
+  {
+    header('Location: appForm.php');
+    exit();
+  }
+}
+
 
 // Checking if the user is already logged in
 if (isset($_SESSION['id'])) {

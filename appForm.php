@@ -1,10 +1,22 @@
 <?php
 include_once 'Config.php';
 require CLASSES . 'init.php';
-$general->logged_out_protect();
-$user = $users->userdata($_SESSION['id']);
-$userId = $user['id'];
-$username = $user['username'];
+//$general->logged_out_protect();
+
+/* Read user info from session in case login comes from
+ * citadel website
+ */
+if(isset($_SESSION['username']))
+{ 
+  $userId = $_SESSION['id'];
+  $username = $_SESSION['username'];
+}
+else // use built-in login functionality
+{
+  $user = $users->userdata($_SESSION['id']);
+  $userId = $user['id'];
+  $username = $user['username'];
+}
 ?>
 
 <!DOCTYPE HTML>
@@ -100,6 +112,7 @@ $username = $user['username'];
         <div data-role="page">
             <div data-role="header">
                 <h1>Create your app</h1>
+                <a href="logout.php" id="logout" data-icon="bars" data-iconpos="notext" data-theme="b" title="Log out" class="ui-btn-right">&nbsp;</a> 
             </div>
 
             <div data-role="content"> 
@@ -174,7 +187,19 @@ $username = $user['username'];
 
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
                         <form id="createNewAppForm" data-ajax="false" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                            <p><?php echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.' ?></p>
+                            
+                          <p>
+                            <?php if(!$general->logged_in()){?>
+                          <div class="warning">
+                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before creating an app!</a>
+                            </div>
+                                <?php } else { 
+                            echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.';
+                             echo '<a style="float:right" href="logout.php" data-ajax="false">log out</a>';
+                                } 
+                            ?>
+                          </p>                            
+                            
                             <p><span class="error">* required field.</span></p>                        
 
                             <legend><b>Select cities:</b> <span class="error">* <?php echo $cityIdsErr; ?></span></legend><br/>
@@ -214,10 +239,15 @@ $username = $user['username'];
                             <br><br>
 
                             <legend><b>Application Name:</b> <span class="error">* <?php echo $nameErr; ?></span></legend><br/>
-                            <input type="text" name="name" required>
-                            <br><br>
-                            <br><br>
-                            <input type="submit" name="submit" value="Create the app">
+                            <input type="text" name="name" required>                        
+                            
+                            <br/><br/>
+                            <?php if(!$general->logged_in()){?>
+                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before creating an app!</a>
+                            <?php } 
+                             else { ?>
+                              <input type="submit" name="submit" value="Create the app">
+                            <?php }?>  
                         </form>
 
                     <?php

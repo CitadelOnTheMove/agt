@@ -1,10 +1,24 @@
 <?php
 include_once 'Config.php';
 require CLASSES . 'init.php';
-$general->logged_out_protect();
-$user = $users->userdata($_SESSION['id']);
-$username = $user['username'];
-$userId = $user['id'];
+//$general->logged_out_protect();
+
+
+/* Read user info from session in case login comes from
+ * citadel website
+ */
+if(isset($_SESSION['username']))
+{ 
+  $userId = $_SESSION['id'];
+  $username = $_SESSION['username'];
+}
+else // use built-in login functionality
+{
+  $user = $users->userdata($_SESSION['id']);
+  $userId = $user['id'];
+  $username = $user['username'];
+}
+
 $userDatasetUploadLimitReached = false;
 ?>
 <!DOCTYPE HTML>
@@ -193,19 +207,23 @@ $userDatasetUploadLimitReached = false;
                             echo '<p>Hi <b>' . $username . '</b>! You have uploaded <b>' . $userDatasetsCount . '</b> dataset(s) so far. You are not allowed to upload any more datasets.</p>';
                             echo '<br/><a data-ajax="false" class="ui-link" href="appForm.php" >Back to the app creation form</a>';
                         }
+                        else {
                         ?>
-                        <form id="importNewDataset" data-ajax="false" onsubmit="return validateForm(this);"
-                        <?php
-                        if ($userDatasetUploadLimitReached) {
-                            echo 'style="display:none;"';
-                        }
-                        ?>
-                              method="post" action="importDatasets.php" enctype='multipart/form-data'>
-                            <p>
-                                <?php
-                                echo 'Hi <b>' . $username . '</b>! You have uploaded <b>' . $userDatasetsCount . '</b> dataset(s) so far. You are allowed to upload a maximum of <b>' . MAX_DATASETS_PER_USER . '</b> datasets.';
-                                ?>
-                            </p>
+                        <form id="importNewDataset" data-ajax="false" onsubmit="return validateForm(this);"                       
+                              method="post" action="importDatasets.php" enctype='multipart/form-data'>                         
+                          <p>
+                            <?php if(!$general->logged_in()){?>
+                            <div class="warning">
+                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before importing a dataset!</a>
+                            </div>
+                                <?php } else { 
+                                  echo 'Hi <b>' . $username . '</b>! You have uploaded <b>' . 
+                                       $userDatasetsCount . '</b> dataset(s) so far. You are allowed to upload a maximum of <b>' . 
+                                      MAX_DATASETS_PER_USER . '</b> datasets.';   
+                                  
+                                  echo '<a style="float:right" href="logout.php" data-ajax="false">log out</a>';
+                                } ?>
+                          </p>  
 
                             <p><span class="error">* required field.</span></p>
 
@@ -261,14 +279,20 @@ $userDatasetUploadLimitReached = false;
                                 <input type="text" style="display:none;" id="lon" name="longitude" value="">
                             </div> 
 
-                            <!--/div-->      
-                            <br><br>
-
-                            <input type="submit" name="import" value="Import">
+                            <!--/div--> 
+                            <?php if(!$general->logged_in()){?>
+                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before importing a dataset!</a>
+                            <?php } 
+                             else { ?>
+                              <input type="submit" name="import" value="Import">
+                            <?php }?>  
+                            
                             <br><br>
                             <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a>'; ?>        
                         </form>
-                    <?php } // end if    ?>
+                    <?php 
+                        } // end if  $userDatasetUploadLimitReached
+                      } // end if ($_SERVER["REQUEST_METHOD"] != "POST" || $error)  ?>
 
                     <?php
                     if (isset($_POST['import']) || $_SERVER["REQUEST_METHOD"] == "POST") {
