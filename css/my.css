@@ -823,6 +823,16 @@ header.ui-header, footer.ui-footer {
     text-shadow:none;
 }
 
+.warning {
+    background: url('images/exclamationyellow.png') no-repeat #EAD17E;
+    border: 2px solid #F4C016;
+    color:#F4C016;
+    padding:15px;
+    border-radius: 5px;
+    text-shadow:none;
+    padding-left:70px;
+}
+
 .failure {
     background-color:#FCD1D7;
     border: 2px solid #FF0000;
