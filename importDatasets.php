@@ -214,7 +214,7 @@ $userDatasetUploadLimitReached = false;
                           <p>
                             <?php if(!$general->logged_in()){?>
                             <div class="warning">
-                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before importing a dataset!</a>
+                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before importing a dataset!</a>
                             </div>
                                 <?php } else { 
                                   echo 'Hi <b>' . $username . '</b>! You have uploaded <b>' . 
@@ -281,7 +281,7 @@ $userDatasetUploadLimitReached = false;
 
                             <!--/div--> 
                             <?php if(!$general->logged_in()){?>
-                              <a target="_blank" href="http://atc-dnn.atc.gr/citadel-eu/Login/tabid/91/language/en-US/Default.aspx" relation="external">You have to login before importing a dataset!</a>
+                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before importing a dataset!</a>
                             <?php } 
                              else { ?>
                               <input type="submit" name="import" value="Import">

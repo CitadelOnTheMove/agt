@@ -19,6 +19,7 @@ define("PROXYPORT", "8080");
 
 // The service running on the main Citadel website
 define("CHECKLOGINSERVICE", "http://www.citadelonthemove.eu/...");
+define("CITADELLOGINLINK","http://www.citadelonthemove.eu/...");
 // database
 define("DB_USERNAME", "root");
 define("DB_PASSWORD", "");
