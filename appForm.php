@@ -231,13 +231,13 @@ else // use built-in login functionality
                             <br><br>
 
                             <legend><b>Select the basic color of your app:</b><span class="error">* <?php echo $colorErr; ?></span></legend><br/>
-                            <input type="color" class="full" name="color" required>
+                            <input type="color" class="full" name="color">
 
                             <br><br>
 
                             <legend><b>Select the secondary color (active/hovered buttons):</b><span class="error">* <?php echo $darkColorErr; ?></span></legend><br/>
 
-                            <input type="color" class="full" name="darkColor" required>
+                            <input type="color" class="full" name="darkColor">
                             <br><br>
 
                             <legend><b>Application Name:</b> <span class="error">* <?php echo $nameErr; ?></span></legend><br/>
