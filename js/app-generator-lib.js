@@ -353,7 +353,14 @@ function setInfoWindowPoi(poi)
             "<div id='poiBubble'><a href='#page3' onclick='overrideDetailClick(\"" + poi.id + "\"); return false;'>" +
             "<div class='title'>" +
             poi.title +
-            "</div>" + "<div class='address'>" + poi.location.address.value + "</div>\n" + category +
+            "</div>";
+            
+    if (poi.location.address.value) {
+        contentTemplate += "<div class='address'>" + poi.location.address.value + "</div>";
+    }        
+            
+            
+    contentTemplate += "\n" + category +
             "<span class='bubbleUpVoteWrapper'><img src='images/like-32.png'/><span id='bubbleUpVotes'></span></span><span  class='bubbleDownVoteWrapper'><img src='images/dislike-32.png'/><span id='bubbleDownVotes'></span></span>" +
             "</a></div><div id='bubbleClose'><a href='' onclick='return overrideBubbleCloseClick();'><img src='images/close.png' width='25' height='25' alt='close' /></a></div>";
 
