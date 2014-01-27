@@ -26,12 +26,11 @@ class PoiLocationAddress {
 	 * @return PoiLocationAddress|boolean a PoiLocationAddress instance or false on failure
 	 */
 	public static function createFromArray($assocArray) {
-		if(isset($assocArray['value']) && isset($assocArray['postal'])) 
-    {
+		
       $city =  isset($assocArray['city'])?$assocArray['city']:"undefined";
-			return new PoiLocationAddress($assocArray['value'], $assocArray['postal'], $city);
-    }
-		return false;
+      $address = isset($assocArray['value'])?$assocArray['value']:"undefined";
+      $postal = isset($assocArray['postal'])?$assocArray['postal']:"undefined";
+			return new PoiLocationAddress($address, $postal, $city);    	
 	}
 
 }
