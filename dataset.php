@@ -46,8 +46,8 @@ if (isset($_GET['uid'])) {
                 $cxContext = null;
             foreach (Database::$dbh->query($sql) as $row) {
                 $type = $row['type'];
-
-                $json = file_get_contents($row['url'], False, $cxContext);
+                // handle datasets with empty spaces in their filename
+                $json = file_get_contents(str_replace(" ", "%20", $row['url']), False, $cxContext);
                 $assocArray = json_decode($json, true);
                 $poisDataset = ResponseDataset::createFromArray(DatasetTypes::Poi, $assocArray);
 
