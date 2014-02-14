@@ -11,10 +11,10 @@ include_once CLASSES . 'AppInfo.class.php';
 $dashbord = array();
 Database::connect();
 
-if (isset($_GET['username'])) {
-    $username = $_GET['username'];
+if (isset($_GET['userId'])) {
+    $userId = $_GET['userId'];
     $sql = "SELECT apps.uid, apps.name, apps.created, users.username from apps 
-        LEFT JOIN users On users.id = apps.userId WHERE users.username = :username";
+         LEFT JOIN users On users.id = apps.userId WHERE apps.userId = :userId";
 } else {
     $username = "";
     $sql = "SELECT apps.uid, apps.name, apps.created, users.username from apps 
@@ -22,7 +22,7 @@ if (isset($_GET['username'])) {
 }
 
 try {
-    $sqlParams[":username"] = $username;
+    $sqlParams[":userId"] = $userId;
     $sth = Database::$dbh->prepare($sql);
     $sth->execute($sqlParams);
     $results = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -32,10 +32,25 @@ try {
         $appName = $row['name'];
         $created = $row['created'];
         $username = $row['username'];
+        
+        $appCitiesSQL = "SELECT cities.name FROM apps_settings 
+             JOIN cities on apps_settings.value = cities.id WHERE apps_settings.app_uid =:appId".
+            " AND apps_settings_definition_id = ".AppSettingsDefinitions::CITY;
+        
+        $sqlParams2[":appId"] = $appId;
+        $sth2 = Database::$dbh->prepare($appCitiesSQL);
+        $sth2->execute($sqlParams2);
+        $results2 = $sth2->fetchAll(PDO::FETCH_ASSOC);
+    
+        $cities = array();
+        foreach ($results2 as $row) {
+          array_push($cities,$row['name']);
+        }
 
-    $appUrl = SERVERNAME . BASE_DIR . "index.php" . '?uid=' . $appId;
+        $appUrl = SERVERNAME . BASE_DIR . "index.php" . '?uid=' . $appId;
 
-        $dashbord[] = new AppInfo($appUrl, $appName, $created, $username);
+        $dashbord[] = new AppInfo($appUrl, $appName, $created, $username,$cities);       
+        
     }
 } catch (Exception $e) {
     if (DEBUG)
@@ -45,7 +60,8 @@ try {
 }
 Database::disconnect();
 
-Util::printJsonObj($dashbord);
+$arr = array('apps' => $dashbord);
+Util::printJsonObj($arr);
 ?>
 
 
