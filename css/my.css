@@ -532,6 +532,13 @@ header.ui-header, footer.ui-footer {
     position: absolute;
     left:0;
 }
+
+.seeOnMap {
+    cursor: pointer !important;
+    width: 48px !important;
+    height: 48px !important;
+}
+
 /* Load pin images as data uris */
 
 /*set pin style besides filters*/

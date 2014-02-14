@@ -2,6 +2,7 @@
 var newMarker = null;
 var point = null;
 var geocoder;
+var currentPoi;
 var currentPoiId;
 var myLatlng;
 // timeout for geolocation failure
@@ -48,18 +49,19 @@ function getPoisFromDataset(resultCallback)
             var k = 0;
             filters = data.filters;
             $.each(data.applicationData, function(i, datasetObject) {
-               /* meta['id'] = datasetObject.dataset.id;
-                meta['updated'] = datasetObject.dataset.updated;
-                meta['created'] = datasetObject.dataset.created;
-                meta['lang'] = datasetObject.dataset.lang;
-                meta['author_id'] = datasetObject.dataset.author.id;
-                meta['author_value'] = datasetObject.dataset.author.value;*/
+                /* meta['id'] = datasetObject.dataset.id;
+                 meta['updated'] = datasetObject.dataset.updated;
+                 meta['created'] = datasetObject.dataset.created;
+                 meta['lang'] = datasetObject.dataset.lang;
+                 meta['author_id'] = datasetObject.dataset.author.id;
+                 meta['author_value'] = datasetObject.dataset.author.value;*/
                 $('.ui-title').html(datasetObject.appName);
 
                 $.each(datasetObject.dataset.poi, function(j, poi) {
                     poi.id = k;
-                    k++;
+
                     pois[poi.id] = poi;
+                    k++;
                 });
             });
         }
@@ -218,7 +220,9 @@ function setFiltersByCityId(cityId) {
 function addMarkers()
 {
     for (var i = 0; i < markersArray.length; i++) {
-        markersArray[i].setMap(null);
+        if (typeof markersArray[i] == "object") {
+            markersArray[i].setMap(null);
+        }
     }
     markersArray = new Array();
     if (infoBubble)
@@ -228,11 +232,12 @@ function addMarkers()
      * the issue of overlapping ones
      */
     var oms = new OverlappingMarkerSpiderfier(map);
-    var iw = new google.maps.InfoWindow();
-    oms.addListener('click', function(marker) {
-        iw.setContent(marker.desc);
-        iw.open(map, marker);
-    });
+    /* var iw = new google.maps.InfoWindow();
+     oms.addListener('click', function(marker) {
+     // console.log("marker", marker);
+     iw.setContent(marker.desc);
+     iw.open(map, marker);
+     });*/
 
     /* We initialize the infobubble styling */
     infoBubble = new InfoBubble({
@@ -263,7 +268,9 @@ function addMarkers()
                 icon: marker_image
             });
 
-            markersArray.push(current_marker);
+            // markersArray.push(current_marker);
+            markersArray[poi.id] = current_marker;
+            //    console.log("marketArrayIndex", poi.id);
             oms.addMarker(current_marker);
             google.maps.event.addListener(current_marker, 'click', function() {
                 infoBubble.setContent(setInfoWindowPoi(poi));
@@ -379,7 +386,9 @@ function resetVoteLoader()
 function setDetailPagePoi(poi)
 {
     resetVoteLoader();
+    currentPoi = poi;
     currentPoiId = poi.id;
+    var latlon = poi.location.point.pos.posList;
     /* Get the Event specific attributes of the POI */
     var image = getCitadel_attr(poi, "#Citadel_image").text;
 
@@ -402,6 +411,9 @@ function setDetailPagePoi(poi)
     if (poi.category) {
         contentTemplate += "<li>" + poi.category + "</li>";
     }
+
+    contentTemplate += "<li><a href='#page1' onclick='seeOnMapFunction(); return false;'><img class='seeOnMap' src='images/seeOnMap.png' alt='see POI on map'/></a></li>";
+
 
     /* Print further poi details found in the attribute array */
     $.each(poi.attribute, function(i, attr) {
@@ -518,7 +530,7 @@ function overrideDetailClick(id) {
     $('#item').html(setDetailPagePoi(poi));
 
     $.mobile.changePage("#page3", {transition: "none", reverse: false, changeHash: false});
-    window.location.href = "#page3?id=" + id;
+    window.location.href = "#page3"; /*?id=" + id*/
     showFavouriteButtons(id);
 
     return true;
@@ -567,6 +579,20 @@ function loadInfoPage() {
     $('#info > article > ul').html(setInfoPage());
 }
 
+
+function seeOnMapFunction() {
+
+    map.setZoom(16);
+    /*    var coords = currentPoi.location.point.pos.posList.split(" ");
+     var currentPoiLat = coords[0];
+     var currentPoiLon = coords[1];
+     map.panTo(new google.maps.LatLng(currentPoiLat, currentPoiLon));*/
+    // console.log(markersArray[currentPoiId]);
+    infoBubble.setContent(setInfoWindowPoi(currentPoi));
+    infoBubble.open(map, markersArray[currentPoiId]);
+    refreshPoiVotes(currentPoi);
+    //refreshBubblePoiVotes(currentPoi.id);
+}
 
 /****************** Event Handlers*************************/
 
