@@ -6,11 +6,9 @@ include_once CLASSES . 'App.class.php';
 class ResponseDataset {
 
     public $dataset;
-    public $appName;
 
-    public function __construct($dataset, $appName) {
-        $this->dataset = $dataset;
-        $this->appName = $appName;
+    public function __construct($dataset) {
+        $this->dataset = $dataset;       
     }
 
     public static function createFromDb($type, $datasetId) {
@@ -24,7 +22,6 @@ class ResponseDataset {
     }
 
     public static function createFromDb2($type, $datasetIds) {
-        //$appName = App::$name;
         if (isset($datasetIds)) {
             switch ($type) {
                 case DatasetTypes::Poi:
