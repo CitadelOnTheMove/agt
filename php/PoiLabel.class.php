@@ -92,22 +92,7 @@ class PoiLabel {
 					 $assocArray['tplIdentifier']);
 		return false;
 	}
-	
-// 	public function getTerm() {
-// 		return $this->term;
-// 	}
-	
-// 	public function setTerm($term) {
-// 		$this->term = term;
-// 	}
-	
-// 	public function getText() {
-// 		 return $this->text;
-// 	}
-	
-// 	public function setText($text) {
-// 		$this->text = $text;
-// 	}
+
 	
 }
 

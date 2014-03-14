@@ -58,21 +58,6 @@ class PoiLocation {
 		}
 		return false;		
 	}
-	
-// 	public function getPoint() {
-// 		return $this->point;
-// 	}
-	
-// 	public function setPoint($point) {
-// 		$this->point = $point;
-// 	}
-	
-// 	public function getAddress() {
-// 		return  $this->address;
-// 	}
-	
-// 	public function setAddress($address) {
-// 		$this->address = $address;
-// 	}	
+		
 }
 ?>

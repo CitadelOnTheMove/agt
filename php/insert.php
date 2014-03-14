@@ -35,7 +35,7 @@ $attribute = array(array('text' => $poiPhone,
         'type' => "url"));
 
 
-$poiArray = array('id' => 'UserGen'.Util::getNextPoiID(), 'title' => $poiTitle, 'description' => $poiDesc,
+$poiArray = array('id' => 'UserGen' . Util::getNextPoiID(), 'title' => $poiTitle, 'description' => $poiDesc,
     'category' => $poiCategory,
     'location' => $location,
     'attribute' => $attribute);
@@ -44,10 +44,10 @@ $poiArray = array('id' => 'UserGen'.Util::getNextPoiID(), 'title' => $poiTitle, 
 Database::connect();
 Database::begin();
 $poi = Poi::createFromArray($poiArray);
-if ($poi->save(DATASET_ID)) {   
-    Database::commit();    
+if ($poi->save(DATASET_ID)) {
+    Database::commit();
 } else {
-    Database::rollback();  
+    Database::rollback();
 }
 Database::disconnect();
 ?>

@@ -10,7 +10,7 @@ class Response {
     public $appName;
     public $filters;
 
-    public function __construct($applicationData, $appName, $filters, $status = "success") {
+    public function __construct($applicationData, $appName, $filters, $status) {
         $this->status = $status;
         $this->applicationData = $applicationData;
         $this->appName = $appName;

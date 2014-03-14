@@ -33,7 +33,7 @@ function printSelectedCities($uid) {
                     $lat = $city['latitude'];
                     $lon = $city['longitude'];
 
-                    $city = new City($id, $name, $lat, $lon);
+                    $city = new City($id, $name, $lat, $lon, null);
                     if (!in_array($city, $cities)) {
                         $cities[] = $city;
                     }

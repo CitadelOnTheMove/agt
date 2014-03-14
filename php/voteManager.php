@@ -9,20 +9,14 @@ include_once CLASSES . 'Database.class.php';
 
 
 $poiId = $_GET['poiId'];
-if ($poiId) {
+if (isset($poiId)) {
     Database::connect();
     Database::begin();
     $result = Vote::getPoiVotes($poiId);
-    
-    echo json_encode($result);//[0][0] ."*". $result[1][0];
-//if ($vote->save()) {   
-//    Database::commit();    
-//} else {
-    //  Database::rollback();  
-//}
+
+    echo json_encode($result); //[0][0] ."*". $result[1][0];
     Database::disconnect();
 } else {
-
 
     $poiId = $_POST['poiId'];
     $value = $_POST['poiVote'];
