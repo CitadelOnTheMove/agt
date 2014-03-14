@@ -44,10 +44,11 @@ function getPoisFromDataset(resultCallback)
 
         pois = new Array();
 
-        if (data.status == "success")
+        if (data.status === "success")
         {
             var k = 0;
             filters = data.filters;
+            $('.ui-title').html(data.appName);
             $.each(data.applicationData, function(i, datasetObject) {
                 /* meta['id'] = datasetObject.dataset.id;
                  meta['updated'] = datasetObject.dataset.updated;
@@ -55,17 +56,20 @@ function getPoisFromDataset(resultCallback)
                  meta['lang'] = datasetObject.dataset.lang;
                  meta['author_id'] = datasetObject.dataset.author.id;
                  meta['author_value'] = datasetObject.dataset.author.value;*/
-                $('.ui-title').html(datasetObject.appName);
 
                 $.each(datasetObject.dataset.poi, function(j, poi) {
                     poi.id = k;
-
                     pois[poi.id] = poi;
                     k++;
                 });
             });
         }
+        else if (data.status === "failed"){
+            alert(data.message);
+            console.log(data.error);
+        }
         else {
+            alert(data.message);
             console.log("Error loading data:" + data.error);
         }
         resultCallback(pois);
@@ -82,11 +86,11 @@ function initializeMap() {
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
     /* If the app has only one city, set it directly as the active one */
-    if(cities.length == 1){
+    if (cities.length == 1) {
         $.mobile.hidePageLoadingMsg();
-        setFiltersByCityId(cities[0].id);        
-        $('input[id=city-filter' + cities[0].id +']').attr('checked','checked').checkboxradio("refresh");
-        centerToCity($('input[id=city-filter' + cities[0].id +']').val());        
+        setFiltersByCityId(cities[0].id);
+        $('input[id=city-filter' + cities[0].id + ']').attr('checked', 'checked').checkboxradio("refresh");
+        centerToCity($('input[id=city-filter' + cities[0].id + ']').val());
     }
     else if (navigator.geolocation) {
         // Set timeout to 15 secs
@@ -118,12 +122,12 @@ function showPosition(position) {
     clearTimeout(location_timeout);
     $.mobile.hidePageLoadingMsg();
     myLatlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
-        
-    var datasetFound = false;    
-    if (cities.length == 0){
+
+    var datasetFound = false;
+    if (cities.length == 0) {
         alert("Missing application id. No data is loaded.");
     }
-   
+
     /* Check if any of the app cities is close to the user's current location
      * and if found make it active */
     else if (cities.length > 1) {
@@ -132,7 +136,7 @@ function showPosition(position) {
             var city = cities[i];
             var cityId = city.id;
             var p2 = new google.maps.LatLng(city.lat, city.lon);
-            var distance = calcDistance(p1, p2);            
+            var distance = calcDistance(p1, p2);
             if (distance < maxCityDistance) {
                 setFiltersByCityId(cityId);
                 datasetFound = true;
@@ -156,6 +160,8 @@ function showPosition(position) {
     map.setOptions(mapOptions);
     map.setCenter(myLatlng);
     addMarkers();
+    loadListPageData();
+    refreshListPageView();
 }
 
 function showError(error) {
@@ -205,7 +211,6 @@ function setFiltersByCityId(cityId) {
                 filter.selected = true;
                 selected = true;
             }
-
         }
         else
             filter.isVisible = false;
@@ -255,13 +260,13 @@ function addMarkers()
 
     /* For every POI we add a marker with an attached infoBubble */
     $.each(pois, function(i, poi) {
-        if (isFilterSelected(poi.category)) {
+        if (isFilterSelected(poi.category, poi.cityId)) {
             /*  posList contains a list of space separated coordinates.
              *  The first two are lat and lon
              */
             var coords = poi.location.point.pos.posList.split(" ");
             var current_markerpos = new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
-            var marker_image = getFavouriteValue(poi.id) ? "images/star.png" : getMarkerImage(poi.category[0]);
+            var marker_image = getFavouriteValue(poi.id) ? "images/star.png" : getMarkerImage(poi.category[0], poi.cityId);
             var current_marker = new google.maps.Marker({
                 position: current_markerpos,
                 map: map,
@@ -286,7 +291,7 @@ function addMarkers()
  * Returns the marker image picking a unique color for every category
  */
 
-function getMarkerImage(category) {
+function getMarkerImage(category, cityId) {
     var coloredMarkers = new Array();
     var marker_parking;
 
@@ -300,7 +305,7 @@ function getMarkerImage(category) {
         }
 
         for (i = 0; i < filters.length; i++) {
-            if (filters[i].name == category) {
+            if (filters[i].name.toLowerCase() == category.toLowerCase() && filters[i].cityId == cityId) {
                 return coloredMarkers[i % 16];
             }
         }
@@ -308,7 +313,7 @@ function getMarkerImage(category) {
 }
 
 
-function getMarkerClass(category) {
+function getMarkerClass(category, cityId) {
 
     var coloredClassMarkers = new Array();
 
@@ -324,7 +329,7 @@ function getMarkerClass(category) {
         }
 
         for (i = 0; i < filters.length; i++) {
-            if (filters[i].name == category) {
+            if (filters[i].name.toLowerCase() == category.toLowerCase() && filters[i].cityId == cityId) {
                 return coloredClassMarkers[i % 16];
             }
         }
@@ -361,12 +366,12 @@ function setInfoWindowPoi(poi)
             "<div class='title'>" +
             poi.title +
             "</div>";
-            
+
     if (poi.location.address.value) {
         contentTemplate += "<div class='address'>" + poi.location.address.value + "</div>";
-    }        
-            
-            
+    }
+
+
     contentTemplate += "\n" + category +
             "<span class='bubbleUpVoteWrapper'><img src='images/like-32.png'/><span id='bubbleUpVotes'></span></span><span  class='bubbleDownVoteWrapper'><img src='images/dislike-32.png'/><span id='bubbleDownVotes'></span></span>" +
             "</a></div><div id='bubbleClose'><a href='' onclick='return overrideBubbleCloseClick();'><img src='images/close.png' width='25' height='25' alt='close' /></a></div>";
@@ -401,7 +406,7 @@ function setDetailPagePoi(poi)
         contentTemplate += "<li class='image'><img src='" + image + "' alt='Event image' /></li>";
 
     /* Print standard poi details */
-    contentTemplate += "<li><h1>" + poi.title + "</h1></li>"; 
+    contentTemplate += "<li><h1>" + poi.title + "</h1></li>";
     if (poi.description) {
         contentTemplate += "<li>" + poi.description + "</li>";
     }
@@ -412,7 +417,7 @@ function setDetailPagePoi(poi)
         contentTemplate += "<li>" + poi.category + "</li>";
     }
 
-    contentTemplate += "<li><a href='#page1' onclick='seeOnMapFunction(); return false;'><img class='seeOnMap' src='images/seeOnMap.png' alt='see POI on map'/></a></li>";
+    contentTemplate += "<li><a href='#page1' onclick='seeOnMap(); return false;'><img class='seeOnMap' src='images/seeOnMap.png' alt='see POI on map'/></a></li>";
 
 
     /* Print further poi details found in the attribute array */
@@ -438,15 +443,15 @@ function setListPagePois()
 
     $.each(pois, function(i, poi) {
 
-        if (isFilterSelected(poi.category)) {
+        if (isFilterSelected(poi.category, poi.cityId)) {
             var category = "";
-            if (poi.category) {
+            if (poi.category && poi.cityId) {
                 category = "<p>" +
                         poi.category +
                         "</p>";
             }
             var isFavourite = getFavouriteValue(poi.id);
-            var imageClass = (isFavourite ? "star" : getMarkerClass(poi.category[0]));
+            var imageClass = (isFavourite ? "star" : getMarkerClass(poi.category[0], poi.cityId));
             var className = (isFavourite ? " class='favourite'" : " class='nonfavourite'");
 
             contentTemplate +=
@@ -458,11 +463,22 @@ function setListPagePois()
                     category +
                     "</a>" +
                     "</li>";
+
+            /**    contentTemplate +=
+             "<li" + className + ">" +
+             "<a href='' onclick='overrideDetailClick(\"" + poi.id + "\"); return false;'>" +
+             "<span class='" + imageClass + " icon'></span>" +
+             "<h3>" + poi.title + "</h3>" +
+             "<h4>" + poi.description + "</h4>" +
+             category +
+             "</a>" +
+             "</li>";*/
         }
 
     });
     return contentTemplate;
 }
+
 
 /* Sets the content of the info page 
  * based on dataset metadata
@@ -580,7 +596,7 @@ function loadInfoPage() {
 }
 
 
-function seeOnMapFunction() {
+function seeOnMap() {
 
     map.setZoom(16);
     /*    var coords = currentPoi.location.point.pos.posList.split(" ");
@@ -622,7 +638,7 @@ $(document).ready(function() {
 //            $('.navbar > ul > li > a').removeClass('ui-btn-active');
 //            $('.pois-nearme').addClass('ui-btn-active');
 //        }
-        
+
         $('.navbar > ul > li > a').removeClass('ui-btn-active');
         $('.pois-nearme').addClass('ui-btn-active');
         $.mobile.changePage("#page1", {transition: "none"});
@@ -704,14 +720,14 @@ $(document).ready(function() {
      *  and markers of one category will be added on the map.
      */
     $('input[type=radio][name=city]').live("change", function() {
-        
+
         var selectedCityId = $(this).attr('id').substring(11);
         setFiltersByCityId(selectedCityId);
 
         if ($('#city-filter').is(":visible")) {
             $('#city-filter').slideUp();
-            var val = $('input[name=city]:checked').val();               
-            centerToCity(val);  
+            var val = $('input[name=city]:checked').val();
+            centerToCity(val);
         } else {
             $('#city-filter').slideDown();
         }
@@ -850,7 +866,6 @@ $(document).ready(function() {
         }
     });
 
-
 }); // end $(document).ready
 
 function refreshPoiVotes(poiId)
@@ -920,14 +935,21 @@ function setFilters() {
     for (i = 0; i < filters.length; i++) {
         var filter = filters[i];
         if (filter.isVisible) {
-            //console.log("filter.isVisible = " + filter.isVisible);
-
+            
             var checked = filter.selected ? ' checked' : '';
             var filterName = filter.name;
             var filterType = filter.type;
+            var filterCityId = filter.cityId;
+            var filterPoisCounter = filter.poisCounter;
+            console.log("filter.poisCounter = " + filter.poisCounter);
+            var filterValue = filterName + "/" + filterCityId;
 
-            filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterName + "\" />" +
-                    "<label for='map-filter" + i + "'><img id='img_style' src='images/pin" + i % 16 + ".png'/> " + filterName + " , (" + filterType + ")</label>";
+//              filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterName + "\" />" +
+//                    "<label for='map-filter" + i + "'><img id='img_style' src='images/pin" + i % 16 + ".png'/> " + filterName + " , (" + filterType + ")</label>";
+
+            filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterValue + "\" />" +
+                    "<label for='map-filter" + i + "'><img id='img_style' src='images/pin" + i % 16 + ".png'/> " + filterName + " , (" + filterPoisCounter + " " + filterType + ")</label>";
+
         }
     }
     $('#map-filter > div > fieldset').html(filters_html);
@@ -958,7 +980,7 @@ function setCityFilters() {
 /*  Centers the map to the given coordinates
  *  coordinatesString: string of the form "lat/long"
  */
-function centerToCity(coordinatesString) {   
+function centerToCity(coordinatesString) {
     var coordsCity = coordinatesString.split("/");
     mapLat = coordsCity[0];
     mapLon = coordsCity[1];
@@ -1007,11 +1029,15 @@ function hideAddressBar() {
  * Matches the selected filters
  * with POIS categories
  */
-function isFilterSelected(categories) {
+function isFilterSelected(categories, cityId) {
     var found = false;
-    $.each(categories, function(k, v) {
-        var filter = $.grep(filters, function(e) {
-            return (e.name == v && e.selected)
+    var filter;
+//      for (i = 0; i < filters.length; i++) {
+//    if(cityId){
+    $.each(categories, function(index, categoryName) {
+        var id = cityId;
+        filter = $.grep(filters, function(e) {
+            return (e.name.toLowerCase() == categoryName.toLowerCase() && e.selected && e.cityId == id);
         });
 
         if (filter.length == 1) {
@@ -1019,9 +1045,14 @@ function isFilterSelected(categories) {
             return false;
         }
     });
+//    }
+//      }
 
-    if (found)
+    if (found) {
+        //   if (filter.cityId == cityId) {
         return true;
+        // }
+    }
 
     return false;
 }
@@ -1105,12 +1136,13 @@ function touchScroll(id) {
 /*
  * Used to update filters object list with newly selected filters
  */
-function setSelectedFilters(selected) {
-    $.each(filters, function(k, v) {
-        if ($.inArray(v.name, selected) > -1) {
-            filters[k].selected = true;
+function setSelectedFilters(selectedFilterValues) {
+    $.each(filters, function(index, filter) {
+             
+        if ($.inArray(filter.name + "/" + filter.cityId, selectedFilterValues) > -1) {
+            filters[index].selected = true;
         } else {
-            filters[k].selected = false;
+            filters[index].selected = false;
         }
     });
 }
