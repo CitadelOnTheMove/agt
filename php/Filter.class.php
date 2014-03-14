@@ -22,5 +22,4 @@ class Filter {
         $this->isVisible = $isVisible;
         $this->poisCounter = $poisCounter;
     }
-
 }
