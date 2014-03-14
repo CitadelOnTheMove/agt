@@ -11,7 +11,6 @@ class PoisDataset extends Dataset {
 
     public $poi;    // the array of Poi.class objects
 
-
     /**
      * @param string $identifier the public url of the dataset identifier
      * @param string $updated the timestamp indicating when this dataset was last updated
@@ -23,8 +22,9 @@ class PoisDataset extends Dataset {
      * @param string $updateFrequency a description of the update frequency e.g. "semester"
      * @param Poi[] $pois the array of @see Poi object
      */
-    public function __construct($identifier, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url, $pois) {
-        parent::__construct($identifier, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url);
+
+    public function __construct($id, $identifier, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url, $pois) {
+        parent::__construct($id, $identifier, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url);
         $this->poi = $pois;
     }
 
@@ -85,7 +85,7 @@ class PoisDataset extends Dataset {
             $dataset = $sth->fetch(PDO::FETCH_ASSOC);
 
             if ($dataset) {
-                return new PoisDataset($dataset['identifier'], $dataset['update'], $dataset['created'], $dataset['lang'], Author::createFromDb($datasetId), License::createFromDb($datasetId), Link::createFromDb($datasetId), $dataset['updateFrequency'], Poi::createListFromDb($datasetId));
+                return new PoisDataset($dataset['id'], $dataset['identifier'], $dataset['update'], $dataset['created'], $dataset['lang'], Author::createFromDb($datasetId), License::createFromDb($datasetId), Link::createFromDb($datasetId), $dataset['updateFrequency'], Poi::createListFromDb($datasetId));
             }
         } catch (Exception $e) {
             if (DEBUG)
@@ -110,8 +110,10 @@ class PoisDataset extends Dataset {
             $dataset = $sth->fetch(PDO::FETCH_ASSOC);
 
             if ($dataset) {
-                return new PoisDataset($dataset['identifier'], $dataset['update'], $dataset['created'], $dataset['lang'], Author::createFromDb($dataset['id']), License::createFromDb($dataset['id']), Link::createFromDb($dataset['id']), $dataset['updateFrequency'], Poi::createListFromDb2($datasetIds));
+                return new PoisDataset($dataset['id'], $dataset['identifier'], $dataset['update'], $dataset['created'], $dataset['lang'], Author::createFromDb($dataset['id']), License::createFromDb($dataset['id']), Link::createFromDb($dataset['id']), $dataset['updateFrequency'], Poi::createListFromDb2($datasetIds));
             }
+            else
+                throw(new AppGeneratorException("No dataset was found!!"));
         } catch (Exception $e) {
             if (DEBUG)
                 $sth->debugDumpParams();
@@ -128,19 +130,25 @@ class PoisDataset extends Dataset {
     public static function createFromArray($assocArray) {
         if (isset($assocArray['id']) && isset($assocArray['updated'])) {
             $pois = array();
-            foreach ($assocArray['poi'] as $key=>$poi) {
-              /* In case the id column doesn't exist in the json files
-               * we just autogenerate the id's
-               */
-                if(is_null($poi["id"]))
-                  $poi["id"] = $key;
+
+            foreach ($assocArray['poi'] as $key => $poi) {
+                /* In case the id column doesn't exist in the json files
+                 * we just autogenerate the id's
+                 */
+                if (is_null($poi["id"]))
+                    $poi["id"] = $key;
+
                 $pois[] = Poi::createFromArray($poi);
             }
-            if(array_key_exists ('url' ,$assocArray ))
+            if (array_key_exists('url', $assocArray))
                 $url = $assocArray['url'];
             else
                 $url = "";
-            return new PoisDataset($assocArray['id'], $assocArray['updated'], $assocArray['created'], $assocArray['lang'], Author::createFromArray($assocArray['author']), License::createFromArray($assocArray['license']), Link::createFromArray($assocArray['link']), $assocArray['updatefrequency'], $url, $pois);
+            if (array_key_exists('identifier', $assocArray))
+                $identifier = $assocArray['identifier'];
+            else
+                $identifier = null;
+            return new PoisDataset($assocArray['id'], $identifier, $assocArray['updated'], $assocArray['created'], $assocArray['lang'], Author::createFromArray($assocArray['author']), License::createFromArray($assocArray['license']), Link::createFromArray($assocArray['link']), $assocArray['updatefrequency'], $url, $pois);
         }
         return false;
     }
