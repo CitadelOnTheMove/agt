@@ -101,7 +101,7 @@ $colors = printColors($appID);
             <header data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
                 <span class="ui-title"><?php echo $currentAppName ?></span>
                 <a href="" id="filter" data-icon="search" data-iconpos="notext" data-theme="a" title="Filter Items" class="ui-btn-left">&nbsp;</a>
-                <a href="" id="city" data-icon="bars" data-iconpos="notext" data-theme="b" title="Select City" class="ui-btn-right">&nbsp;</a>              
+                <a href="" id="city" data-icon="bars" data-iconpos="left" data-theme="b" title="Select City" class="ui-btn-right">Cities</a>              
 
                 <!--a href="#info" data-rel="dialog" data-icon="info" data-iconpos="notext" data-theme="b" title="Info" class="ui-btn-right">&nbsp;</a-->
                 <div data-role="navbar" class="navbar">
@@ -286,8 +286,6 @@ $colors = printColors($appID);
             var maxCityDistance = <?php echo MAX_CITY_DISTANCE_KM; ?>;
 
             /* The url of the dataset */
-
-
             var datasetUrl = "<?php echo DATASET_URL . '?uid=' . $appID; ?>";
 
             var insertNewPoiScript = "<?php echo SERVERNAME . BASE_DIR . CLASSES_DIR . "insert.php"; ?>";
