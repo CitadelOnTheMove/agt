@@ -860,10 +860,10 @@ header.ui-header, footer.ui-footer {
 .dataset_info{display:inline-block;color:#858585;font-size:12px;}
 
 .ui-icon-logout {
-	background-image: url("images/logout.png");        
+    background-image: url("images/logout.png");        
 }
 .ui-icon-documents {
-	background-image: url("images/documents.png");        
+    background-image: url("images/documents.png");        
 }
 
 .beta{
