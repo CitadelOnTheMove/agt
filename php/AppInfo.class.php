@@ -1,17 +1,23 @@
 <?php
 
-class AppInfo {     
-  public $url;
-	public $name;
-	public $created;
-  public $username;
-  public $cities;
-	
-	public function __construct($url, $name, $created, $username, $cities) {
-    $this->url = $url;
-		$this->name = $name;
-		$this->created = $created;
-    $this->username = $username;
-    $this->cities = $cities;
-	}
+class AppInfo {
+
+    public $appId;
+    public $url;
+    public $name;
+    public $description;
+    public $created;
+    public $userId;
+    public $cities;
+
+    public function __construct($appId, $url, $name, $description, $created, $userId, $cities) {
+        $this->appId = $appId;
+        $this->url = $url;
+        $this->name = $name;
+        $this->description = $description;
+        $this->created = $created;
+        $this->userId = $userId;
+        $this->cities = $cities;
+    }
+
 }
