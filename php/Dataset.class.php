@@ -12,8 +12,8 @@ class Dataset {
      * Member variables are public in order
      * to be serialized properly by json_encode
      */
-
     public $id;
+    public $identifier;
     public $updated;
     public $created;
     public $lang;
@@ -24,7 +24,8 @@ class Dataset {
     public $url;
 
     /**
-     * @param string $identifier the public url of the dataset identifier
+     * @param int $id the dataset id
+     * @param string $identifier the dataset name
      * @param string $updated the timestamp indicating when this dataset was last updated
      * @param string $created the timestamp indicating when this dataset was created
      * @param string $lang  the locale code RFC 1766
@@ -33,8 +34,9 @@ class Dataset {
      * @param Link $link the link of the source of the dataset
      * @param string $updateFrequency a description of the update frequency e.g. "semester"
      */
-    public function __construct($id, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url) {
+    public function __construct($id, $identifier, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url) {
         $this->id = $id;
+        $this->identifier = $identifier;
         $this->updated = $updated;
         $this->created = $created;
         $this->lang = $lang;
@@ -44,8 +46,8 @@ class Dataset {
         $this->updateFrequency = $updateFrequency;
         $this->url = $url;
     }
-
-    public static function getCategories($datasetId) {
+    
+     public static function getCategories($datasetId) {
         $sql = "SELECT * FROM categories where dataset_id = :datasetId";
         $sqlParams[":datasetId"] = $datasetId;
 
@@ -64,7 +66,7 @@ class Dataset {
         }
         return $categories;
     }
-    
+
     public static function getDatasetsOfUser($userId) {
         $sql = "SELECT * FROM datasets where createdBy = :userId";
         $sqlParams[":userId"] = $userId;
@@ -74,13 +76,12 @@ class Dataset {
             $sth->execute($sqlParams);
             $userDatasetsCount = $sth->rowCount();
             return $userDatasetsCount;
-           
         } catch (Exception $e) {
             if (DEBUG)
                 $sth->debugDumpParams();
             Util::throwException(__FILE__, __LINE__, __METHOD__, "getDatasetsOfUser query failed", $e->getMessage(), $e);
         }
-       // return $userDatasetsCount;
+   
     }
 
     public static function saveNewDataset($datasetName, $url, $type, $city, $userId) {
@@ -108,22 +109,21 @@ class Dataset {
         // save the db id
         $id = Database::$dbh->lastInsertId();
 
-
-        $sql = "INSERT INTO city_datasets VALUES(null, :city_id, :dataset_id)";
-        $sqlParams = array(':city_id' => $city,
+        $sql2 = "INSERT INTO city_datasets VALUES(null, :city_id, :dataset_id)";
+        $sqlParams2 = array(':city_id' => $city,
             ':dataset_id' => $id);
 
-
         try {
-            $sth = Database::$dbh->prepare($sql);
-            $sth->execute($sqlParams);
+            $sth2 = Database::$dbh->prepare($sql2);
+            $sth2->execute($sqlParams2);
         } catch (Exception $e) {
             if (DEBUG)
-                $sth->debugDumpParams();
+                $sth2->debugDumpParams();
             Util::throwException(__FILE__, __LINE__, __METHOD__, "insert into city_datasets failed", $e->getMessage(), $e);
             return false;
         }
     }
+
 }
 
 ?>
