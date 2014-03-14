@@ -6,16 +6,13 @@ require CLASSES . 'init.php';
 /* Read user info from session in case login comes from
  * citadel website
  */
-if(isset($_SESSION['username']))
-{ 
-  $userId = $_SESSION['id'];
-  $username = $_SESSION['username'];
-}
-else // use built-in login functionality
-{
-  $user = $users->userdata($_SESSION['id']);
-  $userId = $user['id'];
-  $username = $user['username'];
+if (isset($_SESSION['username'])) {
+    $userId = $_SESSION['id'];
+    $username = $_SESSION['username'];
+} else { // use built-in login functionality
+    $user = $users->userdata($_SESSION['id']);
+    $userId = $user['id'];
+    $username = $user['username'];
 }
 ?>
 
@@ -89,7 +86,6 @@ else // use built-in login functionality
                 /* Add the new datasets to the existing ones */
                 //var currentContent = $('#datasetsCheckboxes').html();
                 $('#datasetsCheckboxes').append(data);
-
                 /* Apply the checkbox styling to the new ones */
                 $('input[type=checkbox][name="datasetIds[]"]').each(function() {
 
@@ -127,11 +123,11 @@ else // use built-in login functionality
 
                     Database::connect();
 
-                    // define variables and set to empty values
-                    $darkColorErr = $colorErr = $nameErr = $cityIdsErr = $datasetIdsErr = "";
+// define variables and set to empty values
+                    $darkColorErr = $colorErr = $nameErr = $descriptionErr = $cityIdsErr = $datasetIdsErr = "";
 
                     $error = false;
-                    // Check all required fields
+// Check all required fields
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         if (empty($_POST["cityIds"])) {
@@ -146,6 +142,10 @@ else // use built-in login functionality
                             $nameErr = "Application Name is required";
                             $error = true;
                         }
+                        if (empty($_POST["description"])) {
+                            $descriptionErr = "Application Description is required";
+                            $error = true;
+                        }
                         if (empty($_POST["color"])) {
                             $colorErr = "Color is required";
                             $error = true;
@@ -154,10 +154,10 @@ else // use built-in login functionality
                             $darkColorErr = "Dark Color is required";
                             $error = true;
                         }
-                       
+
 
                         if (!$error) {
-                            if ((isset($_POST["cityIds"])) && (isset($_POST["name"])) &&
+                            if ((isset($_POST["cityIds"])) && (isset($_POST["name"])) && (isset($_POST["description"])) &&
                                     (isset($_POST["datasetIds"])) && (isset($_POST["color"])) &&
                                     (isset($_POST["darkColor"]))) {
 
@@ -189,19 +189,20 @@ else // use built-in login functionality
 
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
                         <form id="createNewAppForm" data-ajax="false" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                            
-                          <p>
-                            <?php if(!$general->logged_in()){?>
-                          <div class="warning">
-                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
-                            </div>
-                                <?php } else { 
-                            echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.';
-                             echo '<a style="float:right" href="logout.php" data-ajax="false">log out</a>';
-                                } 
+
+                            <p>
+                                <?php if (!$general->logged_in()) { ?>
+                                <div class="warning">
+                                    <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
+                                </div>
+                                <?php
+                            } else {
+                                echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.';
+                                echo '<a style="float:right" href="logout.php" data-ajax="false">log out</a>';
+                            }
                             ?>
-                          </p>                            
-                            
+                            </p>                            
+
                             <p><span class="error">* required field.</span></p>                        
 
                             <legend><b>Select cities:</b> <span class="error">* <?php echo $cityIdsErr; ?></span></legend><br/>
@@ -242,17 +243,22 @@ else // use built-in login functionality
 
                             <legend><b>Application Name:</b> <span class="error">* <?php echo $nameErr; ?></span></legend><br/>
                             <input type="text" name="name" required>                        
-                            
                             <br/><br/>
-                            <?php if(!$general->logged_in()){?>
-                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
-                            <?php } 
-                             else { ?>
-                              <input type="submit" name="submit" value="Create the app">
-                            <?php }?>  
+                            
+                             <legend><b>Application Description:</b> <span class="error">* <?php echo $descriptionErr; ?></span></legend><br/>
+                             <textarea rows="4" cols="50" name="description" required ></textarea>                        
+
+                            <br/><br/>
+                            
+                            <?php if (!$general->logged_in()) { ?>
+                                <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
+                            <?php } else {
+                                ?>
+                                <input type="submit" name="submit" value="Create the app">
+                            <?php } ?>  
                         </form>
 
-                    <?php
+                        <?php
                     } // end if 
                     Database::disconnect();
                     ?>
