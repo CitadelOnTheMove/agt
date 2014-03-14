@@ -7,11 +7,13 @@ class ResponseError {
 
     public $status;
     public $error;
-    
-       public function __construct($status, $error) {
+    public $message;
+
+    public function __construct($status, $error, $message) {
         $this->status = $status;
-        $this->error = $error;  
-    }  
+        $this->error = $error;
+        $this->message = $message;
+    }
 }
 
 ?>

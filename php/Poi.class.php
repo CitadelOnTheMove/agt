@@ -15,6 +15,7 @@ class Poi {
     public $id;  // the dataset id e.g. http://data.gent.be/datasets/parkeergarages/1
     public $title;   // the title string
     public $description;  // the description string
+    public $cityId;
     public $category;  // a string array containing the categories
     public $location;  // the PoiLocation.class.php object
     public $attribute;  // a PoiLabel.class array with the available labels
@@ -29,10 +30,11 @@ class Poi {
      * @param PoiLocation $location the location object
      * @param PoiLabel[] $label an array on labels
      */
-    public function __construct($identifier, $title, $description, $category, $location, $label) {
+    public function __construct($identifier, $title, $description, $cityId, $category, $location, $label) {
         $this->id = $identifier;
         $this->title = $title;
         $this->description = $description;
+        $this->cityId = $cityId;
         $this->category = $category;
         $this->location = $location;
         $this->attribute = $label;
@@ -191,9 +193,6 @@ class Poi {
      * @return Poi[] the pois of the dataset
      */
     public static function createListFromDb2($datasetIds) {
-
-
-
         // $sqlParams = array(':datasetIds' => $datasetIdsFormatted);
         //$sqlParams[':datasetIds'] = $datasetIdsFormatted;
         try {
@@ -202,18 +201,15 @@ class Poi {
             $sql = "SELECT * FROM pois	WHERE ";
             $i = 0;
             foreach ($datasetIds as &$datasetId) {
-                if($i == 0)
-                {
+                if ($i == 0) {
                     $sql .= " dataset_id = " . $datasetId;
-                }
-                else
-                {
-                     $sql .= " OR dataset_id = " . $datasetId;
+                } else {
+                    $sql .= " OR dataset_id = " . $datasetId;
                 }
                 $i++;
             }
             $datasetIdsFormatted = implode(', ', $datasetIds);
-            
+
             $sth = Database::$dbh->prepare($sql);
             $sth->execute();
         } catch (Exception $e) {
@@ -289,48 +285,22 @@ class Poi {
      * @return Poi|boolean a Poi instance or false on failure
      */
     public static function createFromArray($assocArray) {
+        if (empty($assocArray['category'])) {
+            throw(new AppGeneratorException("Please make sure that all POIs have category!!"));
+        }
+
         if (isset($assocArray['id']) && isset($assocArray['title']) && isset($assocArray['description']) && isset($assocArray['category']) && isset($assocArray['location']) && isset($assocArray['attribute'])) {
             $labels = array();
-
+            
+            $assocArray['cityId'] = "";
             foreach ($assocArray['attribute'] as $label) {
                 $labels[] = PoiLabel::createFromArray($label);
             }
-
-            return new Poi($assocArray['id'], $assocArray['title'], $assocArray['description'], $assocArray['category'], PoiLocation::createFromArray($assocArray['location']), $labels);
+            return new Poi($assocArray['id'], $assocArray['title'], $assocArray['description'], $assocArray['cityId'], $assocArray['category'], PoiLocation::createFromArray($assocArray['location']), $labels);
         }
         return false;
     }
 
-// 	public function getId() {
-// 		return $this->id;
-// 	}
-// 	public function setId($id) {
-// 		$this->id = $id;
-// 	}
-// 	public function getTitle() {
-// 		return $this->title;
-// 	}
-// 	public function setTitle($title) {
-// 		$this-$title = $title;
-// 	}
-// 	public function getCategory() {
-// 		return $this->category;
-// 	}
-// 	public function setCategory($category) {
-// 		$this->category = $category;
-// 	}	
-// 	public function getLocation() {
-// 		return $this->location;
-// 	}
-// 	public function setLocation() {
-// 		$this->location = location;
-// 	}
-// 	public function getLabel() {
-// 		return $this->attribute;
-// 	}
-// 	public function setLabel($label) {
-// 		$this->attribute = $label;
-// 	}
 }
 
 ?>

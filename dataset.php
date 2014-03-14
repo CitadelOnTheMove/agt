@@ -14,64 +14,106 @@ include_once CLASSES . 'Util.class.php';
 include_once CLASSES . 'App.class.php';
 include_once CLASSES . 'Filter.class.php';
 include_once CLASSES . 'Database.class.php';
+include_once CLASSES . 'AppGeneratorException.class.php';
 
 $filters = array();
 $keys = array();
 
-if (isset($_GET['uid'])) {
-    Database::connect();
+try {
+    if (isset($_GET['uid'])) {
+        Database::connect();
 
-    if ($app = App::createFromDb($_GET['uid'])) {
-        $app_datasets = array();
-        $name = $app->name;
+        if ($app = App::createFromDb($_GET['uid'])) {
+            $app_datasets = array();
+            $name = $app->name;
 
-        foreach ($app->datasetIds as $value) {
+            foreach ($app->datasetIds as $value) {
 
-            $sql = "SELECT datasets.type, datasets.url, city_datasets.city_id AS cityId FROM datasets JOIN 
+                $sql = "SELECT datasets.type, datasets.url, city_datasets.city_id AS cityId FROM datasets JOIN 
                 city_datasets ON city_datasets.dataset_id = datasets.id WHERE datasets.id=" . $value;
 
-            /* If we are behind a proxy, we need to
-             * setup a context for file_get_contents
-             */
-            if (PROXYUSE) {
-                $aContext = array(
-                    'http' => array(
-                        'proxy' => 'tcp://' . PROXYNAME . ':' . PROXYPORT,
-                        'request_fulluri' => true,
-                    ),
-                );
-                $cxContext = stream_context_create($aContext);
-            }
-            else
-                $cxContext = null;
-            foreach (Database::$dbh->query($sql) as $row) {
-                $type = $row['type'];
-                // handle datasets with empty spaces in their filename
-                $json = file_get_contents(str_replace(" ", "%20", $row['url']), False, $cxContext);
-                $assocArray = json_decode($json, true);
-                $poisDataset = ResponseDataset::createFromArray(DatasetTypes::Poi, $assocArray);
+                /* If we are behind a proxy, we need to
+                 * setup a context for file_get_contents
+                 */
+                if (PROXYUSE) {
+                    $aContext = array(
+                        'http' => array(
+                            'proxy' => 'tcp://' . PROXYNAME . ':' . PROXYPORT,
+                            'request_fulluri' => true,
+                        ),
+                    );
+                    $cxContext = stream_context_create($aContext);
+                }
+                else
+                    $cxContext = null;
+                foreach (Database::$dbh->query($sql) as $row) {
+                    $type = $row['type'];
+                    $cityId = $row['cityId'];
 
-                foreach ($poisDataset->poi as $poi) {
-                    foreach ($poi->category as $cat) {
-                        if (!in_array($cat, $keys)) {
-                            $keys[] = $cat;
-                            if ($cat === reset($keys)) {
-                                $filters[0] = new Filter($cat, true, $type, $row['cityId'], true);
-                            } else {
-                                $filters[] = new Filter($cat, false, $type, $row['cityId'], true);
+                    // handle datasets with empty spaces in their filename
+                    $json = file_get_contents(str_replace(" ", "%20", $row['url']), False, $cxContext);
+                    $assocArray = json_decode($json, true);
+
+                    $poisDataset = ResponseDataset::createFromArray(DatasetTypes::Poi, $assocArray);
+                    $status = 'success';
+
+                    $poisCounter = 0;
+
+                    foreach ($poisDataset->poi as $poi) {
+                        $poi->cityId = $cityId;
+                        $filterExists = false;
+
+                        foreach ($poi->category as $cat) {
+
+                            $filterExists = false;
+                            $upperCat = ucfirst($cat);
+
+                            if (!empty($filters)) {
+                                foreach ($filters as $filter) {
+                                    if (($filter->cityId == $cityId) && ($filter->name == $upperCat)) {
+                                        $filterExists = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!$filterExists) {
+
+                                $filters[] = new Filter($upperCat, false, $type, $cityId, true, $poisCounter);
+//                                if (count($filters) == 1) {
+//                                   // $filters[0]->selected = true;
+//                                }
+                            }
+                        }
+
+                        foreach ($filters as $filter) {
+                            if ($upperCat == $filter->name) {
+                                $filter->poisCounter++;
                             }
                         }
                     }
+                    array_push($app_datasets, new ResponseDataset($poisDataset, $name));
                 }
-                array_push($app_datasets, new ResponseDataset($poisDataset, $name));
             }
+            /* sort filters array alphabetically by category name */
+            usort($filters, function($a, $b) {
+                        return strcmp($a->name, $b->name);
+                    });
+                    
+            /*only the first filter appears to be checked*/
+            $filters[0]->selected = true;
+
+            Util::printJsonObj(new Response($app_datasets, $name, $filters, $status));
         }
-        Util::printJsonObj(new Response($app_datasets, $name, $filters));
+        else
+            Util::printJsonObj(new ResponseError("failed", "invalid application id", "Application doesn't exist!"));
+        Database::disconnect();
     }
     else
-        Util::printJsonObj(new ResponseError("failed", "invalid application id"));
-    Database::disconnect();
+        Util::printJsonObj(new ResponseError("failed", "missing application id", "Application doesn't exist!"));
+} catch (AppGeneratorException $e) {
+    $status = 'failed';
+    $error = $e->errorMessageForDevelopper();
+    $message = $e->errorMessageForUser();
+    Util::printJsonObj(new ResponseError($status, $error, $message));
 }
-else
-    Util::printJsonObj(new ResponseError("failed", "missing application id"));
 ?>
