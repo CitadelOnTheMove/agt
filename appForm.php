@@ -1,5 +1,6 @@
 <?php
 include_once 'Config.php';
+include_once CLASSES . 'resizeImage.php';
 require CLASSES . 'init.php';
 //$general->logged_out_protect();
 
@@ -123,11 +124,11 @@ if (isset($_SESSION['username'])) {
 
                     Database::connect();
 
-// define variables and set to empty values
+                    // define variables and set to empty values
                     $darkColorErr = $colorErr = $nameErr = $descriptionErr = $cityIdsErr = $datasetIdsErr = "";
 
                     $error = false;
-// Check all required fields
+                    // Check all required fields
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         if (empty($_POST["cityIds"])) {
@@ -157,12 +158,56 @@ if (isset($_SESSION['username'])) {
 
 
                         if (!$error) {
+                            $image = null;
                             if ((isset($_POST["cityIds"])) && (isset($_POST["name"])) && (isset($_POST["description"])) &&
                                     (isset($_POST["datasetIds"])) && (isset($_POST["color"])) &&
                                     (isset($_POST["darkColor"]))) {
 
+                                if (isset($_FILES["image"])) {
+                                    $tmpFile = $_FILES['image']['tmp_name'];
+                                    $storeImage = false;
+                                    if (!isset($tmpFile)) {
+                                        
+                                    } else {
+                                        $fileName = $_FILES['image']['name'];
+                                        $fileSize = $_FILES['image']['size'];
+                                        $filePath = MY_PATH. $fileName;
+
+                                        //Check filesize
+                                        if ($fileSize < 100000) {
+                                          
+                                            move_uploaded_file($tmpFile, $filePath);
+
+                                            /*Determine filetype (jpeg, png, gif)*/
+                                            switch ($_FILES['image']['type']) {
+                                                case 'image/jpeg': $ext = "jpg";
+                                                    $gd = imagecreatefromjpeg($filePath);
+                                                    $filePath = str_replace(".jpg", ".png", $filePath);
+                                                    $storeImage = true;
+                                                    break;
+                                                case 'image/png': $ext = "png";
+                                                    $gd = imagecreatefrompng($filePath);
+                                                    $storeImage = true;
+                                                    break;
+                                                case 'image/gif': $ext = "gif";
+                                                    $gd = imagecreatefromgif($filePath);
+                                                    $filePath = str_replace(".gif", ".png", $filePath);
+                                                    $storeImage = true;
+                                                    break;
+                                            }
+
+                                            /*Resize image and store it like png at the server*/
+                                            if ($storeImage) {
+                                                $resized = resizePreservingAspectRatio($gd, 60, 60);
+                                                imagepng($resized, $filePath);
+                                                $image = base64_encode(file_get_contents($filePath));
+                                            }
+                                        }
+                                    }
+                                }
+
                                 Database::begin();
-                                $newApp = App::createFromArray($_POST, $userId);
+                                $newApp = App::createFromArray($_POST, $userId, $image);
                                 if ($newApp->save()) {
                                     Database::commit();
                                     echo '<div class="success">Your application was created successfully!';
@@ -188,7 +233,7 @@ if (isset($_SESSION['username'])) {
                     ?>
 
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
-                        <form id="createNewAppForm" data-ajax="false" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                        <form id="createNewAppForm" data-ajax="false" enctype="multipart/form-data" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
                             <p>
                                 <?php if (!$general->logged_in()) { ?>
@@ -245,11 +290,15 @@ if (isset($_SESSION['username'])) {
                             <input type="text" name="name" required>                        
                             <br/><br/>
                             
-                             <legend><b>Application Description:</b> <span class="error">* <?php echo $descriptionErr; ?></span></legend><br/>
-                             <textarea rows="4" cols="50" name="description" required ></textarea>                        
-
+                            <legend><b>Application Description:</b> <span class="error">* <?php echo $descriptionErr; ?></span></legend><br/>
+                            <textarea rows="4" cols="50" maxlength="90" name="description"   required ></textarea>                        
                             <br/><br/>
-                            
+         
+                            <legend><b>Application Image:</b></legend><br/>
+                            <legend>Supported image formats: gif, jpeg, png. Maximum image size: 100KB.</legend><br/>
+                            <input type="file" name="image"/>
+                            <br/><br/>
+
                             <?php if (!$general->logged_in()) { ?>
                                 <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
                             <?php } else {
