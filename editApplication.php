@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Used for updating the title, the description and the image of an existed app
+ * @param $appId the unique identifier of the app
+ */
+
 include_once 'Config.php';
 include_once CLASSES . 'Util.class.php';
 include_once CLASSES . 'Database.class.php';
@@ -16,12 +21,21 @@ if (isset($_GET['appId'])) {
 
     Database::connect();
 
-    $sql = "UPDATE apps SET name=:name, description=:description WHERE uid=:appId";
-    try {
+    if ($app->image != null) {
+        $image = $app->image;
+        $sql = "UPDATE apps SET name=:name, description=:description, image=:image WHERE uid=:appId AND apps.isDeleted = 0";
+        $useSqlParam = true;
+    } else {
+        $sql = "UPDATE apps SET name=:name, description=:description WHERE uid=:appId AND apps.isDeleted = 0";
+        $useSqlParam = false;
+    }
 
+    try {
         $stmt = Database::$dbh->prepare($sql);
         $stmt->bindParam("name", $app->name);
         $stmt->bindParam("description", $app->description);
+        if ($useSqlParam)
+            $stmt->bindParam("image", $image);
         $stmt->bindParam("appId", $appId);
         $stmt->execute();
         echo "success";
