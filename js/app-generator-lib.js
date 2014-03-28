@@ -40,6 +40,7 @@ function globalInit() {
  */
 function getPoisFromDataset(resultCallback)
 {
+
     $.getJSON(datasetUrl, function(data) {
 
         pois = new Array();
@@ -50,12 +51,6 @@ function getPoisFromDataset(resultCallback)
             filters = data.filters;
             $('.ui-title').html(data.appName);
             $.each(data.applicationData, function(i, datasetObject) {
-                /* meta['id'] = datasetObject.dataset.id;
-                 meta['updated'] = datasetObject.dataset.updated;
-                 meta['created'] = datasetObject.dataset.created;
-                 meta['lang'] = datasetObject.dataset.lang;
-                 meta['author_id'] = datasetObject.dataset.author.id;
-                 meta['author_value'] = datasetObject.dataset.author.value;*/
 
                 $.each(datasetObject.dataset.poi, function(j, poi) {
                     poi.id = k;
@@ -64,7 +59,7 @@ function getPoisFromDataset(resultCallback)
                 });
             });
         }
-        else if (data.status === "failed"){
+        else if (data.status === "failed") {
             alert(data.message);
             console.log(data.error);
         }
@@ -197,14 +192,13 @@ function calcDistance(p1, p2) {
 function setFiltersByCityId(cityId) {
 
     var currentCityId = cityId;
-    //console.log("currentCityId = ", currentCityId);
-
     var selected = false;
+
     for (i = 0; i < filters.length; i++) {
 
         var filter = filters[i];
         filter.selected = false;
-        //console.log("filter.cityId = ", filter.cityId);
+
         if (filter.cityId === currentCityId) {
             filter.isVisible = true;
             if (!selected) {
@@ -237,12 +231,6 @@ function addMarkers()
      * the issue of overlapping ones
      */
     var oms = new OverlappingMarkerSpiderfier(map);
-    /* var iw = new google.maps.InfoWindow();
-     oms.addListener('click', function(marker) {
-     // console.log("marker", marker);
-     iw.setContent(marker.desc);
-     iw.open(map, marker);
-     });*/
 
     /* We initialize the infobubble styling */
     infoBubble = new InfoBubble({
@@ -273,9 +261,7 @@ function addMarkers()
                 icon: marker_image
             });
 
-            // markersArray.push(current_marker);
             markersArray[poi.id] = current_marker;
-            //    console.log("marketArrayIndex", poi.id);
             oms.addMarker(current_marker);
             google.maps.event.addListener(current_marker, 'click', function() {
                 infoBubble.setContent(setInfoWindowPoi(poi));
@@ -463,16 +449,6 @@ function setListPagePois()
                     category +
                     "</a>" +
                     "</li>";
-
-            /**    contentTemplate +=
-             "<li" + className + ">" +
-             "<a href='' onclick='overrideDetailClick(\"" + poi.id + "\"); return false;'>" +
-             "<span class='" + imageClass + " icon'></span>" +
-             "<h3>" + poi.title + "</h3>" +
-             "<h4>" + poi.description + "</h4>" +
-             category +
-             "</a>" +
-             "</li>";*/
         }
 
     });
@@ -599,15 +575,9 @@ function loadInfoPage() {
 function seeOnMap() {
 
     map.setZoom(16);
-    /*    var coords = currentPoi.location.point.pos.posList.split(" ");
-     var currentPoiLat = coords[0];
-     var currentPoiLon = coords[1];
-     map.panTo(new google.maps.LatLng(currentPoiLat, currentPoiLon));*/
-    // console.log(markersArray[currentPoiId]);
     infoBubble.setContent(setInfoWindowPoi(currentPoi));
     infoBubble.open(map, markersArray[currentPoiId]);
     refreshPoiVotes(currentPoi);
-    //refreshBubblePoiVotes(currentPoi.id);
 }
 
 /****************** Event Handlers*************************/
@@ -616,55 +586,11 @@ $(document).ready(function() {
 
     /* Click handler for the 'near me' button */
     $('.pois-nearme').click(function() {
-//        if (lastLoaded != 'nearme') {
-//            lastLoaded = 'nearme';
-//            /* Check if we can get geolocation from the browser */
-//            if (!map)
-//            {
-//                initializeMap();
-//            }
-//            else
-//            {
-//               /* var mapOptions = {
-//                    zoom: mapZoom + 10,
-//                    center: myLatlng
-//                };
-//                map.setOptions(mapOptions);*/
-//                initializeMap();
-//            }
-//
-//            google.maps.event.trigger(map, 'resize');
-//            $.mobile.changePage("#page1", {transition: "none"});
-//            $('.navbar > ul > li > a').removeClass('ui-btn-active');
-//            $('.pois-nearme').addClass('ui-btn-active');
-//        }
 
         $('.navbar > ul > li > a').removeClass('ui-btn-active');
         $('.pois-nearme').addClass('ui-btn-active');
         $.mobile.changePage("#page1", {transition: "none"});
     });
-
-
-    /* Click handler for the 'show all' button */
-    /*  $('.pois-showall').click(function() {
-     
-     $.mobile.changePage("#page1", {transition: "none"});
-     $('.navbar > ul > li > a').removeClass('ui-btn-active');
-     $('.pois-showall').addClass('ui-btn-active');
-     
-     //if (lastLoaded != 'showall') {
-     lastLoaded = 'showall';
-     var myLocalLatlng = new google.maps.LatLng(mapLat, mapLon);
-     //define the map options
-     var mapOptions = {
-     center: myLocalLatlng,
-     zoom: mapZoom,
-     mapTypeId: google.maps.MapTypeId.ROADMAP
-     };
-     map.setOptions(mapOptions);
-     //  }
-     
-     });*/
 
 
     /* Click handler for the 'list' button */
@@ -910,7 +836,6 @@ function onRefreshPoiVotesFailure(data, status)
 /*Called after a successful poi insertion*/
 function onVoteSuccess(data, status)
 {
-    //console.log("Vote success");
     alert('Vote submitted!');
     $('#insertVote')[0].reset();
     localStorage.setItem('votedPoi' + currentPoiId, "1");
@@ -935,21 +860,16 @@ function setFilters() {
     for (i = 0; i < filters.length; i++) {
         var filter = filters[i];
         if (filter.isVisible) {
-            
+
             var checked = filter.selected ? ' checked' : '';
             var filterName = filter.name;
             var filterType = filter.type;
             var filterCityId = filter.cityId;
             var filterPoisCounter = filter.poisCounter;
-            console.log("filter.poisCounter = " + filter.poisCounter);
             var filterValue = filterName + "/" + filterCityId;
-
-//              filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterName + "\" />" +
-//                    "<label for='map-filter" + i + "'><img id='img_style' src='images/pin" + i % 16 + ".png'/> " + filterName + " , (" + filterType + ")</label>";
 
             filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + i + "' class='map-filter' value=\"" + filterValue + "\" />" +
                     "<label for='map-filter" + i + "'><img id='img_style' src='images/pin" + i % 16 + ".png'/> " + filterName + " , (" + filterPoisCounter + " " + filterType + ")</label>";
-
         }
     }
     $('#map-filter > div > fieldset').html(filters_html);
@@ -970,7 +890,7 @@ function setCityFilters() {
 
         filters_html += "<input type='radio' " + " name='city' id='city-filter" + city.id + "' class='city-filter' value=\"" + coords + "\" />" +
                 "<label for='city-filter" + city.id + "'>\n\
- " + filterName + " </label>";
+                " + filterName + " </label>";
     }
 
     $('#city-filter > div > fieldset').html(filters_html);
@@ -1032,8 +952,7 @@ function hideAddressBar() {
 function isFilterSelected(categories, cityId) {
     var found = false;
     var filter;
-//      for (i = 0; i < filters.length; i++) {
-//    if(cityId){
+
     $.each(categories, function(index, categoryName) {
         var id = cityId;
         filter = $.grep(filters, function(e) {
@@ -1045,13 +964,9 @@ function isFilterSelected(categories, cityId) {
             return false;
         }
     });
-//    }
-//      }
 
     if (found) {
-        //   if (filter.cityId == cityId) {
         return true;
-        // }
     }
 
     return false;
@@ -1138,7 +1053,7 @@ function touchScroll(id) {
  */
 function setSelectedFilters(selectedFilterValues) {
     $.each(filters, function(index, filter) {
-             
+
         if ($.inArray(filter.name + "/" + filter.cityId, selectedFilterValues) > -1) {
             filters[index].selected = true;
         } else {
