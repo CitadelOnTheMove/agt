@@ -12,6 +12,9 @@ define("CLASSES", HTDOCS_ROOT . BASE_DIR . CLASSES_DIR);
 //define("SERVERNAME", "http://10.1.1.1/");       //Don't forget to replace localhost
 define("SERVERNAME", "http://localhost/");      //with your IP address, if you want to connect to the template with your mobile phone
 
+//appForm: path to store the resized images
+define("MY_PATH", "C:\\Users\\Lkallipolitis\\Desktop\\tmp\\");
+
 //Proxy settings
 define("PROXYUSE", false); 
 define("PROXYNAME", "10.1.1.51"); // without the "http://"
@@ -40,6 +43,6 @@ define("DATASET_FILE", HTDOCS_ROOT . BASE_DIR ."data/POI_athens.json");
 define("DATASET_ID", 36);
 define("DATASET_URL", SERVERNAME . BASE_DIR . "dataset.php");
 define("USE_DATABASE", true);
-define("MAX_DATASETS_PER_USER", 5);
+define("MAX_DATASETS_PER_USER", 50);
 define("MAX_CITY_DISTANCE_KM", 50);
 ?>
