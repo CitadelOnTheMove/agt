@@ -12,20 +12,22 @@ class Poi {
      * to be serialized properly by json_encode
      */
 
-    public $id;  // the dataset id e.g. http://data.gent.be/datasets/parkeergarages/1
-    public $title;   // the title string
-    public $description;  // the description string
+    public $id; 
+    public $title;   
+    public $description; 
     public $cityId;
-    public $category;  // a string array containing the categories
-    public $location;  // the PoiLocation.class.php object
-    public $attribute;  // a PoiLabel.class array with the available labels
+    public $category;  
+    public $location;  
+    public $attribute;  
     private $db_id;   // the database primary key id
-    private $datasetId;
+    public $datasetId;
 
     /**
+     * Creates a new instance of the Poi object
      * @param string $identifier the Poi identifier
      * @param string $title the title of the poi
      * @param string $description the description of the poi
+     * @param int $cityId the city's id
      * @param string[] $category an array of string categories
      * @param PoiLocation $location the location object
      * @param PoiLabel[] $label an array on labels
@@ -41,7 +43,8 @@ class Poi {
     }
 
     /**
-     * @param Dataset $datasetId
+     * Saves the Poi instance to the database
+     * @param int $datasetId the unique identifier of the dataset
      * @return true on success or false otherwise
      */
     public function save($datasetId) {
@@ -93,8 +96,8 @@ class Poi {
     }
 
     /**
-     * Save a new cateogry item and associate it with this poi.
-     * If category item exists in db, only the association is made
+     * Save a new cateogory instance and associate it with this poi.
+     * If category instance exists in db, only the association is made
      * @param string $categoryText the text describing the category
      * @return true on success or false otherwise
      */
@@ -137,7 +140,7 @@ class Poi {
     }
 
     /**
-     * add the category associations to the poi
+     * Add the category associations to the poi
      * @param int $poiId the id of the Poi
      * @param int $categoryId the Category id
      * @return boolean true on seccuess or false otherwise
