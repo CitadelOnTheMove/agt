@@ -100,7 +100,7 @@ $colors = printColors($appID);
         <div data-role="page" id="page1" class="page">
             <header data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
                 <span class="ui-title"><?php echo $currentAppName ?></span>
-                <a href="" id="filter" data-icon="search" data-iconpos="notext" data-theme="a" title="Filter Items" class="ui-btn-left">&nbsp;</a>
+                <a href="" id="filter" data-icon="search" data-iconpos="left" data-theme="a" title="Categories" class="ui-btn-left">Categories</a>
                 <a href="" id="city" data-icon="bars" data-iconpos="left" data-theme="b" title="Select City" class="ui-btn-right">Cities</a>              
 
                 <!--a href="#info" data-rel="dialog" data-icon="info" data-iconpos="notext" data-theme="b" title="Info" class="ui-btn-right">&nbsp;</a-->
