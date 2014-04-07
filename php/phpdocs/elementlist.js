@@ -1,0 +1,3 @@
+
+var ApiGen = ApiGen || {};
+ApiGen.elements = [["c","App"],["c","AppGeneratorException"],["c","AppInfo"],["c","AppSettingsDefinitions"],["c","Author"],["c","City"],["c","Database"],["c","Dataset"],["c","DatasetTypes"],["c","Exception"],["c","Filter"],["c","General"],["c","GeoLocation"],["c","License"],["c","Link"],["c","PDO"],["c","PDOException"],["c","Poi"],["c","PoiLabel"],["c","PoiLocation"],["c","PoiLocationAddress"],["c","PoiLocationPoint"],["c","PoiLocationPointPos"],["c","PoisDataset"],["f","printColors()"],["f","printSelectedCities()"],["f","resizePreservingAspectRatio()"],["c","Response"],["c","ResponseDataset"],["c","ResponseError"],["c","RuntimeException"],["c","Users"],["c","Util"],["c","Vote"]];

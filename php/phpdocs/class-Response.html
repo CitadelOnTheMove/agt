@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Response | app-generator</title>
+
+	<script type="text/javascript" src="resources/combined.js?3272085413"></script>
+	<script type="text/javascript" src="elementlist.js?4278670809"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-App.html">App</a></li>
+				<li><a href="class-AppInfo.html">AppInfo</a></li>
+				<li><a href="class-AppSettingsDefinitions.html">AppSettingsDefinitions</a></li>
+				<li><a href="class-Author.html">Author</a></li>
+				<li><a href="class-City.html">City</a></li>
+				<li><a href="class-Database.html">Database</a></li>
+				<li><a href="class-Dataset.html">Dataset</a></li>
+				<li><a href="class-DatasetTypes.html">DatasetTypes</a></li>
+				<li><a href="class-Filter.html">Filter</a></li>
+				<li><a href="class-General.html">General</a></li>
+				<li><a href="class-GeoLocation.html">GeoLocation</a></li>
+				<li><a href="class-License.html">License</a></li>
+				<li><a href="class-Link.html">Link</a></li>
+				<li><a href="class-Poi.html">Poi</a></li>
+				<li><a href="class-PoiLabel.html">PoiLabel</a></li>
+				<li><a href="class-PoiLocation.html">PoiLocation</a></li>
+				<li><a href="class-PoiLocationAddress.html">PoiLocationAddress</a></li>
+				<li><a href="class-PoiLocationPoint.html">PoiLocationPoint</a></li>
+				<li><a href="class-PoiLocationPointPos.html">PoiLocationPointPos</a></li>
+				<li><a href="class-PoisDataset.html">PoisDataset</a></li>
+				<li class="active"><a href="class-Response.html">Response</a></li>
+				<li><a href="class-ResponseDataset.html">ResponseDataset</a></li>
+				<li><a href="class-ResponseError.html">ResponseError</a></li>
+				<li><a href="class-Users.html">Users</a></li>
+				<li><a href="class-Util.html">Util</a></li>
+				<li><a href="class-Vote.html">Vote</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-AppGeneratorException.html">AppGeneratorException</a></li>
+			</ul>
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-printColors.html">printColors</a></li>
+				<li><a href="function-printSelectedCities.html">printSelectedCities</a></li>
+				<li><a href="function-resizePreservingAspectRatio.html">resizePreservingAspectRatio</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-None.html" title="Summary of None"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Response</h1>
+
+
+	<div class="description">
+	
+<p>Returns a json response with datasets and filters of the given app</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+		<b>Located at</b> <a href="source-class-Response.html#7-36" title="Go to source code">php/Response.class.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Response.html#22-34" title="Go to source code">__construct</a>( <span><code><a href="class-PoisDataset.html">PoisDataset</a>[]</code> <var>$applicationData</var></span>, <span>string <var>$appName</var></span>, <span><code><a href="class-Filter.html">Filter</a>[]</code> <var>$filters</var></span>, <span>string <var>$status</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Creates a new instance of the Response object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates a new instance of the Response object</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$applicationData</var></dt>
+					<dd><code><code><a href="class-PoisDataset.html">PoisDataset</a>[]</code></code><br>$applicationData an array of datasets including pois</dd>
+					<dt><var>$appName</var></dt>
+					<dd><code>string</code><br>$appName the name of the app</dd>
+					<dt><var>$filters</var></dt>
+					<dd><code><code><a href="class-Filter.html">Filter</a>[]</code></code><br>$filters an array of app filters</dd>
+					<dt><var>$status</var></dt>
+					<dd><code>string</code><br>$status can get two values, either success or failed</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="applicationData" id="$applicationData">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Response.html#16" title="Go to source code"><var>$applicationData</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$applicationData" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="appName" id="$appName">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Response.html#17" title="Go to source code"><var>$appName</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$appName" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="filters" id="$filters">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Response.html#18" title="Go to source code"><var>$filters</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$filters" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="status" id="$status">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Response.html#19" title="Go to source code"><var>$status</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$status" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		app-generator API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

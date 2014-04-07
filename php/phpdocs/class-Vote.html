@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Vote | app-generator</title>
+
+	<script type="text/javascript" src="resources/combined.js?3272085413"></script>
+	<script type="text/javascript" src="elementlist.js?4278670809"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-App.html">App</a></li>
+				<li><a href="class-AppInfo.html">AppInfo</a></li>
+				<li><a href="class-AppSettingsDefinitions.html">AppSettingsDefinitions</a></li>
+				<li><a href="class-Author.html">Author</a></li>
+				<li><a href="class-City.html">City</a></li>
+				<li><a href="class-Database.html">Database</a></li>
+				<li><a href="class-Dataset.html">Dataset</a></li>
+				<li><a href="class-DatasetTypes.html">DatasetTypes</a></li>
+				<li><a href="class-Filter.html">Filter</a></li>
+				<li><a href="class-General.html">General</a></li>
+				<li><a href="class-GeoLocation.html">GeoLocation</a></li>
+				<li><a href="class-License.html">License</a></li>
+				<li><a href="class-Link.html">Link</a></li>
+				<li><a href="class-Poi.html">Poi</a></li>
+				<li><a href="class-PoiLabel.html">PoiLabel</a></li>
+				<li><a href="class-PoiLocation.html">PoiLocation</a></li>
+				<li><a href="class-PoiLocationAddress.html">PoiLocationAddress</a></li>
+				<li><a href="class-PoiLocationPoint.html">PoiLocationPoint</a></li>
+				<li><a href="class-PoiLocationPointPos.html">PoiLocationPointPos</a></li>
+				<li><a href="class-PoisDataset.html">PoisDataset</a></li>
+				<li><a href="class-Response.html">Response</a></li>
+				<li><a href="class-ResponseDataset.html">ResponseDataset</a></li>
+				<li><a href="class-ResponseError.html">ResponseError</a></li>
+				<li><a href="class-Users.html">Users</a></li>
+				<li><a href="class-Util.html">Util</a></li>
+				<li class="active"><a href="class-Vote.html">Vote</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-AppGeneratorException.html">AppGeneratorException</a></li>
+			</ul>
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-printColors.html">printColors</a></li>
+				<li><a href="function-printSelectedCities.html">printSelectedCities</a></li>
+				<li><a href="function-resizePreservingAspectRatio.html">resizePreservingAspectRatio</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-None.html" title="Summary of None"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Vote</h1>
+
+
+	<div class="description">
+	
+<p>Pois Votes</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+		<b>Located at</b> <a href="source-class-Vote.html#3-101" title="Go to source code">php/Vote.class.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Vote.html#18-30" title="Go to source code">__construct</a>( <span>mixed <var>$poiId</var></span>, <span>mixed <var>$positionInDataset</var></span>, <span>mixed <var>$voteDate</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Creates a new instance of the Vote object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates a new instance of the Vote object</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$poiId</var></dt>
+					<dd><code>mixed</code><br>$poiId the id of the poi</dd>
+					<dt><var>$positionInDataset</var></dt>
+					<dd><code>mixed</code><br>$positionInDataset the position of the poi in the dataset</dd>
+					<dt><var>$voteDate</var></dt>
+					<dd><code>mixed</code><br>$voteDate the date when the poi was voted</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>mixed</code><br>$value the value of the votes for a poi</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="save" id="_save">
+
+		<td class="attributes"><code>
+			 public 
+			true
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_save">#</a>
+		<code><a href="source-class-Vote.html#32-53" title="Go to source code">save</a>( )</code>
+
+		<div class="description short">
+			
+<p>Saves the Vote instance to the database</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Saves the Vote instance to the database</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>true</code><br>on success of false otherwise<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getPoiVotes" id="_getPoiVotes">
+
+		<td class="attributes"><code>
+			 public static
+			array[][]
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getPoiVotes">#</a>
+		<code><a href="source-class-Vote.html#55-88" title="Go to source code">getPoiVotes</a>( <span>mixed <var>$poiId</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Fetches the positive and the negative votes for a poi from the database</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Fetches the positive and the negative votes for a poi from the database</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$poiId</var></dt>
+					<dd><code>mixed</code><br>$poiId the id of the poi</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array[][]</code><br>with the positive and the negatives votes on success of false otherwise<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createVote" id="_createVote">
+
+		<td class="attributes"><code>
+			 public static
+			a
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createVote">#</a>
+		<code><a href="source-class-Vote.html#90-99" title="Go to source code">createVote</a>( <span>mixed <var>$poiId</var></span>, <span>mixed <var>$voteDate</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Factory method that returns a new instance of Vote</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Factory method that returns a new instance of Vote</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$poiId</var></dt>
+					<dd><code>mixed</code><br>$poiId the id of the poi</dd>
+					<dt><var>$voteDate</var></dt>
+					<dd><code>mixed</code><br>$voteDate indicates when a poi was voted</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>mixed</code><br>$value the value of the votes for a poi</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>a</code><br>new Vote instance<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="id" id="$id">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Vote.html#12" title="Go to source code"><var>$id</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$id" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="poiId" id="$poiId">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Vote.html#13" title="Go to source code"><var>$poiId</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$poiId" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="positionInDataset" id="$positionInDataset">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Vote.html#14" title="Go to source code"><var>$positionInDataset</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$positionInDataset" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="voteDate" id="$voteDate">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Vote.html#15" title="Go to source code"><var>$voteDate</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$voteDate" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="value" id="$value">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Vote.html#16" title="Go to source code"><var>$value</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$value" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		app-generator API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

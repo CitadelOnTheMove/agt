@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Dataset | app-generator</title>
+
+	<script type="text/javascript" src="resources/combined.js?3272085413"></script>
+	<script type="text/javascript" src="elementlist.js?4278670809"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-App.html">App</a></li>
+				<li><a href="class-AppInfo.html">AppInfo</a></li>
+				<li><a href="class-AppSettingsDefinitions.html">AppSettingsDefinitions</a></li>
+				<li><a href="class-Author.html">Author</a></li>
+				<li><a href="class-City.html">City</a></li>
+				<li><a href="class-Database.html">Database</a></li>
+				<li class="active"><a href="class-Dataset.html">Dataset</a></li>
+				<li><a href="class-DatasetTypes.html">DatasetTypes</a></li>
+				<li><a href="class-Filter.html">Filter</a></li>
+				<li><a href="class-General.html">General</a></li>
+				<li><a href="class-GeoLocation.html">GeoLocation</a></li>
+				<li><a href="class-License.html">License</a></li>
+				<li><a href="class-Link.html">Link</a></li>
+				<li><a href="class-Poi.html">Poi</a></li>
+				<li><a href="class-PoiLabel.html">PoiLabel</a></li>
+				<li><a href="class-PoiLocation.html">PoiLocation</a></li>
+				<li><a href="class-PoiLocationAddress.html">PoiLocationAddress</a></li>
+				<li><a href="class-PoiLocationPoint.html">PoiLocationPoint</a></li>
+				<li><a href="class-PoiLocationPointPos.html">PoiLocationPointPos</a></li>
+				<li><a href="class-PoisDataset.html">PoisDataset</a></li>
+				<li><a href="class-Response.html">Response</a></li>
+				<li><a href="class-ResponseDataset.html">ResponseDataset</a></li>
+				<li><a href="class-ResponseError.html">ResponseError</a></li>
+				<li><a href="class-Users.html">Users</a></li>
+				<li><a href="class-Util.html">Util</a></li>
+				<li><a href="class-Vote.html">Vote</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-AppGeneratorException.html">AppGeneratorException</a></li>
+			</ul>
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-printColors.html">printColors</a></li>
+				<li><a href="function-printSelectedCities.html">printSelectedCities</a></li>
+				<li><a href="function-resizePreservingAspectRatio.html">resizePreservingAspectRatio</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-None.html" title="Summary of None"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Dataset</h1>
+
+
+	<div class="description">
+	
+<p>Dataset class is the base class that every dataset should extend</p>
+
+	</div>
+
+
+
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-PoisDataset.html">PoisDataset</a>
+	</div>
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+		<b>Located at</b> <a href="source-class-Dataset.html#7-147" title="Go to source code">php/Dataset.class.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Dataset.html#26-50" title="Go to source code">__construct</a>( <span>integer <var>$id</var></span>, <span>string <var>$identifier</var></span>, <span>string <var>$updated</var></span>, <span>string <var>$created</var></span>, <span>string <var>$lang</var></span>, <span><code><a href="class-Author.html">Author</a></code> <var>$author</var></span>, <span><code><a href="class-License.html">License</a></code> <var>$license</var></span>, <span><code><a href="class-Link.html">Link</a></code> <var>$link</var></span>, <span>string <var>$updateFrequency</var></span>, <span>string <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Creates a new instance of the Dataset object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates a new instance of the Dataset object</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$id</var></dt>
+					<dd><code>integer</code><br>$id the dataset id</dd>
+					<dt><var>$identifier</var></dt>
+					<dd><code>string</code><br>$identifier the dataset name</dd>
+					<dt><var>$updated</var></dt>
+					<dd><code>string</code><br>$updated the timestamp indicating when this dataset was last updated</dd>
+					<dt><var>$created</var></dt>
+					<dd><code>string</code><br>$created the timestamp indicating when this dataset was created</dd>
+					<dt><var>$lang</var></dt>
+					<dd><code>string</code><br>$lang the locale code RFC 1766</dd>
+					<dt><var>$author</var></dt>
+					<dd><code><code><a href="class-Author.html">Author</a></code></code><br>$author the author of the dataset</dd>
+					<dt><var>$license</var></dt>
+					<dd><code><code><a href="class-License.html">License</a></code></code><br>$license the license of the dataset</dd>
+					<dt><var>$link</var></dt>
+					<dd><code><code><a href="class-Link.html">Link</a></code></code><br>$link the link of the source of the dataset</dd>
+					<dt><var>$updateFrequency</var></dt>
+					<dd><code>string</code><br>$updateFrequency a description of the update frequency e.g. "semester"</dd>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url the dataset url, where the dataset is stored</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCategories" id="_getCategories">
+
+		<td class="attributes"><code>
+			 public static
+			Category|boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCategories">#</a>
+		<code><a href="source-class-Dataset.html#52-75" title="Go to source code">getCategories</a>( <span>integer <var>$datasetId</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Fetches a Category instance from database based on the dataset id</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Fetches a Category instance from database based on the dataset id</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$datasetId</var></dt>
+					<dd><code>integer</code><br>$datasetId the id of the dataset</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Category|boolean</code><br>a new Category object or false if not found<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDatasetsOfUser" id="_getDatasetsOfUser">
+
+		<td class="attributes"><code>
+			 public static
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDatasetsOfUser">#</a>
+		<code><a href="source-class-Dataset.html#77-96" title="Go to source code">getDatasetsOfUser</a>( <span>integer <var>$userId</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Fetches the number of datasets per user from database based on the user
+id</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Fetches the number of datasets per user from database based on the user
+id</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$userId</var></dt>
+					<dd><code>integer</code><br>$userId the id of the user</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>the number of datasets per user<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="saveNewDataset" id="_saveNewDataset">
+
+		<td class="attributes"><code>
+			 public static
+			true
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_saveNewDataset">#</a>
+		<code><a href="source-class-Dataset.html#98-145" title="Go to source code">saveNewDataset</a>( <span>string <var>$datasetName</var></span>, <span>string <var>$url</var></span>, <span>string <var>$type</var></span>, <span>integer <var>$city</var></span>, <span>integer <var>$userId</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Saves the Dataset instance to the database</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Saves the Dataset instance to the database</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$datasetName</var></dt>
+					<dd><code>string</code><br>$datasetName the dataset name</dd>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url the dataset url</dd>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code><br>$type the dataset type</dd>
+					<dt><var>$city</var></dt>
+					<dd><code>integer</code><br>$city the city id</dd>
+					<dt><var>$userId</var></dt>
+					<dd><code>integer</code><br>$userId the user id</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>true</code><br>on success of false otherwise<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="id" id="$id">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#15" title="Go to source code"><var>$id</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$id" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="identifier" id="$identifier">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#16" title="Go to source code"><var>$identifier</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$identifier" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="updated" id="$updated">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#17" title="Go to source code"><var>$updated</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$updated" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="created" id="$created">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#18" title="Go to source code"><var>$created</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$created" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="lang" id="$lang">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#19" title="Go to source code"><var>$lang</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$lang" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="author" id="$author">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#20" title="Go to source code"><var>$author</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$author" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="license" id="$license">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#21" title="Go to source code"><var>$license</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$license" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="link" id="$link">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#22" title="Go to source code"><var>$link</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$link" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="updateFrequency" id="$updateFrequency">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#23" title="Go to source code"><var>$updateFrequency</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$updateFrequency" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="url" id="$url">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Dataset.html#24" title="Go to source code"><var>$url</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$url" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		app-generator API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
