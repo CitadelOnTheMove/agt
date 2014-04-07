@@ -3,6 +3,10 @@
 include_once CLASSES . 'GeoLocation.class.php';
 include_once CLASSES . 'AppGeneratorException.class.php';
 
+/**
+ * Describes the location point position object to be used in a @see PoiLocationPoint
+ */
+
 class PoiLocationPointPos {
     /*
      * Member variables
