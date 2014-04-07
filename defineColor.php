@@ -6,9 +6,11 @@ include_once CLASSES . 'Database.class.php';
 include_once CLASSES . 'Response.class.php';
 include_once CLASSES . 'PoisDataset.class.php';
 include_once CLASSES . 'App.class.php';
-
-/* Gets the colors defined for the given application
- * 
+ 
+/**
+ * Gets the colors defined for the given application
+ * @param $uid the unique identifier of the app
+ * @return string[] an array with the color value and the dark color value
  */
 
 function printColors($uid) {
