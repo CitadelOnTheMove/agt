@@ -222,14 +222,7 @@ if (isset($_SESSION['username'])) {
                                 }
                             }
                         }
-                    }
-
-                    function clear_input($data) {
-                        $data = trim($data);
-                        $data = stripslashes($data);
-                        $data = htmlspecialchars($data);
-                        return $data;
-                    }
+                    }                   
                     ?>
 
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
@@ -290,12 +283,12 @@ if (isset($_SESSION['username'])) {
                             <input type="text" name="name" required>                        
                             <br/><br/>
                             
-                            <legend><b>Application Description:</b> <span class="error">* <?php echo $descriptionErr; ?></span></legend><br/>
+                            <legend><b>Application Description:(max 90 chars)</b> <span class="error">* <?php echo $descriptionErr; ?></span></legend><br/>
                             <textarea rows="4" cols="50" maxlength="90" name="description"   required ></textarea>                        
                             <br/><br/>
          
                             <legend><b>Application Image:</b></legend><br/>
-                            <legend>Supported image formats: gif, jpeg, png. Maximum image size: 100KB.</legend><br/>
+                            <legend>(Supported image formats: gif, jpeg, png. Maximum size: 1MB.)</legend><br/>
                             <input type="file" name="image"/>
                             <br/><br/>
 
