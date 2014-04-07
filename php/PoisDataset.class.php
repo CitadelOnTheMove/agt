@@ -12,7 +12,9 @@ class PoisDataset extends Dataset {
     public $poi;    // the array of Poi.class objects
 
     /**
-     * @param string $identifier the public url of the dataset identifier
+     * Creates a new instance of the PoisDataset object
+     * @param string $id the unique identifier of the dataset
+     * @param string $identifier the name of the dataset
      * @param string $updated the timestamp indicating when this dataset was last updated
      * @param string $created the timestamp indicating when this dataset was created
      * @param string $lang  the locale code RFC 1766
@@ -20,6 +22,7 @@ class PoisDataset extends Dataset {
      * @param License $license the license of the dataset
      * @param Link $link the link of the source of the dataset
      * @param string $updateFrequency a description of the update frequency e.g. "semester"
+     * @param string $url the public url of the dataset
      * @param Poi[] $pois the array of @see Poi object
      */
 
@@ -28,6 +31,10 @@ class PoisDataset extends Dataset {
         $this->poi = $pois;
     }
 
+     /**
+     * Saves the PoisDataset instance to the database
+     * @return boolean true on success or fasle otherwise
+     */
     public function save() {
         $sql = "INSERT INTO datasets VALUES(null, :identifier, :update, :created, :lang, :updateFrequency, :url)";
         $sqlParams = array(':identifier' => $this->identifier,
@@ -36,7 +43,6 @@ class PoisDataset extends Dataset {
             ':lang' => $this->lang,
             ':updateFrequency' => $this->updateFrequency,
             ':url' => $this->url);
-
 
         try {
             $sth = Database::$dbh->prepare($sql);
@@ -75,6 +81,13 @@ class PoisDataset extends Dataset {
         return true;
     }
 
+     /**
+     * Fetches a PoisDataset instance from database based on the dataset id
+     * (Initialize object from db)
+     * @param int $datasetId
+     * @return PoisDataset|boolean a new PoisDataset object or false if not found
+     */
+    
     public static function createFromDb($datasetId) {
         $sql = "SELECT * FROM datasets WHERE id = :datasetId";
         $sqlParams = array(':datasetId' => $datasetId);

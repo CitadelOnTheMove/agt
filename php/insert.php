@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Creates a new poi(@see Poi object) and saves it into the database
+ */
+
 include_once '../Config.php';
 include_once CLASSES . 'Response.class.php';
 include_once CLASSES . 'Poi.class.php';

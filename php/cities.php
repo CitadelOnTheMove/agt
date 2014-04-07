@@ -7,7 +7,9 @@ include_once CLASSES . 'City.class.php';
 include_once CLASSES . 'App.class.php';
 
 /**
- *  echoes a javascript array with the cities stored in the database
+ * Echoes a javascript array with the cities stored in the database
+ * @param $uid the unique identifier of the app
+ * @return json all City[] objects for the specific app
  */
 function printSelectedCities($uid) {
     $cities = array();
@@ -17,16 +19,11 @@ function printSelectedCities($uid) {
 
         if ($app = App::createFromDb($uid)) {
 
-
             foreach ($app->datasetIds as $datasetId) {
-                //  echo " key = " . $key  . " value = " . $value;
-                //  $sql = "SELECT id FROM datasets WHERE id =" . $value;
-
 
                 $sqlCity = "SELECT * FROM cities JOIN city_datasets ON city_datasets.city_id=cities.id 
             WHERE dataset_id=" . $datasetId;
 
-                //echo 'sqlCity = ' . $sqlCity;
                 foreach (Database::$dbh->query($sqlCity) as $city) {
                     $id = $city['city_id'];
                     $name = $city['name'];

@@ -8,19 +8,24 @@ class PoiLocationPointPos {
      * Member variables
      */
 
-    public $srsName;  // the GIS standard used e.g. http://www.opengis.net/def/crs/EPSG/0/4326
-    public $posList; // space seperated pair values of lat/lng 
+    public $srsName;
+    public $posList;
 
     /**
+     * Creates a new instance of the PoiLocationPointPos object
      * @param string $srsName the GIS standard used e.g. http://www.opengis.net/def/crs/EPSG/0/4326
      * @param string $posList space seperated pair values of lat/lng 
      */
-
     public function __construct($srsName, $posList) {
         $this->srsName = $srsName;
         $this->posList = $posList;
     }
 
+    /**
+     * Returns a new instance of GeoLocation
+     * @param array $assocArray an associative array representation of the object
+     * @return GeoLocation[]
+     */
     public function getCoords() {
         $ret = array();
 
@@ -30,10 +35,6 @@ class PoiLocationPointPos {
             $ret[] = new GeoLocation($pointCoords[0], $pointCoords[1]);
         }
         return $ret;
-    }
-
-    public static function createFromDb() {
-        
     }
 
     /**
@@ -49,7 +50,6 @@ class PoiLocationPointPos {
             foreach ($geoPairs as $geoPair) {
                 $pointCoords = explode(' ', $geoPair);
             }
-            //echo "pointCoords[0] = " . $pointCoords[0]. " pointCoords[1] = " . $pointCoords[1];
             if (!is_numeric($pointCoords[0]) || (!is_numeric($pointCoords[1]))) {
                 throw(new AppGeneratorException("Please make sure that your dataset contains the right coords!!"));
             }

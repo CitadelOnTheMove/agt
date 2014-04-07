@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Describes the location address object to be used in a @see Poi
+ */
 class PoiLocationAddress {
     /*
      * Memeber variables
@@ -10,6 +12,7 @@ class PoiLocationAddress {
     public $city;
 
     /**
+     * Creates a new instance of the PoiLocationAddress object
      * @param string $value the street name of the address
      * @param string $postal the postal code of the address
      * @param string $city the city that this address belongs to

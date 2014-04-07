@@ -4,18 +4,16 @@ include_once CLASSES . 'Database.class.php';
 
 class Users {
 
-    public function __construct() {
-//$this->db = $database;
-    }
-
+    /**
+     * login process, checks user's credentials
+     * @param string $username the user's username
+     * @param string $password the user's password
+     * @return int|boolean an id if user succeeded to log in or false if not 
+     */
     public function login($username, $password) {
-
-
         Database::connect();
         Database::begin();
         $query = Database::$dbh->prepare("SELECT `password`, `id` FROM `users` WHERE `username` = ?");
-
-
 
         $query->bindValue(1, $username);
         try {
@@ -24,7 +22,7 @@ class Users {
             $stored_password = $data['password'];
             $id = $data['id'];
             Database::disconnect();
-#hashing the supplied password and comparing it with the stored hashed password.
+            #hashing the supplied password and comparing it with the stored hashed password.
             if ($stored_password === sha1($password)) {
                 return $id;
             } else {
@@ -35,6 +33,11 @@ class Users {
         }
     }
 
+    /**
+     * email confirmation process
+     * @param string $username the user's username
+     * @return int|boolean an id if user succeeded to log in or false if not 
+     */
     public function email_confirmed($username) {
         Database::connect();
         Database::begin();
@@ -56,16 +59,18 @@ class Users {
         }
     }
 
+    /**
+     * checks if a user exists
+     * @param string $username the user's username
+     * @return true on success of false otherwise
+     */
     public function user_exists($username) {
-
         Database::connect();
         Database::begin();
         $query = Database::$dbh->prepare("SELECT COUNT(`id`) FROM `users` WHERE `username`= ?");
         $query->bindValue(1, $username);
 
-
         try {
-
             $query->execute();
             $rows = $query->fetchColumn();
             Database::disconnect();
@@ -79,8 +84,12 @@ class Users {
         }
     }
 
+    /**
+     * checks if a user's email exists
+     * @param string $email the user's email
+     * @return true on success of false otherwise
+     */
     public function email_exists($email) {
-
         Database::connect();
         Database::begin();
         $query = Database::$dbh->prepare("SELECT COUNT(`id`) FROM `users` WHERE `email`= ?");
@@ -88,7 +97,6 @@ class Users {
         Database::disconnect();
 
         try {
-
             $query->execute();
             $rows = $query->fetchColumn();
 
@@ -102,17 +110,18 @@ class Users {
         }
     }
 
+    /**
+     * login process, checks user's credentials
+     * @param string $id the user's id
+     * @return User a user object 
+     */
     public function userdata($id) {
-
         Database::connect();
         Database::begin();
         $query = Database::$dbh->prepare("SELECT * FROM `users` WHERE `id`= ?");
         $query->bindValue(1, $id);
 
-
-
         try {
-
             $query->execute();
             Database::disconnect();
             return $query->fetch();
@@ -122,6 +131,12 @@ class Users {
         }
     }
 
+    /**
+     * register process
+     * @param string $username the user's username
+     * @param string $password the user's password
+     * @param string $email the user's email
+     */
     public function register($username, $password, $email) {
         Database::connect();
         Database::begin();

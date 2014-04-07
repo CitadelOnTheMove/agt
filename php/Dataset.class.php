@@ -5,7 +5,7 @@ include_once CLASSES . 'License.class.php';
 include_once CLASSES . 'Author.class.php';
 
 /**
- * Dataset class is tha base class that every dataset should extend
+ * Dataset class is the base class that every dataset should extend
  */
 class Dataset {
     /*
@@ -24,15 +24,17 @@ class Dataset {
     public $url;
 
     /**
+     * Creates a new instance of the Dataset object
      * @param int $id the dataset id
      * @param string $identifier the dataset name
      * @param string $updated the timestamp indicating when this dataset was last updated
      * @param string $created the timestamp indicating when this dataset was created
-     * @param string $lang  the locale code RFC 1766
+     * @param string $lang the locale code RFC 1766
      * @param Author $author the author of the dataset
      * @param License $license the license of the dataset
      * @param Link $link the link of the source of the dataset
      * @param string $updateFrequency a description of the update frequency e.g. "semester"
+     * @param string $url the dataset url, where the dataset is stored
      */
     public function __construct($id, $identifier, $updated, $created, $lang, $author, $license, $link, $updateFrequency, $url) {
         $this->id = $id;
@@ -46,8 +48,13 @@ class Dataset {
         $this->updateFrequency = $updateFrequency;
         $this->url = $url;
     }
-    
-     public static function getCategories($datasetId) {
+
+    /**
+     * Fetches a Category instance from database based on the dataset id
+     * @param int $datasetId the id of the dataset
+     * @return Category|boolean a new Category object or false if not found
+     */
+    public static function getCategories($datasetId) {
         $sql = "SELECT * FROM categories where dataset_id = :datasetId";
         $sqlParams[":datasetId"] = $datasetId;
 
@@ -67,6 +74,11 @@ class Dataset {
         return $categories;
     }
 
+     /**
+     * Fetches the number of datasets per user from database based on the user id
+     * @param int $userId the id of the user
+     * @return int the number of datasets per user
+     */
     public static function getDatasetsOfUser($userId) {
         $sql = "SELECT * FROM datasets where createdBy = :userId";
         $sqlParams[":userId"] = $userId;
@@ -81,9 +93,17 @@ class Dataset {
                 $sth->debugDumpParams();
             Util::throwException(__FILE__, __LINE__, __METHOD__, "getDatasetsOfUser query failed", $e->getMessage(), $e);
         }
-   
     }
 
+    /**
+     * Saves the Dataset instance to the database
+     * @param string $datasetName the dataset name
+     * @param string $url the dataset url
+     * @param string $type the dataset type
+     * @param int $city the city id
+     * @param int $userId the user id
+     * @return true on success of false otherwise
+     */
     public static function saveNewDataset($datasetName, $url, $type, $city, $userId) {
 
         $sql = "INSERT INTO datasets VALUES(null, :identifier, :type , :update, Now(),  :userId, :lang, :updateFrequency, :url)";

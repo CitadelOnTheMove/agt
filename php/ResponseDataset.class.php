@@ -3,14 +3,25 @@
 include_once CLASSES . 'DatasetTypes.class.php';
 include_once CLASSES . 'App.class.php';
 
+/* Returns a json response with datasets of the given app */
 class ResponseDataset {
 
     public $dataset;
 
+    /**
+     * Creates a new instance of the ResponseDataset object
+     * @param Dataset $dataset the app dataset
+     */
     public function __construct($dataset) {
         $this->dataset = $dataset;       
     }
 
+    /**
+     * Fetches PoisDataset instance from database based on the dataset id
+     * @param string $type gets the value DatasetTypes::Poi
+     * @param int $datasetId the id of the dataset
+     * @return PoisDataset|boolean a PoisDataset object or false if not found
+     */
     public static function createFromDb($type, $datasetId) {
         if (isset($datasetId)) {
             switch ($type) {

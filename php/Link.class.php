@@ -14,6 +14,7 @@ class Link {
     public $term;
 
     /**
+     * Creates a new instance of the Link object
      * @param string $href the href of the link 
      * @param string $term the term of the link
      */
@@ -45,7 +46,7 @@ class Link {
     }
 
     /**
-     * 
+     * Fetches a Link instance from database based on the dataset id
      * @param int $datasetId th id of the dataset
      * @return Link|boolean a new Link object or false if not found
      */

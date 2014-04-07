@@ -8,10 +8,11 @@ include_once CLASSES.'PoiLocationAddress.class.php';
  */
 class PoiLocation {
 	
-	public $point; 	// the PoiLocationPoint.class object 
-	public $address;	// the PoiLocationAddress.class object
+	public $point; 	
+	public $address;	
 	
 	/**
+         * Creates a new instance of the PoiLocation object
 	 * @param PoiLocationPoint $point
 	 * @param PoiLocationAddress $address
 	 */
@@ -21,7 +22,7 @@ class PoiLocation {
 	}
 	
 	/**
-	 * Initialize object from db
+	 * Fetches a PoiLocation instance from database based on the poi id
 	 * @param int $poiId the id of the poi
 	 */
 	public static function createFromDb($poiId) {

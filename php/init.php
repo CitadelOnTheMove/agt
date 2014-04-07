@@ -1,6 +1,8 @@
 <?php
 
-//starting the users session
+/**
+ * starting the users session
+ */
 session_start();
 
 require 'users.php';

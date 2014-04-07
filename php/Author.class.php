@@ -46,7 +46,7 @@ class Author {
     }
 
     /**
-     *
+     * Fetches an Author instance from database based on the dataset id
      * @param int $datasetId th id of the dataset
      * @return Author|boolean a new Author object or false if not found
      */

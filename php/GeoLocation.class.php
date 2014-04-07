@@ -10,6 +10,7 @@ class GeoLocation {
     public $longitude;
 
     /**
+     * Creates a new instance of the GeoLocation object
      * @param float $latitude the latitude of the point
      * @param float $longitude the longitude of the point
      */

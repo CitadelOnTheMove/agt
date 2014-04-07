@@ -13,7 +13,7 @@ class License {
     public $term;
 
     /**
-     * 
+     * Creates a new instance of the License object
      * @param string $href
      * @param string $term
      */
@@ -46,8 +46,8 @@ class License {
     }
 
     /**
-     * 
-     * @param int $datasetId th id of the dataset
+     * Fetches a license instance from database based on the dataset id
+     * @param int $datasetId the id of the dataset
      * @return License|boolean a new License object or false if not found
      */
     public static function createFromDb($datasetId) {

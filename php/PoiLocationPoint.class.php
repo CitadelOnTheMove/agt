@@ -7,10 +7,11 @@ class PoiLocationPoint {
      * Member variables
      */
 
-    public $term; // the type of the position e.g. centroid
-    public $pos; // the PoiLocationPointPos object
+    public $term; 
+    public $pos; 
 
     /**
+     * Creates a new instance of the PoiLocationPoint object
      * @param string $term the type of the position e.g. centroid
      * @param PoiLocationPointPos $pos th object containing the lat/lng pairs
      */

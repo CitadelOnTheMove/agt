@@ -1,6 +1,14 @@
 <?php
 
+/**
+ * The city we have dataset for
+ */
 class City {
+
+     /*
+     * Member variables are public in order 
+     * to be serialized properly by json_encode
+     */
 
     public $id;
     public $name;
@@ -8,6 +16,15 @@ class City {
     public $lon;
     public $datasets;
 
+    
+    /**
+     * Creates a new instance of the City object
+     * @param int $id the unique identifier of the city
+     * @param string $name the name of the city
+     * @param double $lat the latitude coordinations  of the city's center
+     * @param double $lon the longitude coordinations of the city's center
+     * @param int $datasets the datasets' ids of the city
+     */
     public function __construct($id, $name, $lat, $lon, $datasets) {
         $this->id = $id;
         $this->name = $name;
@@ -17,6 +34,13 @@ class City {
         
     }
 
+     /**
+     * Saves the City instance to the database
+     * @param string $cityName the name of the city
+     * @param double $lat the latitude coordinations  of the city's center
+     * @param double $lon the longitude coordinations of the city's center
+     * @return true on success of false otherwise
+     */
     public static function saveNewCity($cityName, $latitude, $longitude) {
 
         $query = "SELECT * FROM cities WHERE name= :city";
