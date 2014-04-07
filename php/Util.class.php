@@ -40,6 +40,13 @@ class Util {
 // 		header('Content-type: application/json; charset=utf-8');
         echo json_encode($obj);
     }
+    
+    public static function clear_input($data) {
+      $data = trim($data);
+      $data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+  }
 
     public static function getNextPoiID() {
 
