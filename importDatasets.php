@@ -1,6 +1,12 @@
 <?php
 include_once 'Config.php';
+include_once CLASSES . 'Util.class.php';
 require CLASSES . 'init.php';
+include_once 'Config.php';
+include_once CLASSES . 'Database.class.php';
+include_once CLASSES . 'App.class.php';
+include_once CLASSES . 'City.class.php';
+include_once CLASSES . 'Dataset.class.php';
 //$general->logged_out_protect();
 
 
@@ -95,11 +101,7 @@ $userDatasetUploadLimitReached = false;
         </script>
 
         <?php
-        include_once 'Config.php';
-        include_once CLASSES . 'Database.class.php';
-        include_once CLASSES . 'App.class.php';
-        include_once CLASSES . 'City.class.php';
-        include_once CLASSES . 'Dataset.class.php';
+
 
         Database::connect();
         Database::begin();
@@ -147,7 +149,7 @@ $userDatasetUploadLimitReached = false;
                             $city = $_POST["city"];
                         } else {
                             $creatingNewCity = true;
-                            $cityName = clear_input($_POST["newCity"]);
+                            $cityName = Util::clear_input($_POST["newCity"]);
                             $latitude = $_POST["latitude"];
                             $longitude = $_POST["longitude"];
                         }
@@ -156,7 +158,7 @@ $userDatasetUploadLimitReached = false;
                             $datasetNameErr = "Dataset Name is required";
                             $error = true;
                         } else {
-                            $datasetName = clear_input($_POST["datasetName"]);
+                            $datasetName = Util::clear_input($_POST["datasetName"]);
                         }
 
                         if (empty($_POST["datasetUrl"]) && empty($_FILES["userFile"]["name"])) {
@@ -166,7 +168,7 @@ $userDatasetUploadLimitReached = false;
                             $datasetUrlErr = "Only one of a Dataset Url OR a Dataset file must be given";
                             $error = true;
                         } else if (!empty($_POST["datasetUrl"])) {
-                            $datasetUrl = clear_input($_POST["datasetUrl"]);
+                            $datasetUrl = Util::clear_input($_POST["datasetUrl"]);
                         } else {
 
                             $datasetFile = $_FILES['userFile'];
@@ -190,16 +192,11 @@ $userDatasetUploadLimitReached = false;
                             $datasetTypeErr = "Dataset Type is required";
                             $error = true;
                         } else {
-                            $datasetType = clear_input($_POST["datasetType"]);
+                            $datasetType = Util::clear_input($_POST["datasetType"]);
                         }
                     }
 
-                    function clear_input($data) {
-                        $data = trim($data);
-                        $data = stripslashes($data);
-                        $data = htmlspecialchars($data);
-                        return $data;
-                    }
+                   
                     ?>
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
                         <?php
