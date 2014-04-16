@@ -13,16 +13,13 @@ include_once CLASSES . 'Dataset.class.php';
 /* Read user info from session in case login comes from
  * citadel website
  */
-if(isset($_SESSION['username']))
-{ 
-  $userId = $_SESSION['id'];
-  $username = $_SESSION['username'];
-}
-else // use built-in login functionality
-{
-  $user = $users->userdata($_SESSION['id']);
-  $userId = $user['id'];
-  $username = $user['username'];
+if (isset($_SESSION['username'])) {
+    $userId = $_SESSION['id'];
+    $username = $_SESSION['username'];
+} else { // use built-in login functionality
+    $user = $users->userdata($_SESSION['id']);
+    $userId = $user['id'];
+    $username = $user['username'];
 }
 
 $userDatasetUploadLimitReached = false;
@@ -67,12 +64,12 @@ $userDatasetUploadLimitReached = false;
                     var geocoder = new google.maps.Geocoder();
                     geocoder.geocode({'address': cityName}, function(results,
                             status) {
-                        if (status === google.maps.GeocoderStatus.OK) {                            
+                        if (status === google.maps.GeocoderStatus.OK) {
                             $("#lat").val(results[0].geometry.location.lat());
                             $("#lon").val(results[0].geometry.location.lng());
                             form.submit();
                         } else {
-                            alert("This city could not be found." + status);                            
+                            alert("This city could not be found." + status);
                             $.mobile.hidePageLoadingMsg();
                             return false;
                         }
@@ -80,7 +77,7 @@ $userDatasetUploadLimitReached = false;
 
 
                 }
-                 else if ($("#country").val() === "") {
+                else if ($("#country").val() === "") {
                     alert("Please give a country");
                 }
                 else if ($("#cityName").val() === "") {
@@ -100,13 +97,11 @@ $userDatasetUploadLimitReached = false;
             });
         </script>
 
-        <?php
-
-
-        Database::connect();
-        Database::begin();
-        $userDatasetsCount = Dataset::getDatasetsOfUser($userId);
-        ?>
+<?php
+Database::connect();
+Database::begin();
+$userDatasetsCount = Dataset::getDatasetsOfUser($userId);
+?>
         <?php
         if ($userDatasetsCount + 1 > MAX_DATASETS_PER_USER) {
             $userDatasetUploadLimitReached = true;
@@ -119,9 +114,9 @@ $userDatasetUploadLimitReached = false;
                     $("input[type='radio']").checkboxradio('disable');
                 });
             </script>
-            <?php
-        }
-        ?>
+    <?php
+}
+?>
     </head>       
     <body>
         <div data-role="page">
@@ -130,170 +125,167 @@ $userDatasetUploadLimitReached = false;
             </div>
             <div data-role="content"> 
                 <div id="importNewDatasetWrapper">
-                    <?php
-                    // define variables and set to empty values
-                    $datasetTypeErr = $datasetUrlErr = $datasetNameErr = $datasetFileErr = $cityErr = "";
-                    $latitude = $longitude = $cityName = $newUid = $datasetName = $city = $datasetUrl = $datasetType = $datasetFile = "";
+<?php
+// define variables and set to empty values
+$datasetTypeErr = $datasetUrlErr = $datasetNameErr = $datasetFileErr = $cityErr = "";
+$latitude = $longitude = $cityName = $newUid = $datasetName = $city = $datasetUrl = $datasetType = $datasetFile = "";
 
-                    $error = false;
-                    $creatingNewCity = false;
+$error = false;
+$creatingNewCity = false;
 
-                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                        if (empty($_POST["city"]) && empty($_POST["newCity"])) {
-                            $cityErr = "City is required";
-                            $error = true;
-                        } else if (!empty($_POST["city"]) && !empty($_POST["newCity"])) {
-                            $cityErr = "Only one city must be selected";
-                            $error = true;
-                        } else if (!empty($_POST["city"])) {
-                            $city = $_POST["city"];
-                        } else {
-                            $creatingNewCity = true;
-                            $cityName = Util::clear_input($_POST["newCity"]);
-                            $latitude = $_POST["latitude"];
-                            $longitude = $_POST["longitude"];
-                        }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["city"]) && empty($_POST["newCity"])) {
+        $cityErr = "City is required";
+        $error = true;
+    } else if (!empty($_POST["city"]) && !empty($_POST["newCity"])) {
+        $cityErr = "Only one city must be selected";
+        $error = true;
+    } else if (!empty($_POST["city"])) {
+        $city = $_POST["city"];
+    } else {
+        $creatingNewCity = true;
+        $cityName = Util::clear_input($_POST["newCity"]);
+        $latitude = $_POST["latitude"];
+        $longitude = $_POST["longitude"];
+    }
 
-                        if (empty($_POST["datasetName"])) {
-                            $datasetNameErr = "Dataset Name is required";
-                            $error = true;
-                        } else {
-                            $datasetName = Util::clear_input($_POST["datasetName"]);
-                        }
+    if (empty($_POST["datasetName"])) {
+        $datasetNameErr = "Dataset Name is required";
+        $error = true;
+    } else {
+        $datasetName = Util::clear_input($_POST["datasetName"]);
+    }
 
-                        if (empty($_POST["datasetUrl"]) && empty($_FILES["userFile"]["name"])) {
-                            $datasetUrlErr = "Dataset Url or Dataset file is required";
-                            $error = true;
-                        } else if (!empty($_POST["datasetUrl"]) && !empty($_FILES["userFile"]["name"])) {
-                            $datasetUrlErr = "Only one of a Dataset Url OR a Dataset file must be given";
-                            $error = true;
-                        } else if (!empty($_POST["datasetUrl"])) {
-                            $datasetUrl = Util::clear_input($_POST["datasetUrl"]);
-                        } else {
+    if (empty($_POST["datasetUrl"]) && empty($_FILES["userFile"]["name"])) {
+        $datasetUrlErr = "Dataset Url or Dataset file is required";
+        $error = true;
+    } else if (!empty($_POST["datasetUrl"]) && !empty($_FILES["userFile"]["name"])) {
+        $datasetUrlErr = "Only one of a Dataset Url OR a Dataset file must be given";
+        $error = true;
+    } else if (!empty($_POST["datasetUrl"])) {
+        $datasetUrl = Util::clear_input($_POST["datasetUrl"]);
+    } else {
+        $uid = trim(Util::getGUID(), '{}');
+        $datasetFile = $_FILES['userFile'];
 
-                            $datasetFile = $_FILES['userFile'];
+        if (strpos($datasetFile['name'], '.json') !== FALSE) {
+            $splittedDatasetFileName = explode(".json", $datasetFile['name']);
+            $datasetFileName = $splittedDatasetFileName[0] . '-citadel-' . $uid . '.json';
+        } else {
+            $datasetFileName = $datasetFile['name'] . '-citadel-' . $uid . '.json';
+        }
+        $target_Path = HTDOCS_ROOT . BASE_DIR . "data/";
+        $target_Path = $target_Path . basename($datasetFileName);
+        move_uploaded_file($datasetFile['tmp_name'], $target_Path);
+        $datasetUrl = SERVERNAME . BASE_DIR . "data/" . $datasetFileName;
+    }
 
-
-                          /*if($datasetFile['type'] != "application/json")
-                          {
-                                $datasetFileErr = "Dataset file must be in json format (.json)";
-                                $error = true;
-                            }
-                          else{*/
-					
-                            $target_Path =  HTDOCS_ROOT.BASE_DIR."data/";
-                            $target_Path = $target_Path.basename( $datasetFile['name'] );
-                            move_uploaded_file( $datasetFile['tmp_name'], $target_Path );
-                            $datasetUrl = SERVERNAME . BASE_DIR."data/".$datasetFile['name'];
-                         /* }*/
-                        }
-
-                        if (empty($_POST["datasetType"])) {
-                            $datasetTypeErr = "Dataset Type is required";
-                            $error = true;
-                        } else {
-                            $datasetType = Util::clear_input($_POST["datasetType"]);
-                        }
-                    }
-
-                   
-                    ?>
+    if (empty($_POST["datasetType"])) {
+        $datasetTypeErr = "Dataset Type is required";
+        $error = true;
+    } else {
+        $datasetType = Util::clear_input($_POST["datasetType"]);
+    }
+}
+?>
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
                         <?php
                         if ($userDatasetUploadLimitReached) {
                             echo '<p>Hi <b>' . $username . '</b>! You have uploaded <b>' . $userDatasetsCount . '</b> dataset(s) so far. You are not allowed to upload any more datasets.</p>';
                             echo '<br/><a data-ajax="false" class="ui-link" href="appForm.php" >Back to the app creation form</a>';
-                        }
-                        else {
-                        ?>
-                        <form id="importNewDataset" data-ajax="false" onsubmit="return validateForm(this);"                       
-                              method="post" action="importDatasets.php" enctype='multipart/form-data'>                         
-                          <p>
-                            <?php if(!$general->logged_in()){?>
-                            <div class="warning">
-                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before importing a dataset!</a>
-                            </div>
-                                <?php } else { 
-                                  echo 'Hi <b>' . $username . '</b>! You have uploaded <b>' . 
-                                       $userDatasetsCount . '</b> dataset(s) so far. You are allowed to upload a maximum of <b>' . 
-                                      MAX_DATASETS_PER_USER . '</b> datasets.';   
-                                  
-                                  echo '<a style="float:right" href="logout.php" data-ajax="false">log out</a>';
-                                } ?>
-                          </p>  
+                        } else {
+                            ?>
+                            <form id="importNewDataset" data-ajax="false" onsubmit="return validateForm(this);"                       
+                                  method="post" action="importDatasets.php" enctype='multipart/form-data'>                         
+                                <p>
+                            <?php if (!$general->logged_in()) { ?>
+                                    <div class="warning">
+                                        <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before importing a dataset!</a>
+                                    </div>
+                            <?php
+                            } else {
+                                echo 'Hi <b>' . $username . '</b>! You have uploaded <b>' .
+                                $userDatasetsCount . '</b> dataset(s) so far. You are allowed to upload a maximum of <b>' .
+                                MAX_DATASETS_PER_USER . '</b> datasets.';
 
-                            <p><span class="error">* required field.</span></p>
+                                echo '<a style="float:right" href="logout.php" data-ajax="false">log out</a>';
+                            }
+                            ?>
+                                </p>  
 
-                            <b>Dataset Name:</b> <span class="error">* <?php echo $datasetNameErr; ?></span><br/><br/>
-                            <input type="text" id="dat" name="datasetName" required>
+                                <p><span class="error">* required field.</span></p>
 
-                            <br><br>
+                                <b>Dataset Name:</b> <span class="error">* <?php echo $datasetNameErr; ?></span><br/><br/>
+                                <input type="text" id="dat" name="datasetName" required>
 
-                            <div style="border:1px solid #CCC;padding:0 20px 20px;border-radius:10px;">
-                                <h3>You must either enter a dataset url or upload a dataset file in 
-                                    <a href="http://www.citadelonthemove.eu/en-us/citadelcommonschemaforpois.aspx" target="_blank"
-                                       rel="external">Citadel Json format</a></h3>
-                                <b>Dataset Url:</b> <span class="error">* <?php echo $datasetUrlErr; ?></span><br/>
-                                <input type="url" name="datasetUrl" ><br />
-                                <b>Dataset File:</b><span class="error">* <?php echo $datasetFileErr; ?></span><br/>
-                                <input type='file' name='userFile'>
-                                <a href="http://www.rbox.tv/citadel/converter/php/" target="_blank" rel="external">
-                                    Click here to easily convert your dataset in the Citadel Json format!</a>
-                            </div>                        
+                                <br><br>
 
-                            <br><br>
+                                <div style="border:1px solid #CCC;padding:0 20px 20px;border-radius:10px;">
+                                    <h3>You must either enter a dataset url or upload a dataset file in 
+                                        <a href="http://www.citadelonthemove.eu/en-us/citadelcommonschemaforpois.aspx" target="_blank"
+                                           rel="external">Citadel Json format</a></h3>
+                                    <b>Dataset Url:</b> <span class="error">* <?php echo $datasetUrlErr; ?></span><br/>
+                                    <input type="url" name="datasetUrl" ><br />
+                                    <b>Dataset File:</b><span class="error">* <?php echo $datasetFileErr; ?></span><br/>
+                                    <input type='file' name='userFile'>
+                                    <a href="http://www.rbox.tv/citadel/converter/php/" target="_blank" rel="external">
+                                        Click here to easily convert your dataset in the Citadel Json format!</a>
+                                </div>                        
 
-                            <b>Dataset Type:</b> (e.g. Pois, Parking, Events, etc) <span class="error">* <?php echo $datasetTypeErr; ?></span><br/><br/>
-                            <input type="text" name="datasetType" required>
+                                <br><br>
+
+                                <b>Dataset Type:</b> (e.g. Pois, Parking, Events, etc) <span class="error">* <?php echo $datasetTypeErr; ?></span><br/><br/>
+                                <input type="text" name="datasetType" required>
 
 
-                            <br><br>
+                                <br><br>
 
-                            <!--div style="border:1px solid #CCC;padding:0 20px 20px;border-radius:10px;">
-                                <h3>You must either select a city or add a new one </h3-->
-                            <b>Select a city:</b> <span class="error">* <?php echo $cityErr; ?></span><br/><br/>
-                            <div id="datasetsCheckboxes" data-role=controlgroup>                       
-                                <?php
-                                $sql = 'SELECT * FROM cities ORDER BY name';
-                                foreach (Database::$dbh->query($sql) as $row) {
-                                    echo '<input type="radio" name="city" id="city' . $row['id'] . '" value="' . $row['id'] . '">
+                                <!--div style="border:1px solid #CCC;padding:0 20px 20px;border-radius:10px;">
+                                    <h3>You must either select a city or add a new one </h3-->
+                                <b>Select a city:</b> <span class="error">* <?php echo $cityErr; ?></span><br/><br/>
+                                <div id="datasetsCheckboxes" data-role=controlgroup>                       
+        <?php
+        $sql = 'SELECT * FROM cities ORDER BY name';
+        foreach (Database::$dbh->query($sql) as $row) {
+            echo '<input type="radio" name="city" id="city' . $row['id'] . '" value="' . $row['id'] . '">
                                 <label for="city' . $row['id'] . '">' . $row['name'] . '</label>';
-                                }
-                                ?>
-                                <input type="radio" name="city" id="city0" value="0">
-                                <label for="city0">Add a new city</label>
-                            </div>
+        }
+        ?>
+                                    <input type="radio" name="city" id="city0" value="0">
+                                    <label for="city0">Add a new city</label>
+                                </div>
 
-                            <br><br>
+                                <br><br>
 
-                            <div id="addNewCity" style="display:none;">   
-                                <b>Country:</b><span class="error">*</span>
-                                <input type="text" id="country" name="country" value="">
-                                <b>City:</b><span class="error">*</span>
-                                <input type="text" id="cityName" name="newCity" value="">
+                                <div id="addNewCity" style="display:none;">   
+                                    <b>Country:</b><span class="error">*</span>
+                                    <input type="text" id="country" name="country" value="">
+                                    <b>City:</b><span class="error">*</span>
+                                    <input type="text" id="cityName" name="newCity" value="">
 
-                                <input type="text" style="display:none;" id="lat" name="latitude" value="">
-                                <input type="text" style="display:none;" id="lon" name="longitude" value="">
-                            </div> 
+                                    <input type="text" style="display:none;" id="lat" name="latitude" value="">
+                                    <input type="text" style="display:none;" id="lon" name="longitude" value="">
+                                </div> 
 
-                            <!--/div--> 
-                            <?php if(!$general->logged_in()){?>
-                              <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before importing a dataset!</a>
-                            <?php } 
-                             else { ?>
-                              <input type="submit" name="import" value="Import">
-                            <?php }?>  
-                            
-                            <br><br>
-                            <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a>'; ?>        
-                        </form>
-                    <?php 
-                        } // end if  $userDatasetUploadLimitReached
-                      } // end if ($_SERVER["REQUEST_METHOD"] != "POST" || $error)  ?>
+                                <!--/div--> 
+        <?php if (!$general->logged_in()) { ?>
+                                    <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before importing a dataset!</a>
+        <?php } else {
+            ?>
+                                    <input type="submit" name="import" value="Import">
+                                <?php } ?>  
+
+                                <br><br>
+                                <?php echo '<a style="float:right" href="appForm.php" >Back to the app creation form</a>'; ?>        
+                            </form>
+                                <?php
+                            } // end if  $userDatasetUploadLimitReached
+                        } // end if ($_SERVER["REQUEST_METHOD"] != "POST" || $error)  
+                        ?>
 
                     <?php
                     if (isset($_POST['import']) || $_SERVER["REQUEST_METHOD"] == "POST") {
-                        if (!$error && ($userDatasetsCount < MAX_DATASETS_PER_USER)) {                        
+                        if (!$error && ($userDatasetsCount < MAX_DATASETS_PER_USER)) {
                             if ($creatingNewCity) {
                                 $city = City::saveNewCity($cityName, $latitude, $longitude);
                             }
