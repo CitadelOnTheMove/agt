@@ -1,4 +1,5 @@
 <?php
+
 header('Content-type: application/json; charset=utf-8');
 header("Expires: Tue, 01 Jan 2000 00:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -26,11 +27,16 @@ try {
         if ($app = App::createFromDb($_GET['uid'])) {
             $app_datasets = array();
             $name = $app->name;
+            $cityIdParam = "";
+
+            if (isset($_GET['cityId'])) {
+                $cityIdParam = " AND city_datasets.city_id=" . $_GET['cityId'];
+            }
 
             foreach ($app->datasetIds as $value) {
 
                 $sql = "SELECT datasets.type, datasets.url, city_datasets.city_id AS cityId FROM datasets JOIN 
-                city_datasets ON city_datasets.dataset_id = datasets.id WHERE datasets.id=" . $value;
+                city_datasets ON city_datasets.dataset_id = datasets.id WHERE datasets.id=" . $value . $cityIdParam;
 
                 /* If we are behind a proxy, we need to
                  * setup a context for file_get_contents
@@ -98,8 +104,8 @@ try {
             usort($filters, function($a, $b) {
                         return strcmp($a->name, $b->name);
                     });
-                    
-            /*only the first filter appears to be checked*/
+
+            /* only the first filter appears to be checked */
             $filters[0]->selected = true;
 
             Util::printJsonObj(new Response($app_datasets, $name, $filters, $status));
