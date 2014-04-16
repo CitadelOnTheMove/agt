@@ -1,5 +1,9 @@
 <?php
 
+/** 
+ * Contains auxiliary functions used in the project
+ */
+
 class Util {
 
     public static function throwException($file, $line, $method, $message, $cause = NULL, $previous = NULL) {

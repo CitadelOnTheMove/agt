@@ -1,6 +1,7 @@
 <?php
 
-/* Returns a list of cities formatted as checkboxes
+/**
+ *  Returns a list of cities formatted as checkboxes
  * to be used in the app creation form
  */
 

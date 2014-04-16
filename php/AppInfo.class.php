@@ -2,7 +2,7 @@
 
 
 /**
- * Information needed about user applications
+ * For retrieving information needed about user applications
  */
 class AppInfo {
 

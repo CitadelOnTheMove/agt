@@ -2,6 +2,10 @@
 
 include_once CLASSES . 'Database.class.php';
 
+/**
+ * Handles user authentication 
+ */
+
 class Users {
 
     /**

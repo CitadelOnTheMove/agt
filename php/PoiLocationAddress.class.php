@@ -1,6 +1,6 @@
 <?php
 /**
- * Describes the location address object to be used in a @see Poi
+ * Describes the location address object to be used in a @see PoiLocation
  */
 class PoiLocationAddress {
     /*

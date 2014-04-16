@@ -3,7 +3,9 @@
 include_once CLASSES . 'DatasetTypes.class.php';
 include_once CLASSES . 'App.class.php';
 
-/* Returns a json response with datasets of the given app */
+/**
+ * Returns a json response with datasets of the given app
+ */
 class ResponseDataset {
 
     public $dataset;

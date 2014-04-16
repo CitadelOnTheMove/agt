@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Resizes a given image
+ * @param $img the initial image we want to resize
+ * @param $targetWidth the new image width
+ * @param $targetHeight the new image height
+ * @return string the new resized image
+ */
+
 function resizePreservingAspectRatio($img, $targetWidth, $targetHeight)
 {
     $srcWidth = imagesx($img);

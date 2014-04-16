@@ -2,6 +2,9 @@
 
 include_once CLASSES . 'PoiLocationPointPos.class.php';
 
+/**
+ * Describes the location point object to be used in a @see PoiLocation
+ */
 class PoiLocationPoint {
     /*
      * Member variables

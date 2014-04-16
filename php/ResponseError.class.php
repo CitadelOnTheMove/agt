@@ -2,7 +2,9 @@
 include_once CLASSES . 'DatasetTypes.class.php';
 include_once CLASSES . 'App.class.php';
 
-/* Returns a json response with errors*/
+/** 
+ * Returns a json response with errors
+ */
 class ResponseError {
 
     public $status;

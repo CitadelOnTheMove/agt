@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Handles user authentication sessions
+ */
 class General {
 
     /**
