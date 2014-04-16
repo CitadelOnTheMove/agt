@@ -21,8 +21,8 @@ function globalInit() {
     $.mobile.showPageLoadingMsg();
     $('#progressbar').hide();
     jQMProgressBar('progressbar')
-            .setOuterTheme('b')
-            .setInnerTheme('e')
+            .setOuterTheme('s')
+            .setInnerTheme('b')
             .isMini(true)
             .setMax(100)
             .setStartFrom(0)
