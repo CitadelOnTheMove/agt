@@ -1,0 +1,168 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "dataset",
+    "type": "object",
+    "properties": {
+        "dataset": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "The unique identifier for a product",
+                    "type": ["string","integer"]
+                },
+                "updated": {
+                    "type": "string"
+                },
+                "created": {
+                    "type": "string"
+                },
+                "lang": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "license": {
+                    "type": "object",
+                    "properties": {
+                        "href": {
+                            "type": "string"
+                        },
+                        "term": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "link": {
+                    "type": "object",
+                    "properties": {
+                        "href": {
+                            "type": "string"
+                        },
+                        "term": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "updatefrequency": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+				"poi": {
+                    "type": "array",
+					"items": {
+					   "title": "POI",
+					   "type": "object",
+					   "properties": {
+                        "id": {
+                            "type": ["string","null"]
+                        },
+                        "title": {
+                            "type": "string"
+                        },
+						"description": {
+                            "type": ["string","null"]
+                        },
+						"category": {
+                            "type": "array",
+							"items": {
+								"type": "string"
+							},
+							"minItems": 1,
+							"uniqueItems": true
+                        },
+						"location": {
+							"type": "object",
+							"properties": {
+								"point": {
+									"type": "object",
+									"properties": {
+										"term": {
+											"type": "string"
+											},
+										"pos": {
+										     "type": "object",
+											 "properties": {
+											 "srsName": {
+												 "type": "string"
+											 },
+											 "posList": {
+												 "type": "string",
+												 "pattern": "[0-9]+ -?[0-9]+"
+												}
+											}
+										}
+								    },									
+									"required": ["term","pos"]
+								},
+								"address": {
+									"type": "object",
+									"properties": {
+										"value": {
+											"type": "string"
+										},
+										"postal": {
+											"type": ["string","null"]
+										},
+										"city": {
+											"type": ["string","null"]
+										}
+								    },
+									"required": ["value","postal","city"]
+								}
+							},
+							"required": ["point","address"]
+						},
+						"attribute": {
+						    "type": "array",
+							"items":{
+								"title": "Attribute",					       
+								"type": "object",
+								"properties": {
+									"term": {
+										"type": "string"
+									},
+									"type": {
+										"type": "string"
+									},
+									"text": {
+										"type": "string"
+									},
+									"tplIdentifier": {
+										"type": "string"
+									}
+								},
+								"required": ["term","type","text","tplIdentifier"]
+							}
+						}
+                      }
+					}
+                }
+            },
+            "required": [
+                "id",
+                "updated",
+                "created",
+                "lang",
+                "author",
+                "license",
+                "link",
+                "updatefrequency",
+				"poi"
+            ]
+        }
+    },
+    "required": [
+        "dataset"
+    ]
+}
