@@ -104,8 +104,7 @@ $colors = printColors($appID);
     <body>
         <!-- Home Page: Contains the Map -->
         <div data-role="page" id="page1" class="page">
-
-            <!-- /Progress Bar for jQuery Mobile -->
+           
             <header data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
                 <span class="ui-title"><?php echo $currentAppName ?></span>
                 <a href="" id="filter" data-icon="search" data-iconpos="left" data-theme="a" title="Categories" class="ui-btn-left">Categories</a>
@@ -146,6 +145,7 @@ $colors = printColors($appID);
 
             <div data-role="content" id="map-container">
 
+ 		<!-- /Progress Bar for jQuery Mobile -->
                 <div id="progressbar"></div>
 
                 <div id="map_canvas" class="map_canvas"></div>

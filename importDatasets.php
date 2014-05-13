@@ -13,13 +13,16 @@ include_once CLASSES . 'Dataset.class.php';
 /* Read user info from session in case login comes from
  * citadel website
  */
-if (isset($_SESSION['username'])) {
-    $userId = $_SESSION['id'];
-    $username = $_SESSION['username'];
-} else { // use built-in login functionality
-    $user = $users->userdata($_SESSION['id']);
-    $userId = $user['id'];
-    $username = $user['username'];
+if(isset($_SESSION['username']))
+{ 
+  $userId = $_SESSION['id'];
+  $username = $_SESSION['username'];
+}
+else // use built-in login functionality
+{
+  $user = $users->userdata($_SESSION['id']);
+  $userId = $user['id'];
+  $username = $user['username'];
 }
 
 $userDatasetUploadLimitReached = false;
