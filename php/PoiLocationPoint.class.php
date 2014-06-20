@@ -10,15 +10,14 @@ class PoiLocationPoint {
      * Member variables
      */
 
-    public $term; 
-    public $pos; 
+    public $term;
+    public $pos;
 
     /**
      * Creates a new instance of the PoiLocationPoint object
      * @param string $term the type of the position e.g. centroid
      * @param PoiLocationPointPos $pos th object containing the lat/lng pairs
      */
-
     public function __construct($term, $pos) {
         $this->term = $term;
         $this->pos = $pos;
@@ -34,7 +33,6 @@ class PoiLocationPoint {
             return new PoiLocationPoint($assocArray['term'], PoiLocationPointPos::createFromArray($assocArray['pos']));
         return false;
     }
-
 
 }
 
