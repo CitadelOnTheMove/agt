@@ -41,7 +41,7 @@ try {
         $sth->execute();
     }
     $results = $sth->fetchAll(PDO::FETCH_ASSOC);
-
+$appDatasetsIds = array();
     foreach ($results as $row) {
         $appId = $row['uid'];
         $appName = $row['name'];
@@ -59,10 +59,10 @@ try {
         $sthDataset->execute($sqlParamsdataset);
         $resultsDataset = $sthDataset->fetchAll(PDO::FETCH_ASSOC);
 
-        $appDatasetsIds = array();
+        
 
-        foreach ($resultsDataset as $row) {
-            $appDatasetId = $row['id'];
+        foreach ($resultsDataset as $datasetRow) {
+            $appDatasetId = $datasetRow['id'];
             array_push($appDatasetsIds, $appDatasetId);
         }
 
@@ -82,7 +82,7 @@ try {
         foreach ($results2 as $row) {
             $cityId = $row['id'];
             $cityName = $row['name'];
-            $cityNames .= $cityName . ",";
+            $cityNames .= $cityName . "*$";
             $latitude = $row['latitude'];
             $longitude = $row['longitude'];
 
@@ -107,11 +107,11 @@ try {
             array_push($cities, $city);
         }
 
-        /* Remove the trailing ',' from the string */
-        $cityNames = rtrim($cityNames, ",");
+        /* Remove the trailing '*$' from the string */
+        $cityNames = rtrim($cityNames, "*$");
         $appUrl = SERVERNAME . BASE_DIR . "index.php" . '?uid=' . $appId;
 
-        $dashbord[] = new AppInfo($appId, $appUrl, $appName, $description, $created, $userId, $cities, $cityNames, $image);
+        $dashbord[] = new AppInfo($appId, $appUrl, $appName, $description, $created, $userId, $cities, $cityNames, $image, $appDatasetsIds);
     }
 } catch (Exception $e) {
     if (DEBUG)

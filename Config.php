@@ -21,8 +21,12 @@ define("PROXYNAME", "10.1.1.51"); // without the "http://"
 define("PROXYPORT", "8080"); 
 
 // The service running on the main Citadel website
-define("CHECKLOGINSERVICE", "http://www.citadelonthemove.eu/...");
-define("CITADELLOGINLINK","http://www.citadelonthemove.eu/...");
+define("CHECKLOGINSERVICE", "http://www.citadelonthemove.eu..."); // remove login checking if not applicable
+define("CITADELLOGINLINK","http://www.citadelonthemove.eu....");
+define("CITIES_SERVICE", "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetCities");
+define("DATASETS_SERVICE", "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetDatasets");
+define("DATASETS_PREVIEW_URL","http://citadel.rbox.tv/converter?p_p_id=converter_WAR_converter10SNAPSHOT&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=saveFile_download&p_p_cacheability=cacheLevelPage&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_converter_WAR_converter10SNAPSHOT_page_param_download_link={URL}&_converter_WAR_converter10SNAPSHOT_extended_mvc_request_parameter=saveFile");
+
 // database
 define("DB_USERNAME", "root");
 define("DB_PASSWORD", "");
