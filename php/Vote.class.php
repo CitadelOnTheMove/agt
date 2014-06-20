@@ -11,17 +11,20 @@ class Vote {
 
     public $id;
     public $poiId;
+    public $positionInDataset;
     public $voteDate;
     public $value; // true is thumbsup, false is thumbsdown
 
     /**
      * Creates a new instance of the Vote object
      * @param $poiId the id of the poi
+     * @param $positionInDataset the position of the poi in the dataset
      * @param $voteDate the date when the poi was voted
      * @param $value the value of the votes for a poi
      */
-    public function __construct($poiId, $voteDate, $value) {
+    public function __construct($poiId, $positionInDataset, $voteDate, $value) {
         $this->poiId = $poiId;
+        $this->positionInDataset = $positionInDataset;
         $this->voteDate = $voteDate;
         $this->value = $value;
     }
@@ -31,8 +34,9 @@ class Vote {
      * @return true on success of false otherwise
      */
     public function save() {
-        $sql = "INSERT INTO votes VALUES(null, :poi_id, :voteDate, :value)";
+        $sql = "INSERT INTO votes VALUES(null, :poi_id, :positionInDataset, :voteDate, :value)";
         $sqlParams = array(':poi_id' => $this->poiId,
+            ':positionInDataset' => $this->$positionInDataset,
             ':voteDate' => $this->voteDate,
             ':value' => $this->value);
 
