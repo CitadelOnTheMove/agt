@@ -11,7 +11,7 @@ var poisArrayInitialised = false;
 var selectedCityId;
 var retrievedCitiesDatasets = new Array();
 var startTime;
-
+  var filtersIndex = 0;
 /****************** Functions *****************************/
 
 /* Initialization function.
@@ -34,10 +34,24 @@ function globalInit() {
     setTimeout(function() {
         fixMapHeight();
     }, 500);
+    
+    if(datasetPreview){
+        activateDatasetPreviewMode();
+    }
+    
 
     //Enable scroll for older versions of android
     touchScroll('mapFilterList');
     touchScroll('cityFilterList');
+}
+
+function activateDatasetPreviewMode()
+{
+    $('#city').addClass('ui-disabled');
+    $('#filter').addClass('ui-disabled');
+    $('#addFav').addClass('ui-disabled');
+    $('.votePanel').hide();
+    $(".favourites-button").hide();
 }
 
 /* Returns an array of poi objects.
@@ -46,15 +60,18 @@ function globalInit() {
  */
 function getPoisFromDataset(data)
 {
-    //console.log("getPoisFromDataset() called");
-    startTime = new Date();
+    console.log("getPoisFromDataset() called");
+    //startTime = new Date();
 
     if (data.status === "success")
     {
-        if (!poisArrayInitialised) {
+        if (!poisArrayInitialised || datasetPreview) {
+
+            console.log("if getPoisFromDataset was called..");
+
             var k = 0;
             filters = data.filters;
-            $('.ui-title').html(data.appName);
+            //$('.ui-title').html(data.appName);
 
             $.each(data.applicationData, function(i, datasetObject) {
                 var positionInDataset = 0;
@@ -157,21 +174,24 @@ function getPoisFromDataset(data)
 
 }
 
-function getPoisFromDatasetCallback() 
+function getPoisFromDatasetCallback()
 {
-    var endTime = new Date();
-    var getPoisFromDatasetDuration = endTime - startTime;
-    //console.log("getPoisFromDataset took: ", getPoisFromDatasetDuration);
+    
+    if(datasetPreview)
+       {
+            addMarkers();
+        }
+        else
+            {
     setFiltersByCityId(selectedCityId);
+            }
 }
 
 
 /* Initialises a google map using map api v3 */
-function initializeMap() 
+function initializeMap()
 {
-    //console.log("initializeMap() called");
-    var startTime = new Date();
-
+$('.ui-title').html(appName);
     var mapOptions = {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -195,17 +215,26 @@ function initializeMap()
             error: onDatasetFailure
         });
     }
+     else if(datasetPreview)
+    {
+        $.mobile.hidePageLoadingMsg();
+            $.ajax({
+            type: "GET",
+            url: "dataset.php?preview=true&converterdatasetID=" + datasetPreviewId,
+            cache: false,
+            success: onDatasetSuccess,
+            error: onDatasetFailure
+        });
+    }
     else if (navigator.geolocation) {
         // Set timeout to 15 secs
         location_timeout = setTimeout("geolocFail()", 15000);
         navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {
+    }
+    
+    else {
         showDefaultMap();
     }
-
-    var endTime = new Date();
-    var duration = endTime - startTime;
-    //console.log("initializeMap took: ", duration);
 }
 
 function geolocFail() {
@@ -227,6 +256,7 @@ function showDefaultMap()
 
 function showPosition(position) 
 {
+    console.log("geolocation is supported");
     clearTimeout(location_timeout);
     $.mobile.hidePageLoadingMsg();
     myLatlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
@@ -315,7 +345,6 @@ function calcDistance(p1, p2) {
  * based on the selected city*/
 function setFiltersByCityId(cityId)
 {
-    //console.log("setFiltersByCityId() called");
     startTime = new Date();
 
     var currentCityId = cityId;
@@ -410,18 +439,21 @@ function addMarkers()
     /* For every POI we add a marker with an attached infoBubble */
     var length = pois.length;
     var index = 0;
-    
+
     var processMarkers = function() {
         for (; index < length; index++) {
             var poi = pois[index];
 
-            if (isFilterSelected(poi.category, poi.cityId)) {
+            if (isFilterSelected(poi.category, poi.cityId) || datasetPreview) {
                 /*  posList contains a list of space separated coordinates.
                  *  The first two are lat and lon
                  */
                 var coords = poi.location.point.pos.posList.split(" ");
                 var current_markerpos = new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
+                
                 var marker_image = getFavouriteValue(poi.id) ? "images/star.png" : getMarkerImage(poi.category[0], poi.cityId);
+             if( !marker_image)
+                 marker_image = "images/pin1.png";
                 var current_marker = new google.maps.Marker({
                     position: current_markerpos,
                     map: map,
@@ -432,6 +464,8 @@ function addMarkers()
                 markersArray[poi.id] = current_marker;
                 oms.addMarker(current_marker);
                 google.maps.event.addListener(current_marker, 'click', function() {
+                  
+                    refreshMap();
                     infoBubble.setContent(setInfoWindowPoi(this.citadelPoi));
                     infoBubble.open(map, this);
                     setTimeout("$('#poiBubble').parent().parent().css('overflow', 'hidden')", 100);
@@ -463,11 +497,11 @@ function addMarkers()
 }
 
 
-function addMarkersCallback() 
+function addMarkersCallback()
 {
     var endTime = new Date();
     var duration = endTime - startTime;
-   //console.log("addMarkers took: ", duration);
+    //console.log("addMarkers took: ", duration);
 
     loadDetailsPage();
     loadListPageData();
@@ -476,13 +510,30 @@ function addMarkersCallback()
     updateProgressBar('Done', 100);
     $('#progressbar').hide("slow", function() {
     });
+    
+    if(datasetPreview)
+        {
+            google.maps.event.trigger(map, 'resize');
+           // map.
+            refreshMap();
+    var  aPoi = markersArray[0];
+    console.log(aPoi.position);
+   // var coordsCity = "43.316652/11.689453".split("/");
+    mapLat =  aPoi.position.lat();
+    mapLon = aPoi.position.lng();
+    map.setZoom(16);
+ map.setCenter(new google.maps.LatLng(mapLat, mapLon));
+   // map.panTo(new google.maps.LatLng(mapLat, mapLon));
+   // map.panTo();
+    
+        }
 }
 
 /*
  * Returns the marker image picking a unique color for every category
  */
 
-function getMarkerImage(category, cityId) 
+function getMarkerImage(category, cityId)
 {
     var coloredMarkers = new Array();
     var marker_parking;
@@ -504,10 +555,11 @@ function getMarkerImage(category, cityId)
 }
 
 
-function getMarkerClass(category, cityId) 
+function getMarkerClass(category, cityId)
 {
     var coloredClassMarkers = new Array();
     var marker_parking;
+    
     if (category == "Parking") {
         marker_parking = 'pinParking';
         return marker_parking;
@@ -523,6 +575,7 @@ function getMarkerClass(category, cityId)
             }
         }
     }
+    return "pin1";
 }
 
 function refreshBubblePoiVotes(poiId)
@@ -602,8 +655,8 @@ function setDetailPagePoi(poi)
     if (poi.category) {
         contentTemplate += "<li>" + poi.category + "</li>";
     }
-
-    contentTemplate += "<li><a href='#page1' onclick='seeOnMap(); return false;'><img class='seeOnMap' src='images/seeOnMap.png' alt='see POI on map'/></a></li>";
+//href='#page1'
+    contentTemplate += "<li><a onclick='seeOnMap(); return false;'><img class='seeOnMap' src='images/seeOnMap.png' alt='see POI on map'/></a></li>";
     /* Print further poi details found in the attribute array */
     $.each(poi.attribute, function(i, attr) {
         if (attr.text != "")
@@ -624,7 +677,7 @@ function setListPagePois()
     var contentTemplate = "";
     $.each(pois, function(i, poi) {
 
-        if (isFilterSelected(poi.category, poi.cityId)) {
+        if (isFilterSelected(poi.category, poi.cityId) || datasetPreview) {
             var category = "";
             if (poi.category && poi.cityId) {
                 category = "<p>" +
@@ -706,7 +759,7 @@ function getCitadel_attr(poi, tplIdentifer) {
 }
 
 /* Bubble on click poi listener */
-function overrideDetailClick(id) 
+function overrideDetailClick(id)
 {
     //Get poi by id
     var poi = pois[id];
@@ -726,7 +779,7 @@ function overrideBubbleCloseClick() {
 
 
 /* Load list page using pois variable */
-function loadListPageData() 
+function loadListPageData()
 {
     //console.log("loadListPageData() called");
     var startTime = new Date();
@@ -739,7 +792,7 @@ function loadListPageData()
 }
 
 /* Refreshes the list of POIS in the List Page */
-function refreshListPageView() 
+function refreshListPageView()
 {
     //console.log("refreshListPageView() called");
     var startTime = new Date();
@@ -779,8 +832,9 @@ function loadDetailsPage() {
 }
 
 
-function seeOnMap() 
+function seeOnMap()
 {
+    $.mobile.changePage("#page1", {transition: "none"});
     map.setZoom(16);
     infoBubble.setContent(setInfoWindowPoi(currentPoi));
     infoBubble.open(map, markersArray[currentPoiId]);
@@ -830,6 +884,8 @@ $(document).ready(function() {
 
     /* Click handler for the filters button */
     $('#filter').click(function() {
+        if(retrievedCitiesDatasets.length > 0)
+            {
         if ($('#map-filter').is(":visible")) {
             $('#map-filter').slideUp();
         } else {
@@ -837,6 +893,12 @@ $(document).ready(function() {
             $('#map-filter').slideDown();
         }
         return false;
+            }
+            else
+                {
+                
+                alert('You have to select a city before you can filter by category');
+                }
     });
 
 
@@ -856,7 +918,7 @@ $(document).ready(function() {
      * The map will be recentered to the center of the selected city
      *  and markers of one category will be added on the map.
      */
-    $('#cityFilterList').on("change", "input[type=radio][name=city]", function() 
+    $('#cityFilterList').on("change", "input[type=radio][name=city]", function()
     {
         selectedCityId = $(this).attr('id').substring(11);
 
@@ -872,15 +934,15 @@ $(document).ready(function() {
 
         if (cities.length > 1) {
             if ($.inArray(selectedCityId, retrievedCitiesDatasets) > -1) {
-                 setFiltersByCityId(selectedCityId);
+                setFiltersByCityId(selectedCityId);
             }
             else {
                 retrievedCitiesDatasets.push(selectedCityId);
-            
+
                 $.ajax({
                     type: "GET",
                     dataType: 'json',
-                    url: "dataset.php?uid=" + appId + "&cityId=" + selectedCityId, 
+                    url: "dataset.php?uid=" + appId + "&cityId=" + selectedCityId,
                     cache: false,
                     progress: function(e) {
                         updateProgressBar('Loading data...', 10);
@@ -900,7 +962,6 @@ $(document).ready(function() {
      */
     $('#apply').click(function() {
         if ($('#map-filter').is(":visible")) {
-            //$.mobile.showPageLoadingMsg();
             $('#map-filter').slideUp('400', function() {
                 var checked_objs = $('.map-filter:checked');
                 var set_filters = new Array();
@@ -910,6 +971,7 @@ $(document).ready(function() {
                 });
                 setSelectedFilters(set_filters);
                 addMarkers();
+
             });
 
         } else {
@@ -1027,7 +1089,7 @@ function updateProgressBar(labelText, value) {
     //console.log(labelText, value)
     $('#progressbar').show("slow", function() {
     });
-     jQMProgressBar('progressbar').setValue(value);
+    jQMProgressBar('progressbar').setValue(value);
     $('.ui-jqm-progressbar-label').html(labelText);
 }
 
@@ -1099,10 +1161,8 @@ function onDatasetSuccess(data, status)
     var startTime = new Date();
 
     getPoisFromDataset(data);
-
-    var endTime = new Date();
-    var onDatasetSuccessduration = endTime - startTime;
-    //console.log("onDatasetSuccess took: ", onDatasetSuccessduration);
+    
+    
 }
 
 function onDatasetFailure(data, status)
@@ -1111,22 +1171,22 @@ function onDatasetFailure(data, status)
 }
 
 /* Sets the available filters  */
-function setFilters() 
+function setFilters()
 {
-    //console.log("setFiltersCalled, " + filters.length + " filters");
+    console.log("setFiltersCalled, " + filters.length + " filters");
     startTime = new Date();
-   
+
     /*enable filter selection*/
     $('#filter').removeClass('ui-disabled');
 
     var length = filters.length;
-    var index = 0;
+  
     filters_html = "";
-
+    filtersIndex = 0;
     /*Define processSetFilters function to allow the filters to be processed in batches */
     var processSetFilters = function() {
-        for (; index < length; index++) {
-            var filter = filters[index];
+        for (; filtersIndex < length; filtersIndex++) {
+            var filter = filters[filtersIndex];
 
             if (filter.isVisible) {
                 var checked = filter.selected ? ' checked' : '';
@@ -1135,29 +1195,29 @@ function setFilters()
                 var filterCityId = filter.cityId;
                 var filterPoisCounter = filter.poisCounter;
                 var filterValue = filterName + "/" + filterCityId;
-                filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + index + "' class='map-filter' value=\"" + filterValue + "\" />" +
-                        "<label for='map-filter" + index + "'><img id='img_style' src='images/pin" + index % 16 + ".png'/> " + filterName + " , (" + filterPoisCounter + " " + filterType + ")</label>";
+                filters_html += "<input type='checkbox'" + checked + " name='map-filter' id='map-filter" + filtersIndex + "' class='map-filter' value=\"" + filterValue + "\" />" +
+                        "<label for='map-filter" + filtersIndex + "'><img id='img_style' src='images/pin" + filtersIndex % 16 + ".png'/> " + filterName + " , (" + filterPoisCounter + " " + filterType + ")</label>";
             }
 
             /* Every 20 iterations, we set a 5 second timeout, to prevent the browser from freezing*/
-            if (index + 1 < length && index % 20 === 0) {
+            if (filtersIndex + 1 < length && filtersIndex % 20 === 0) {
 
-                updateProgressBar('Setting Categories...', ((index / length) * 30) + 20);
+                updateProgressBar('Setting Categories...', ((filtersIndex / length) * 30) + 20);
 
                 /* Covers the case where this is also the last iteration */
-                if (index === length - 1)
+                if (filtersIndex === length - 1)
                 {
                     setFiltersCallback();
                 }
                 else {
                     setTimeout(processSetFilters, 5);
-                    index++;
+                    filtersIndex++;
                     break;
                 }
             }
 
             // Last iteration
-            if (index === length - 1)
+            if (filtersIndex === length - 1)
             {
                 setFiltersCallback();
             }
@@ -1194,7 +1254,7 @@ function setCityFilters()
         var filterLon = city.lon;
         var coords = filterLat + "/" + filterLon;
         filters_html += "<input type='radio' " + " name='city' id='city-filter" + city.id + "' class='city-filter' value=\"" + coords + "\" />" +
-                "<label for='city-filter" + city.id + "'>\n\
+                "<label for='city-filter" + city.id  + "'>\n\
     " + filterName + " </label>";
     }
 
@@ -1209,7 +1269,7 @@ function setCityFilters()
 /*  Centers the map to the given coordinates
  *  coordinatesString: string of the form "lat/long"
  */
-function centerToCity(coordinatesString) 
+function centerToCity(coordinatesString)
 {
     var coordsCity = coordinatesString.split("/");
     mapLat = coordsCity[0];
@@ -1334,7 +1394,7 @@ function showFavouriteButtons(id) {
     }
 }
 
-function touchScroll(id) 
+function touchScroll(id)
 {
     var versionRX = new RegExp(/Android [0-9]/);
     var versionS = new String(versionRX.exec(navigator.userAgent));
@@ -1356,7 +1416,7 @@ function touchScroll(id)
 /*
  * Used to update filters object list with newly selected filters
  */
-function setSelectedFilters(selectedFilterValues) 
+function setSelectedFilters(selectedFilterValues)
 {
     //console.log("setSelectedFilters() called");
     var startTime = new Date();
