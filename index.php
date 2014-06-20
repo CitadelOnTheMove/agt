@@ -2,7 +2,7 @@
 include_once 'Config.php';
 include_once CLASSES . 'App.class.php';
 include_once CLASSES . 'Database.class.php';
-include_once 'defineColor.php';
+include_once CLASSES . 'defineColor.php';
 include_once CLASSES . 'cities.php';
 
 $currentAppName = "Loading app...";
@@ -35,6 +35,13 @@ $colors = printColors($appID);
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
         <link rel="stylesheet" href="css/my.css" />
         <!--<link rel="stylesheet" href="css/validationForm.css" />-->
+        
+       
+        
+          <!--------------- Add a sortcut to home screen------------>
+        <link rel="apple-touch-icon" href="images/logoCitadel.png"/>
+        <link rel="apple-touch-startup-image" href="images/logoCitadel.png">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
 
         <style>
             .ui-btn-up-a  {
@@ -83,7 +90,8 @@ $colors = printColors($appID);
         <!-- jQuery Library --> 
         <script src="js/jquery-1.8.2.min.js"></script>
         <!-- jQuery Mobile Library -->
-        <script src="js/jquery.mobile-1.2.0.min.js"></script>  
+        <script src="js/jquery.mobile-1.2.0.min.js"></script> 
+       
         <!-- Page params Library: Used to pass query params to embedded/internal pages of jQuery Mobile -->    
         <script src="js/jqm.page.params.js"></script>
         <!-- Template specific functions and handlers -->    
@@ -104,7 +112,8 @@ $colors = printColors($appID);
     <body>
         <!-- Home Page: Contains the Map -->
         <div data-role="page" id="page1" class="page">
-           
+
+            <!-- /Progress Bar for jQuery Mobile -->
             <header data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
                 <span class="ui-title"><?php echo $currentAppName ?></span>
                 <a href="" id="filter" data-icon="search" data-iconpos="left" data-theme="a" title="Categories" class="ui-btn-left">Categories</a>
@@ -258,10 +267,7 @@ $colors = printColors($appID);
             var filters = [];
 
             /*The id (unique identifier) of the application*/
-            var appId = "<?php echo $appID; ?>";
-
-            /* Define cities - get them from db */
-            var cities = <?php printSelectedCities($appID); ?>;
+            var appId = "<?php echo $appID; ?>";       
 
             /* Keeps page id to emulate full url using querystring */
             var pageId = 0;
@@ -271,6 +277,30 @@ $colors = printColors($appID);
 
             /* Defines the color of the infoBubble/infoWindow*/
             var bubbleColor = <?php echo "'" . $colors['darkColor'] . "'" ?>;
+            
+            
+             <?php 
+            //echo 'datasetPreview = ';
+            if(isset($_GET['preview']))
+            {
+                echo 'var datasetPreview = true;';   
+                 echo 'var datasetPreviewId = "'. $_GET['converterdatasetID'] .'";';  
+                echo   'var cities = "";';
+                echo 'var appName= "Dataset Preview";';
+                
+            }
+            else
+            {
+                echo 'var datasetPreview = false;';
+                 echo 'var datasetPreviewId = -1;';  
+                echo   'var cities =' ;
+                echo  printSelectedCities($appID) . ";"; 
+                Database::connect();
+                echo 'var appName= "' . App::createFromDb($_GET['uid'])->name . '";';
+                Database::disconnect();
+            } ?>
+            
+                
 
             /* The coordinates of the center of the map */
             var mapLat = <?php echo MAP_CENTER_LATITUDE; ?>;
