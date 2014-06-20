@@ -37,7 +37,7 @@ function printColors($uid) {
         Database::disconnect();
         return $colors;
     } else {
-        $colors = array("color" => "#F8545B", "darkColor" => "#4980AE");
+        $colors = array("color" => "#E36C0A", "darkColor" => "#13235B");
         return $colors;
     }
 }

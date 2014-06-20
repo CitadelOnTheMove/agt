@@ -5,7 +5,7 @@
  * to be used in the app creation form
  */
 
-include_once 'Config.php';
+include_once '../Config.php';
 include_once CLASSES . 'Database.class.php';
 include_once CLASSES . 'Util.class.php';
 if
