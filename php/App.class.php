@@ -2,6 +2,8 @@
 
 include_once CLASSES . 'AppSettingsDefinitions.class.php';
 include_once CLASSES . 'Util.class.php';
+include_once CLASSES . 'City.class.php';
+include_once CLASSES . 'Database.class.php';
 
 /**
  * This class is to handle the creation and loading of the applications
@@ -115,8 +117,63 @@ class App {
      * @return App|boolean an App instance or false on failure
      */
     public static function createFromArray($assocArray, $userId, $image) {
-        if (!empty($assocArray))
+        if (!empty($assocArray)) {
+            $assocArray['datasetIds'] = explode(",", $assocArray['datasetIds']);
+            // We will call a service that will give us a list of cities, based on the datasetIds
+            // we provide it with
+            
+            $datasetIdsQueryString = "?format=json&datasetIds=";
+            foreach ($assocArray['datasetIds'] as $datasetId) {
+                $datasetIdsQueryString .= $datasetId . ",";
+            }
+            // Removing the trailing comma
+            $datasetIdsQueryString = rtrim($datasetIdsQueryString, ",");
+
+            // Clearing the cityIds array in case it has values, this can be removed when the appForm
+            // stops providing cityIds
+            $assocArray["cityIds"] = array();
+
+            // Setting proxy settings
+            if (PROXYUSE) {
+                $aContext = array(
+                    'http' => array(
+                        'proxy' => 'tcp://' . PROXYNAME . ':' . PROXYPORT,
+                        'request_fulluri' => true,
+                    ),
+                );
+                $cxContext = stream_context_create($aContext);
+            }
+            else
+                $cxContext = null;
+
+            // Retrieving the cities from the index service
+        //    $citiesInfoResponse = file_get_contents(CITIES_SERVICE . $datasetIdsQueryString, False, $cxContext);
+
+            // Decoding the response
+            $citiesInfoObj = json_decode($assocArray["cities"], true);
+
+            // We need the id of each city. The ids come from the AGT database, and not
+            // from the cities service
+            foreach ($citiesInfoObj as $city) {
+                
+                $cityName = $city["name"];
+                $cityLat = $city["lat"];
+                $cityLon = $city["lat"];
+
+                if (is_null($cityLat))
+                    $cityLat = 0;
+
+                if (is_null($cityLon))
+                    $cityLon = 0;
+
+                $cityId = City::getCityId($cityName, $cityLat, $cityLon);
+                array_push($assocArray['cityIds'], $cityId);
+            }
+            
+           
+
             return new App(null, $assocArray['name'], $assocArray['description'], $userId, $assocArray['datasetIds'], $assocArray['cityIds'], $assocArray['color'], $assocArray['darkColor'], $image);
+        }
         return false;
     }
 
@@ -131,6 +188,8 @@ class App {
         $sql = "INSERT INTO apps VALUES(:uid, :name, :userId, Now(), :description, :image, :isDeleted)";
         $sqlParams = array(':uid' => $this->uid, ':name' => $this->name, ':userId' => $this->userId, ':description' => $this->description, ':image' => $this->image, ':isDeleted' => 0);
         try {
+            Database::connect();
+            Database::begin();
             $sth = Database::$dbh->prepare($sql);
             $sth->execute($sqlParams);
         } catch (Exception $e) {
