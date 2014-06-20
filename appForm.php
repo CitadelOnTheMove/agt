@@ -23,95 +23,256 @@ if (isset($_SESSION['username'])) {
         <!--------------- Metatags ------------------->   
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <!--------------- CSS files ------------------->    
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />    
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.min.css" />
         <link rel="stylesheet" href="css/my.css" />  
         <link rel="stylesheet" href="css/spectrum.css" />
 
         <!-- jQuery Library --> 
         <script src="js/jquery-1.8.2.min.js"></script>
+
         <!-- jQuery Mobile Library -->
-        <script src="js/jquery.mobile-1.2.0.min.js"></script>  
+        <script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.min.js"></script>
 
         <script src="js/spectrum.js"></script> 
 
         <script lang="text/javascript">
+
+
             $(document).ready(function() {
 
-                var counter = 0;
-                var counterMax = 0;
+                $.ajax({
+                    type: "GET",
+                    url: "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetCities",
+                    cache: false,
+                    error: getCitiesFailure,
+                    dataType: "jsonp"
+                });
+
 
                 $('.ui-checkbox a').bind("click", function(event, data) {
                     event.stopPropagation();
                     window.open($this.attr('href'), $this.attr('target'));
                 });
 
-                $("input[type=checkbox][id^=city]").click(function() {
 
-                    /* The id attribute is of the form "cityXX"
-                     * where XX is the id of the city
-                     */
-                    var cityId = $(this).attr('id').substring(4);
+                $("#createNewAppForm").submit(function(event) {
 
-                    if ($(this).attr('checked')) {
+                    getSelectedDatasetIds();
 
-                        /* Check if we allready have the datasets from previous 
-                         * calls and if yes show them.
-                         */
-                        if ($('input[type=checkbox][name="datasetIds[]"].city' + cityId).length)
-                        {
-                            $('input[type=checkbox][name="datasetIds[]"].city' + cityId).parent().show();
-                        }
-                        else {
-                            $.ajax({
-                                type: "GET",
-                                url: "ajaxHelper.php?action=getCities&cityId=" + cityId,
-                                cache: false,
-                                success: onSuccess,
-                                error: onFailure
-                            });
-                        }
-                    } // if 
-                    else {
-                        /*city checkbox unchecked, hide and uncheck the checkboxes */
-                        $('input[type=checkbox][name="datasetIds[]"].city' + cityId).parent().hide();
-                        $('input[type=checkbox][name="datasetIds[]"].city' + cityId).attr("checked", false).checkboxradio("refresh");
+                });
+
+
+                $("#citySelection").bind("change", function() {
+                    var selectedCityName = $(this).find(":selected").text();
+                    if ($(this).find(":selected").val() !== "-1")
+                    {
+                        $.ajax({
+                            type: "GET",
+                            url: "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetCityCategoriesAndDatasets?city=" + selectedCityName,
+                            cache: false,
+                            error: getCitiesFailure,
+                            dataType: "jsonp"
+                        });
                     }
-                }); // click
+                });
+
+
+                // Swipe to remove list item
+                $(document).on("swipeleft swiperight", "#datasetsListView li", function(event) {
+                    var listitem = $(this),
+                            // These are the classnames used for the CSS transition
+                            dir = event.type === "swipeleft" ? "left" : "right",
+                            // Check if the browser supports the transform (3D) CSS transition
+                            transition = $.support.cssTransform3d ? dir : false;
+                    confirmAndDelete(listitem, transition);
+                });
+                // If it's not a touch device...
+                if (!$.mobile.support.touch) {
+                    // Remove the class that is used to hide the delete button on touch devices
+                    $("#datasetsListView").removeClass("touch");
+                    // Click delete split-button to remove list item
+                    $(".delete").on("click", function() {
+                        var listitem = $(this).parent("li");
+                        confirmAndDelete(listitem);
+                    });
+                }
+
+
 
             }); // document.ready
 
-            function onSuccess(data, status)
-            {
-                /* Add the new datasets to the existing ones */
-                //var currentContent = $('#datasetsCheckboxes').html();
-                $('#datasetsCheckboxes').append(data);
-                /* Apply the checkbox styling to the new ones */
-                $('input[type=checkbox][name="datasetIds[]"]').each(function() {
+            function confirmAndDelete(listitem, transition) {
+                // Highlight the list item that will be removed
+                listitem.children(".ui-btn").addClass("ui-btn-active");
+                // Inject topic in confirmation popup after removing any previous injected topics
+                $("#confirm .topic").remove();
+                listitem.find(".topic").clone().insertAfter("#question");
+                // Show the confirmation popup
+                $("#confirm").popup("open");
+                // Proceed when the user confirms
+                $("#confirm #yes").unbind("click");
+                $("#confirm #yes").on("click", function() {
+                    // Remove with a transition
+                    datasetsCounter--;
+                    $("#datasetsCounter").html("(" + datasetsCounter + ")");
 
-                    if ($(this).parent().not('.ui-checkbox').length)
-                        $(this).checkboxradio().trigger('create');
+                    if (transition) {
+                        listitem
+                                // Add the class for the transition direction
+                                .addClass(transition)
+                                // When the transition is done...
+                                .on("webkitTransitionEnd transitionend otransitionend", function() {
+                            // ...the list item will be removed
+                            listitem.remove();
+                            // ...the list will be refreshed and the temporary class for border styling removed
+                            $("#datasetsListView").listview("refresh").find(".border-bottom").removeClass("border-bottom");
+                        })
+                                // During the transition the previous button gets bottom border
+                                .prev("li").children("a").addClass("border-bottom")
+                                // Remove the highlight
+                                .end().end().children(".ui-btn").removeClass("ui-btn-active");
+                    }
+                    // If it's not a touch device or the CSS transition isn't supported just remove the list item and refresh the list
+                    else {
+                        listitem.remove();
+                        $("#datasetsListView").listview("refresh");
+                    }
+
                 });
-
-                $("input[type=checkbox][id^=city]").checkboxradio('enable');
+                // Remove active state and unbind when the cancel button is clicked
+                $("#confirm #cancel").on("click", function() {
+                    listitem.removeClass("ui-btn-active");
+                    $("#confirm #yes").off();
+                });
             }
 
-            function onFailure(data, status)
+            var cities_html = "";
+            var categories_html = "";
+            var datasets_html = "";
+            var datasetsCounter = 0;
+
+            function getCitiesJsonPSuccess(data)
             {
-                //  $('#loadingCities').hide();
-                $('#datasetsCheckboxes').html("Dataset retrieval failed");
+                cities_html += "<option value='-1'>- Select a city -</option>";
+                $.each(data.cities, function(i, city) {
+                    cities_html += "<option lat='" + city.lat + "'  lon='" + city.lon + "' value='" + i + "'>" + city.name + "</option>";
+                });
+
+                $('#citySelection').html(cities_html);
+
+                var myselect = $("select#citySelection");
+                myselect[0].selectedIndex = 0;
+                myselect.selectmenu("refresh");
+            }
+
+            function getCitiesFailure(data, status)
+            {
+                
+            }
+
+            function getCategoriesAndDatasetsJsonPSuccess(data)
+            {
+                categories_html = "";
+
+                $.each(data.categories, function(i, category) {
+
+                    categories_html += "<div id='" + i + "' data-role='collapsible' data-inset='false'><h3>" + i + "</h3><ul data-role='listview'>";
+                    datasets_html = "";
+                    $.each(category, function(j, dataset) {
+                        datasets_html += "<li class='selectedDataset'><a class='ui-btn ui-btn-icon-right ui-icon-plus' href='#'>" + dataset.title + "</a><span class='datasetId' style='display:none;'>" + dataset.id + "</span><span class='datasetUrl' style='display:none;'>" + dataset.url + "</span></li>";
+                    });
+
+                    datasets_html = datasets_html + "</ul></div>";
+                    categories_html += datasets_html;
+                });
+
+                $('#datasetsByCategory').html(categories_html);
+                $("ul").listview();
+                $('#datasetsByCategory').collapsibleset('refresh');
+                $(".selectedDataset").on("click", function() {
+
+                    addDatasetToCart($("a", this).html(), $("span.datasetId", this).html(), $("span.datasetUrl", this).html(), $("#citySelection").find(":selected").text(), $("#citySelection").find(":selected").attr('lat'), $("#citySelection").find(":selected").attr('lon'));
+                });
+
+            }
+
+
+            function addDatasetToCart(datasetName, datasetId, datasetUrl, cityName, cityLat, cityLon)
+            {
+                // see if element(s) exists that matches by checking length           
+                var exists = $('#datasetsListView li:contains(' + datasetName + ')').length;
+
+                if (!exists) {
+                    datasetsCounter++;
+                    var datasetTitle = '<li><span style="display:none;" class="datasetId">' + datasetId + '</span><span style="display:none;" class="cityName">' + cityName + '</span><span style="display:none;" class="cityLat">' + cityLat + '</span><span style="display:none;" class="cityLon">' + cityLat + '</span><a><p class="topic">' +
+                            '<h2>' + datasetName + ' ,  url: <i>' + datasetUrl + '</i></h2></p></a><a href="#" class="delete">Delete</a>' +
+                            '</a></li>';
+
+                    $('#datasetsListView').append(datasetTitle).listview("refresh");
+
+                    $("#datasetsCounter").html("(" + datasetsCounter + ")");
+                    $(".delete").unbind("click");
+                    $(".delete").on("click", function() {
+                        var listitem = $(this).parent("li");
+                        confirmAndDelete(listitem);
+                    });
+                }
+            }
+
+
+            function getSelectedDatasetIds()
+            {
+                var datasetIds = [];
+                var cityNames = [];
+                var cityLats = [];
+                var cityLons = [];
+                var cities = [];
+
+                $('#datasetsListView li').each(function() {
+                    datasetIds.push($("span.datasetId", this).html());
+                    if ($.inArray($("span.cityName", this).html(), cityNames) === -1)
+                    {
+                        cityNames.push($("span.cityName", this).html());
+                        cityLats.push($("span.cityLat", this).html());
+                        cityLons.push($("span.cityLon", this).html());
+                    }
+                });
+                var i;
+
+                for (i = 0; i < cityNames.length; ++i) {
+                    var city = new City();
+                    city.name = cityNames[i];
+                    city.lat = cityLats[i];
+                    city.lon = cityLons[i];
+                    cities.push(city);
+                }
+
+                $('#datasetIds')
+                        .attr('name', "datasetIds")
+                        .attr('value', datasetIds);
+                $('#cities')
+                        .attr('name', "cities")
+                        .attr('value', JSON.stringify(cities));
+            }
+            function City() {
+                this.name;
+                this.lat;
+                this.lon;
             }
         </script>
 
     </head>
+
+
     <body>
         <div data-role="page">
             <div data-role="header">
                 <h1>Create your app</h1>
                 <div class="beta"></div>
-                <a href="http://www.citadelonthemove.eu/en-us/innovate/templateapps.aspx" id="documentsLink" data-icon="documents" data-iconpos="left" data-theme="c" title="Documentation" rel="external" class="ui-btn-left">Resources</a> 
-                <a href="logout.php" id="logoutLink" data-icon="logout" data-iconpos="left" data-theme="c" title="Log out" class="ui-btn-right">Log out</a> 
+                <a href="http://www.citadelonthemove.eu/en-us/innovate/templateapps.aspx" data-role="button"  id="documentsLink" data-icon="info" data-theme="c" title="Documentation" rel="external" >Resources</a> 
+                <a href="logout.php" id="logoutLink" data-icon="back" data-iconpos="left" data-theme="c" title="Log out" class="ui-btn-right">Log out</a> 
             </div>
 
             <div data-role="content"> 
@@ -131,10 +292,6 @@ if (isset($_SESSION['username'])) {
                     // Check all required fields
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                        if (empty($_POST["cityIds"])) {
-                            $cityIdsErr = "City is required";
-                            $error = true;
-                        }
                         if (empty($_POST["datasetIds"])) {
                             $datasetIdsErr = "Dataset is required";
                             $error = true;
@@ -159,7 +316,7 @@ if (isset($_SESSION['username'])) {
 
                         if (!$error) {
                             $image = null;
-                            if ((isset($_POST["cityIds"])) && (isset($_POST["name"])) && (isset($_POST["description"])) &&
+                            if ((isset($_POST["name"])) && (isset($_POST["description"])) &&
                                     (isset($_POST["datasetIds"])) && (isset($_POST["color"])) &&
                                     (isset($_POST["darkColor"]))) {
 
@@ -171,14 +328,14 @@ if (isset($_SESSION['username'])) {
                                     } else {
                                         $fileName = $_FILES['image']['name'];
                                         $fileSize = $_FILES['image']['size'];
-                                        $filePath = MY_PATH. $fileName;
+                                        $filePath = MY_PATH . $fileName;
 
                                         //Check filesize
                                         if ($fileSize < 100000) {
-                                          
+
                                             move_uploaded_file($tmpFile, $filePath);
 
-                                            /*Determine filetype (jpeg, png, gif)*/
+                                            /* Determine filetype (jpeg, png, gif) */
                                             switch ($_FILES['image']['type']) {
                                                 case 'image/jpeg': $ext = "jpg";
                                                     $gd = imagecreatefromjpeg($filePath);
@@ -196,7 +353,7 @@ if (isset($_SESSION['username'])) {
                                                     break;
                                             }
 
-                                            /*Resize image and store it like png at the server*/
+                                            /* Resize image and store it like png at the server */
                                             if ($storeImage) {
                                                 $resized = resizePreservingAspectRatio($gd, 60, 60);
                                                 imagepng($resized, $filePath);
@@ -206,7 +363,6 @@ if (isset($_SESSION['username'])) {
                                     }
                                 }
 
-                                Database::begin();
                                 $newApp = App::createFromArray($_POST, $userId, $image);
                                 if ($newApp->save()) {
                                     Database::commit();
@@ -220,9 +376,10 @@ if (isset($_SESSION['username'])) {
                                     echo '<br><br>';
                                     echo ' <a style="float:right" href="appForm.php" target="_blank">Create a new app</a></div>';
                                 }
+                                Database::disconnect();
                             }
                         }
-                    }                   
+                    }
                     ?>
 
                     <?php if ($_SERVER["REQUEST_METHOD"] != "POST" || $error) { ?>
@@ -244,30 +401,46 @@ if (isset($_SESSION['username'])) {
                             <p><span class="error">* required field.</span></p>                        
 
                             <legend><b>Select cities:</b> <span class="error">* <?php echo $cityIdsErr; ?></span></legend><br/>
-                            <div id="citiesCheckboxes"  data-role="controlgroup">
-
-                                <?php
-                                $sql1 = 'SELECT * FROM cities ORDER BY name';
-                                foreach (Database::$dbh->query($sql1) as $row) {
-                                    echo '<input type="checkbox" autocomplete="off" name="cityIds[]" id="city' . $row['id'] . '"  value="' . $row['id'] . '">
-                            <label for="city' . $row['id'] . '">' . $row['name'] . '</label>';
-                                }
-                                ?>
+                            <div class="ui-field-contain" id="citiesSelectMenu" > 
+                                <select name="selectCity" id="citySelection"> 
+                                </select>
                             </div>
+                            <br>
 
-                            <br><br>
+                            <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-inset="false">
+                                <legend><b>Selected datasets </b><span id="datasetsCounter">(0)</span></legend>
+                                <ul id="datasetsListView" class="touch" data-role="listview" data-split-icon="delete">
 
-                            <legend><b>Select datasets:</b> <span class="error">* <?php echo $datasetIdsErr; ?></span> </legend><br/>
-
-                            <div id="datasetsCheckboxes" >
-                                <?php
-                                echo '<i>Select a City to see the available datasets.</i>'
-                                ?>
+                                </ul>
                             </div>
 
                             <br>
-                            <a rel="external" href="/<?php echo BASE_DIR ?>importDatasets.php">Click here if you want to import a new dataset</a>
+
+                            <p><span class="error">* required field.</span></p>                        
+
+                            <legend><b>Select datasets grouped by category:</b> <span class="error">* <?php echo $datasetIdsErr; ?></span></legend><br/>
+                            <?php
+                            echo '<i>Select a Category to see the available datasets.</i>'
+                            ?>
                             <br><br>
+
+                            <div id="datasetsByCategory" data-role="collapsibleset" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-inset="false">
+                            </div>
+                            <br><br>                       
+
+
+                            <div id="confirm" class="ui-content" data-role="popup" data-theme="a">
+                                <p id="question">Are you sure you want to remove this dataset?</p>
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a">
+                                        <a id="yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
+                                    </div>
+                                    <div class="ui-block-b">
+                                        <a id="cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
+                                    </div>
+                                </div>
+                            </div><!-- /popup -->
+
 
                             <legend><b>Select the basic color of your app:</b><span class="error">* <?php echo $colorErr; ?></span></legend><br/>
                             <input type="color" class="full" name="color">
@@ -282,15 +455,18 @@ if (isset($_SESSION['username'])) {
                             <legend><b>Application Name:</b> <span class="error">* <?php echo $nameErr; ?></span></legend><br/>
                             <input type="text" name="name" required>                        
                             <br/><br/>
-                            
+
                             <legend><b>Application Description:(max 90 chars)</b> <span class="error">* <?php echo $descriptionErr; ?></span></legend><br/>
                             <textarea rows="4" cols="50" maxlength="90" name="description"   required ></textarea>                        
                             <br/><br/>
-         
+
                             <legend><b>Application Image:</b></legend><br/>
                             <legend>(Supported image formats: gif, jpeg, png. Maximum size: 1MB.)</legend><br/>
                             <input type="file" name="image"/>
                             <br/><br/>
+
+                            <input id="datasetIds" type="hidden"  />
+                            <input id="cities" type="hidden"  />
 
                             <?php if (!$general->logged_in()) { ?>
                                 <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
@@ -298,6 +474,7 @@ if (isset($_SESSION['username'])) {
                                 ?>
                                 <input type="submit" name="submit" value="Create the app">
                             <?php } ?>  
+
                         </form>
 
                         <?php
