@@ -29,47 +29,52 @@ $colors = printColors($appID);
         <meta property="og:site_name" content="Citadel Application generation Tool"/>
         <meta property="og:image" content="<?php echo SERVERNAME . BASE_DIR ?>images/logoCitadel.png"/>
 
-        <!--------------- CSS files ------------------->    
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />        
-        <link rel="stylesheet" href="css/app-generator.min.css">
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile.structure-1.2.0.min.css" /> 
-        <link rel="stylesheet" href="css/my.css" />
-        <!--<link rel="stylesheet" href="css/validationForm.css" />-->
-        
-       
-        
-          <!--------------- Add a sortcut to home screen------------>
+        <!--------------- CSS files ------------------->  
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.min.css" />
+        <!--          <link rel="stylesheet" href="css/app-generator.min.css">-->
+        <link rel="stylesheet" href="css/my.css" />    
+
+        <!--------------- Add a sortcut to home screen------------>
         <link rel="apple-touch-icon" href="images/logoCitadel.png"/>
         <link rel="apple-touch-startup-image" href="images/logoCitadel.png">
         <meta name="apple-mobile-web-app-capable" content="yes" />
 
         <style>
-            .ui-btn-up-a  {
-                background: linear-gradient(<?php echo $colors['color'] ?>, <?php echo $colors['color'] ?>) repeat scroll 00 <?php echo $colors['color'] ?>;
+
+            .ui-page-theme-a .ui-btn.ui-btn-active, html .ui-bar-a .ui-btn.ui-btn-active, html .ui-body-a .ui-btn.ui-btn-active, html body .ui-group-theme-a .ui-btn.ui-btn-active, html head + body .ui-btn.ui-btn-a.ui-btn-active, .ui-page-theme-a .ui-checkbox-on:after, html .ui-bar-a .ui-checkbox-on:after, html .ui-body-a .ui-checkbox-on:after, html body .ui-group-theme-a .ui-checkbox-on:after, .ui-btn.ui-checkbox-on.ui-btn-a:after, .ui-page-theme-a .ui-flipswitch-active, html .ui-bar-a .ui-flipswitch-active, html .ui-body-a .ui-flipswitch-active, html body .ui-group-theme-a .ui-flipswitch-active, html body .ui-flipswitch.ui-bar-a.ui-flipswitch-active, .ui-page-theme-a .ui-slider-track .ui-btn-active, html .ui-bar-a .ui-slider-track .ui-btn-active, html .ui-body-a .ui-slider-track .ui-btn-active, html body .ui-group-theme-a .ui-slider-track .ui-btn-active, html body div.ui-slider-track.ui-body-a .ui-btn-active {
+                background-color: <?php echo $colors['darkColor'] ?> !important;
+                border-color: <?php echo $colors['darkColor'] ?>;
+                color:#fff;
+                text-shadow: 0 1px 0 #000;
             }
-            .ui-btn-hover-a{
-                background: <?php echo $colors['darkColor'] ?>;
+
+            .ui-page-theme-a .ui-btn, html .ui-bar-a .ui-btn, html .ui-body-a .ui-btn, html body .ui-group-theme-a .ui-btn, html head + body .ui-btn.ui-btn-a, .ui-page-theme-a .ui-btn:visited, html .ui-bar-a .ui-btn:visited, html .ui-body-a .ui-btn:visited, html body .ui-group-theme-a .ui-btn:visited, html head + body .ui-btn.ui-btn-a:visited {
+                background-color: <?php echo $colors['color'] ?>;
+                color:#fff;
+                text-shadow: 0 1px 0 #000;
             }
-            .ui-btn-active{
-                background: <?php echo $colors['darkColor'] ?>;
+
+            .ui-page-theme-a .ui-radio-on:after, html .ui-bar-a .ui-radio-on:after, html .ui-body-a .ui-radio-on:after, html body .ui-group-theme-a .ui-radio-on:after, .ui-btn.ui-radio-on.ui-btn-a:after {
+                border-color: <?php echo $colors['darkColor'] ?> ;
             }
-            .list-scroll-container{
-                background: none repeat scroll 0 0 <?php echo $colors['color'] ?>;
+            .ui-page-theme-a .ui-btn:focus, html .ui-bar-a .ui-btn:focus, html .ui-body-a .ui-btn:focus, html body .ui-group-theme-a .ui-btn:focus, html head + body .ui-btn.ui-btn-a:focus, .ui-page-theme-a .ui-focus, html .ui-bar-a .ui-focus, html .ui-body-a .ui-focus, html body .ui-group-theme-a .ui-focus, html head + body .ui-btn-a.ui-focus, html head + body .ui-body-a.ui-focus {
+                box-shadow: 0 0 12px  <?php echo $colors['darkColor'] ?>;
             }
-            .ui-checkbox-on .ui-icon,
-            .ui-radio-on .ui-icon {
-                background-color: <?php echo $colors['color'] ?> 
+            .ui-page-theme-a .ui-btn:hover, html .ui-bar-a .ui-btn:hover, html .ui-body-a .ui-btn:hover, html body .ui-group-theme-a .ui-btn:hover, html head + body .ui-btn.ui-btn-a:hover {
+                background-color:  <?php echo $colors['darkColor'] ?> !important;
+                border-color:  <?php echo $colors['darkColor'] ?> ;
+                color: #fff;
+                text-shadow: 0 1px 0 #000;
             }
-            #list ul li.ui-btn-up-b {
-                background: <?php echo $colors['color'] ?> ;
-            }
-            .ui-btn-hover-a, .ui-btn-hover-b {
-                border:1px solid <?php echo $colors['darkColor'] ?>  ;
-                background:<?php echo $colors['darkColor'] ?> ;
-            }
-            .ui-focus, .ui-btn:focus {
-                box-shadow: 0 0 3px <?php echo $colors['darkColor'] ?> inset,
-                    0 0 9px <?php echo $colors['darkColor'] ?>;
+
+            #mapFilterList .ui-btn, #poiBubble .ui-btn ,  #mapFilterList .ui-btn, #poiBubble .ui-btn:hover,
+            #cityFilterList .ui-btn, #poiBubble .ui-btn ,  #cityFilterList .ui-btn, #poiBubble .ui-btn:hover,
+            #list .ui-btn, #poiBubble .ui-btn ,  #list .ui-btn, #poiBubble .ui-btn:hover
+            {
+                background-color: #f6f6f6 !important;
+                color:#333!important;
+                text-shadow:none!important;
+                border-color: #ddd !important;
             }
 
         </style>
@@ -90,8 +95,8 @@ $colors = printColors($appID);
         <!-- jQuery Library --> 
         <script src="js/jquery-1.8.2.min.js"></script>
         <!-- jQuery Mobile Library -->
-        <script src="js/jquery.mobile-1.2.0.min.js"></script> 
-       
+        <script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.min.js"></script>
+
         <!-- Page params Library: Used to pass query params to embedded/internal pages of jQuery Mobile -->    
         <script src="js/jqm.page.params.js"></script>
         <!-- Template specific functions and handlers -->    
@@ -113,22 +118,29 @@ $colors = printColors($appID);
         <!-- Home Page: Contains the Map -->
         <div data-role="page" id="page1" class="page">
 
-            <!-- /Progress Bar for jQuery Mobile -->
-            <header data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
-                <span class="ui-title"><?php echo $currentAppName ?></span>
-                <a href="" id="filter" data-icon="search" data-iconpos="left" data-theme="a" title="Categories" class="ui-btn-left">Categories</a>
-                <a href="" id="city" data-icon="bars" data-iconpos="left" data-theme="b" title="Select City" class="ui-btn-right">Cities</a>              
+            <div data-role="popup" id="popupMenu" data-theme="a">
+                <ul data-role="listview" data-inset="true" style="min-width:210px;">
+                    <li data-role="list-divider">How do you want to get there?</li>
+                    <!--            <li><a href="#">View details</a></li>-->
+                    <li><a  onclick="initStartingPoint('DRIVING')" ><img class="ui-li-icon" src='css/images/car-black.png' />Car</a></li>
+                    <li><a  onclick="initStartingPoint('WALKING')" ><img  class="ui-li-icon"  src='css/images/walk2-black.png' />Walk</a></li>
+                    <li><a  onclick="initStartingPoint('TRANSIT')"><img  class="ui-li-icon"  src='css/images/bus-black.png'  />Public transportation</a></li>
+                </ul>
+            </div>
 
-                <!--a href="#info" data-rel="dialog" data-icon="info" data-iconpos="notext" data-theme="b" title="Info" class="ui-btn-right">&nbsp;</a-->
+            <!-- /Progress Bar for jQuery Mobile -->
+            <div data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
+                <span class="ui-title"><?php echo $currentAppName ?></span>
+                <a href="" id="filter" data-role="button" data-icon="filter" data-iconpos="notext"  data-theme="a" title="Categories" ></a>
+                <a href="" id="city" data-role="button" data-icon="bars" data-iconpos="left" data-theme="a" title="Select City" >Cities</a>              
+
                 <div data-role="navbar" class="navbar">
                     <ul>
                         <li><a href="#" class="pois-nearme ui-btn-active" data-theme="a">Map</a></li>
-                        <!--li><a href="#" class="pois-showall" data-theme="a">Show all</a></li-->
                         <li><a href="#page2" class="pois-list" data-theme="a">List</a></li>
                     </ul>
                 </div><!-- /navbar -->
-            </header>
-
+            </div>
 
             <div data-role="content" id="map-filter">
                 <div class="filters-list" id="mapFilterList">
@@ -147,16 +159,11 @@ $colors = printColors($appID);
 
                     </fieldset>
                 </div>
-                <!--footer data-role="footer" data-posistion="fixed" data-fullscreen="true" class="filter-footer">
-                    <a href="" id="cityApply" data-icon="gear" data-theme="a" title="Apply" class="ui-btn-right">Apply</a>
-                </footer-->
+
             </div><!--city-filter-->
 
             <div data-role="content" id="map-container">
-
- 		<!-- /Progress Bar for jQuery Mobile -->
                 <div id="progressbar"></div>
-
                 <div id="map_canvas" class="map_canvas"></div>
             </div>
 
@@ -180,7 +187,6 @@ $colors = printColors($appID);
                 <div data-role="navbar" class="navbar">
                     <ul>
                         <li><a href="#" class="pois-nearme" data-theme="a">Map</a></li>
-                        <!--li><a href="#" class="pois-showall" data-theme="a">Show all</a></li-->
                         <li><a href="#page2" class="pois-list ui-btn-active" data-theme="a">List</a></li>
                     </ul>
                 </div><!-- /navbar -->
@@ -188,8 +194,8 @@ $colors = printColors($appID);
 
             <div class="list-container">
                 <div class="list-scroll-container">
-                    <div data-role="content" id="list" class="poi">
-                        <ul data-role='listview' data-filter='true' data-theme='b'>
+                    <div data-role="content" id="list">
+                        <ul data-role='listview' data-inset='true' data-filter='true' data-theme='a'>
                             <!-- dynamically filled with data -->
                         </ul>
                     </div><!--list-->
@@ -205,7 +211,6 @@ $colors = printColors($appID);
                 <div data-role="navbar" class="navbar">
                     <ul>
                         <li><a href="#" class="pois-nearme" data-theme="a">Map</a></li>
-                        <!--li><a href="#" class="pois-showall" data-theme="a">Show all</a></li-->
                         <li><a href="#page2" class="pois-list" data-theme="a">List</a></li>
                     </ul>
                 </div><!-- /navbar --> 
@@ -267,7 +272,7 @@ $colors = printColors($appID);
             var filters = [];
 
             /*The id (unique identifier) of the application*/
-            var appId = "<?php echo $appID; ?>";       
+            var appId = "<?php echo $appID; ?>";
 
             /* Keeps page id to emulate full url using querystring */
             var pageId = 0;
