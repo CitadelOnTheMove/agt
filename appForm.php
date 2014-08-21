@@ -70,7 +70,7 @@ if (isset($_SESSION['username'])) {
                     {
                         $.ajax({
                             type: "GET",
-                            url: "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetCityCategoriesAndDatasets?city=" + selectedCityName,
+                            url: "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetCityCategoriesAndDatasets?city=" + encodeURIComponent(selectedCityName),
                             cache: false,
                             error: getCitiesFailure,
                             dataType: "jsonp"
@@ -152,10 +152,11 @@ if (isset($_SESSION['username'])) {
             var categories_html = "";
             var datasets_html = "";
             var datasetsCounter = 0;
+            var categoryName = "";
 
             function getCitiesJsonPSuccess(data)
             {
-                cities_html += "<option value='-1'>- Select a city -</option>";
+                cities_html += "<option value='-1'>- Select City/Region -</option>";
                 $.each(data.cities, function(i, city) {
                     cities_html += "<option lat='" + city.lat + "'  lon='" + city.lon + "' value='" + i + "'>" + city.name + "</option>";
                 });
@@ -163,7 +164,10 @@ if (isset($_SESSION['username'])) {
                 $('#citySelection').html(cities_html);
 
                 var myselect = $("select#citySelection");
-                myselect[0].selectedIndex = 0;
+
+                if (myselect[0]) {
+                    myselect[0].selectedIndex = 0;
+                }
                 myselect.selectmenu("refresh");
             }
 
@@ -178,10 +182,12 @@ if (isset($_SESSION['username'])) {
 
                 $.each(data.categories, function(i, category) {
 
+                    categoryName = i;
                     categories_html += "<div id='" + i + "' data-role='collapsible' data-inset='false'><h3>" + i + "</h3><ul data-role='listview'>";
                     datasets_html = "";
                     $.each(category, function(j, dataset) {
-                        datasets_html += "<li class='selectedDataset'><a class='ui-btn ui-btn-icon-right ui-icon-plus' href='#'>" + dataset.title + "</a><span class='datasetId' style='display:none;'>" + dataset.id + "</span><span class='datasetUrl' style='display:none;'>" + dataset.url + "</span></li>";
+                        datasets_html += "<li class='selectedDataset'><a class='ui-btn ui-btn-icon-right ui-icon-plus' href='#'>" + dataset.title + "</a><span class='datasetId' style='display:none;'>" + dataset.id + "</span><span class='datasetUrl' style='display:none;'>" + dataset.url + "</span><span style='display:none;' class='categoryName'>" + categoryName + "</span></li>";
+                        //datasets_html += "<li class='selectedDataset'><a class='ui-btn ui-btn-icon-right ui-icon-plus' href='#'>" + dataset.title + "</a><span class='datasetId' style='display:none;'>" + dataset.id + "</span><span class='datasetUrl' style='display:none;'>" + dataset.url + "</span></li>";
                     });
 
                     datasets_html = datasets_html + "</ul></div>";
@@ -193,21 +199,22 @@ if (isset($_SESSION['username'])) {
                 $('#datasetsByCategory').collapsibleset('refresh');
                 $(".selectedDataset").on("click", function() {
 
-                    addDatasetToCart($("a", this).html(), $("span.datasetId", this).html(), $("span.datasetUrl", this).html(), $("#citySelection").find(":selected").text(), $("#citySelection").find(":selected").attr('lat'), $("#citySelection").find(":selected").attr('lon'));
+                    addDatasetToCart($("a", this).html(), $("span.datasetId", this).html(), $("span.datasetUrl", this).html(), $("span.categoryName", this).html(), $("#citySelection").find(":selected").text(), $("#citySelection").find(":selected").attr('lat'), $("#citySelection").find(":selected").attr('lon'));
+                    // addDatasetToCart($("a", this).html(), $("span.datasetId", this).html(), $("span.datasetUrl", this).html(), $("#citySelection").find(":selected").text(), $("#citySelection").find(":selected").attr('lat'), $("#citySelection").find(":selected").attr('lon'));
                 });
 
             }
 
 
-            function addDatasetToCart(datasetName, datasetId, datasetUrl, cityName, cityLat, cityLon)
+            function addDatasetToCart(datasetName, datasetId, datasetUrl, categoryName, cityName, cityLat, cityLon)
             {
                 // see if element(s) exists that matches by checking length           
                 var exists = $('#datasetsListView li:contains(' + datasetName + ')').length;
 
                 if (!exists) {
                     datasetsCounter++;
-                    var datasetTitle = '<li><span style="display:none;" class="datasetId">' + datasetId + '</span><span style="display:none;" class="cityName">' + cityName + '</span><span style="display:none;" class="cityLat">' + cityLat + '</span><span style="display:none;" class="cityLon">' + cityLat + '</span><a><p class="topic">' +
-                            '<h2>' + datasetName + ' ,  url: <i>' + datasetUrl + '</i></h2></p></a><a href="#" class="delete">Delete</a>' +
+                    var datasetTitle = '<li><span style="display:none;" class="datasetId">' + datasetId + '</span><span style="display:none;" class="cityName">' + cityName + '</span><span style="display:none;" class="cityLat">' + cityLat + '</span><span style="display:none;" class="cityLon">' + cityLat + '</span><span style="display:none;" class="categoryName">' + categoryName + '</span><a><div class="topic">' +
+                            '<h2>' + datasetName + ' , <i><span style="font-size:12px">(' + datasetUrl + ')</span></i></h2></div></a><a href="#" class="delete">Delete</a>' +
                             '</a></li>';
 
                     $('#datasetsListView').append(datasetTitle).listview("refresh");
@@ -229,9 +236,14 @@ if (isset($_SESSION['username'])) {
                 var cityLats = [];
                 var cityLons = [];
                 var cities = [];
+                var categoryNames = [];
 
                 $('#datasetsListView li').each(function() {
                     datasetIds.push($("span.datasetId", this).html());
+                    if ($.inArray($("span.categoryName", this).html(), categoryNames) === -1)
+                    {
+                        categoryNames.push($("span.categoryName", this).html());
+                    }
                     if ($.inArray($("span.cityName", this).html(), cityNames) === -1)
                     {
                         cityNames.push($("span.cityName", this).html());
@@ -252,6 +264,11 @@ if (isset($_SESSION['username'])) {
                 $('#datasetIds')
                         .attr('name', "datasetIds")
                         .attr('value', datasetIds);
+
+                $('#categoryNames')
+                        .attr('name', "categoryNames")
+                        .attr('value', categoryNames);
+
                 $('#cities')
                         .attr('name', "cities")
                         .attr('value', JSON.stringify(cities));
@@ -270,9 +287,7 @@ if (isset($_SESSION['username'])) {
         <div data-role="page">
             <div data-role="header">
                 <h1>Create your app</h1>
-                <div class="beta"></div>
-                <a href="http://www.citadelonthemove.eu/en-us/innovate/templateapps.aspx" data-role="button"  id="documentsLink" data-icon="info" data-theme="c" title="Documentation" rel="external" >Resources</a> 
-                <a href="logout.php" id="logoutLink" data-icon="back" data-iconpos="left" data-theme="c" title="Log out" class="ui-btn-right">Log out</a> 
+                <div class="beta"></div> 
             </div>
 
             <div data-role="content"> 
@@ -369,12 +384,12 @@ if (isset($_SESSION['username'])) {
                                     echo '<div class="success">Your application was created successfully!';
                                     echo '<br><br>';
                                     echo ' <a href="index.php?uid=' . $newApp->uid . '" target="_blank" rel="external">See my app!</a>';
-                                    echo ' <a style="float:right" href="appForm.php" target="_blank">Create a new app</a></div>';
+                                    echo ' <a style="float:right" href="appForm.php" rel="external">Create a new app</a></div>';
                                 } else {
                                     Database::rollback();
                                     echo '<div class="failure">Your application was not created.';
                                     echo '<br><br>';
-                                    echo ' <a style="float:right" href="appForm.php" target="_blank">Create a new app</a></div>';
+                                    echo ' <a style="float:right" href="appForm.php" >Create a new app</a></div>';
                                 }
                                 Database::disconnect();
                             }
@@ -392,15 +407,13 @@ if (isset($_SESSION['username'])) {
                                 </div>
                                 <?php
                             } else {
-                                echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.';
-                                echo '<a style="float:right" href="logout.php" data-ajax="false">log out</a>';
-                            }
+                                echo 'Hi <b>' . $username . '</b>! Use this form to create your own app.';                                                            }
                             ?>
                             </p>                            
 
                             <p><span class="error">* required field.</span></p>                        
 
-                            <legend><b>Select cities:</b> <span class="error">* <?php echo $cityIdsErr; ?></span></legend><br/>
+                            <legend><b>Select City/Region:</b> <span class="error">* <?php echo $cityIdsErr; ?></span></legend>
                             <div class="ui-field-contain" id="citiesSelectMenu" > 
                                 <select name="selectCity" id="citySelection"> 
                                 </select>
@@ -466,13 +479,14 @@ if (isset($_SESSION['username'])) {
                             <br/><br/>
 
                             <input id="datasetIds" type="hidden"  />
+                            <input id="categoryNames" type="hidden"  />
                             <input id="cities" type="hidden"  />
 
                             <?php if (!$general->logged_in()) { ?>
                                 <a target="_blank" href="<?php echo CITADELLOGINLINK; ?>" relation="external">You have to login before creating an app!</a>
                             <?php } else {
                                 ?>
-                                <input type="submit" name="submit" value="Create the app">
+                                <input type="submit" name="submit" value="Create the app" onclick="window.scrollTo(0, 0);">
                             <?php } ?>  
 
                         </form>
