@@ -2,7 +2,7 @@
 var newMarker = null;
 var point = null;
 var geocoder;
-var currentPoi;
+
 var currentPoiId;
 var myLatlng;
 // timeout for geolocation failure
@@ -11,14 +11,33 @@ var poisArrayInitialised = false;
 var selectedCityId;
 var retrievedCitiesDatasets = new Array();
 var startTime;
-  var filtersIndex = 0;
+var filtersIndex = 0;
+
+var markerArray = [];
+var directionsDisplay;
+var directionsService;
+var stepDisplay;
+var datasetSupportsDates = true;
+var dateFilterActive = false;
+var currentPoi;
+
+var currentMarker;
+
+function Transit(lat, lon, type) {
+    this.lat = lat;
+    this.lon = lon;
+    this.type = type;
+}
+
+var currentTransit = new Transit("", "", "");
+
 /****************** Functions *****************************/
 
 /* Initialization function.
  * It is called once when the page is load
  */
 function globalInit() {
-    $.mobile.showPageLoadingMsg();
+    $.mobile.loading("show");
     $('#progressbar').hide();
     jQMProgressBar('progressbar')
             .setOuterTheme('s')
@@ -60,14 +79,10 @@ function activateDatasetPreviewMode()
  */
 function getPoisFromDataset(data)
 {
-    console.log("getPoisFromDataset() called");
-    //startTime = new Date();
-
+    
     if (data.status === "success")
     {
         if (!poisArrayInitialised || datasetPreview) {
-
-            console.log("if getPoisFromDataset was called..");
 
             var k = 0;
             filters = data.filters;
@@ -118,6 +133,7 @@ function getPoisFromDataset(data)
          * Add pois to the initial array of poi objects.
          */
         else {
+
             $.each(data.filters, function(i, filterObject) {
                 filters.push(filterObject);
             });
@@ -176,31 +192,44 @@ function getPoisFromDataset(data)
 
 function getPoisFromDatasetCallback()
 {
-    
-    if(datasetPreview)
-       {
-            addMarkers();
-        }
-        else
-            {
-    setFiltersByCityId(selectedCityId);
-            }
+
+    if (datasetPreview)
+    {
+        addMarkers();
+    }
+    else
+    {
+        setFiltersByCityId(selectedCityId);
+    }
 }
 
 
 /* Initialises a google map using map api v3 */
 function initializeMap()
 {
-$('.ui-title').html(appName);
+    /* If the app has only one city, set it directly as the active one */
+    directionsService = new google.maps.DirectionsService();
+
+    $('.ui-title').html(appName);
     var mapOptions = {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    
     /* instantiate the map wih the options and put it in the div holder, "map-canvas" */
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-    /* If the app has only one city, set it directly as the active one */
+
+    // Create a renderer for directions and bind it to the map.
+    var rendererOptions = {
+        map: map
+    }
+    directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+
+    // Instantiate an info window to hold step text.
+    stepDisplay = new google.maps.InfoWindow();
+
+
     if (cities.length === 1) {
-        $.mobile.hidePageLoadingMsg();
+        //  $.mobile.hidePageLoadingMsg();
+        $.mobile.loading("hide");
         selectedCityId = cities[0].id;
         retrievedCitiesDatasets.push(selectedCityId);
 
@@ -215,10 +244,11 @@ $('.ui-title').html(appName);
             error: onDatasetFailure
         });
     }
-     else if(datasetPreview)
+    else if (datasetPreview)
     {
-        $.mobile.hidePageLoadingMsg();
-            $.ajax({
+        //  $.mobile.hidePageLoadingMsg();
+        $.mobile.loading("hide");
+        $.ajax({
             type: "GET",
             url: "dataset.php?preview=true&converterdatasetID=" + datasetPreviewId,
             cache: false,
@@ -241,9 +271,10 @@ function geolocFail() {
     showDefaultMap();
 }
 
-function showDefaultMap() 
+function showDefaultMap()
 {
-    $.mobile.hidePageLoadingMsg();
+    // $.mobile.hidePageLoadingMsg();
+    $.mobile.loading("hide");
     myLatlng = new google.maps.LatLng(mapLat, mapLon);
     mapOptions = {
         center: myLatlng,
@@ -254,21 +285,23 @@ function showDefaultMap()
     alert("Geolocation not available, please select a city from the upper right corner");
 }
 
-function showPosition(position) 
+function showPosition(position)
 {
     console.log("geolocation is supported");
     clearTimeout(location_timeout);
-    $.mobile.hidePageLoadingMsg();
+    // $.mobile.hidePageLoadingMsg();
+    $.mobile.loading("hide");
     myLatlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
     var datasetFound = false;
     if (cities.length == 0) {
         alert("Missing application id. No data is loaded.");
+        alert("cities.length == 0" + cities.length)
     }
 
     /* Check if any of the app cities is close to the user's current location
      * and if found make it active */
     else if (cities.length > 1) {
-        
+
         var p1 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
         for (i = 0; i < cities.length; i++) {
@@ -316,7 +349,8 @@ function showError(error) {
     clearTimeout(location_timeout);
     console.warn('ERROR(' + error.code + '): ' + error.message);
 
-    $.mobile.hidePageLoadingMsg();
+    // $.mobile.hidePageLoadingMsg();
+    $.mobile.loading("hide");
     switch (error.code) {
         case error.PERMISSION_DENIED:
             alert("User denied the request for Geolocation.");
@@ -393,19 +427,18 @@ function setFiltersByCityId(cityId)
 }
 
 
-function setFiltersByCityIdCallback() 
+function setFiltersByCityIdCallback()
 {
+   
     var endTime = new Date();
-    var duration = endTime - startTime;
-    //console.log("setFiltersByCityId took: ", duration);
+    var duration = endTime - startTime;   
     setFilters();
 }
 
 /* Adds all the markers on the global map object */
 function addMarkers()
 {
-    //console.log("addMarkers() called");
-    startTime = new Date();
+        startTime = new Date();
 
     for (var i = 0; i < markersArray.length; i++) {
         if (typeof markersArray[i] == "object") {
@@ -421,6 +454,14 @@ function addMarkers()
      * the issue of overlapping ones
      */
     var oms = new OverlappingMarkerSpiderfier(map);
+    var iw = new google.maps.InfoWindow();
+    oms.addListener('click', function(marker) {
+        iw.setContent(marker.desc);
+        iw.open(map, marker);
+        //  console.log(marker);
+        currentTransit.lat = marker.position.lat();
+        currentTransit.lon = marker.position.lng();
+    });
 
     /* We initialize the infobubble styling */
     infoBubble = new InfoBubble({
@@ -429,10 +470,11 @@ function addMarkers()
         backgroundColor: bubbleColor,
         borderRadius: 10,
         arrowSize: 10,
-        borderWidth: 2,
-        maxWidth: 300,
-        borderColor: '#3A3A3A',
+        borderWidth: 1,
+        borderColor: '#7c7c7c',
         disableAutoPan: false,
+        arrowPosition: 30,
+        arrowStyle: 2,
         hideCloseButton: true
     });
 
@@ -450,10 +492,10 @@ function addMarkers()
                  */
                 var coords = poi.location.point.pos.posList.split(" ");
                 var current_markerpos = new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
-                
+
                 var marker_image = getFavouriteValue(poi.id) ? "images/star.png" : getMarkerImage(poi.category[0], poi.cityId);
-             if( !marker_image)
-                 marker_image = "images/pin1.png";
+                if (!marker_image)
+                    marker_image = "images/pin1.png";
                 var current_marker = new google.maps.Marker({
                     position: current_markerpos,
                     map: map,
@@ -501,32 +543,28 @@ function addMarkersCallback()
 {
     var endTime = new Date();
     var duration = endTime - startTime;
-    //console.log("addMarkers took: ", duration);
-
+ 
     loadDetailsPage();
     loadListPageData();
     refreshListPageView();
-    //$.mobile.hidePageLoadingMsg();
     updateProgressBar('Done', 100);
     $('#progressbar').hide("slow", function() {
     });
-    
-    if(datasetPreview)
-        {
-            google.maps.event.trigger(map, 'resize');
-           // map.
-            refreshMap();
-    var  aPoi = markersArray[0];
-    console.log(aPoi.position);
-   // var coordsCity = "43.316652/11.689453".split("/");
-    mapLat =  aPoi.position.lat();
-    mapLon = aPoi.position.lng();
-    map.setZoom(16);
- map.setCenter(new google.maps.LatLng(mapLat, mapLon));
-   // map.panTo(new google.maps.LatLng(mapLat, mapLon));
-   // map.panTo();
-    
-        }
+
+    if (datasetPreview)
+    {
+        google.maps.event.trigger(map, 'resize');
+        // map.
+        refreshMap();
+        var aPoi = markersArray[0];
+        mapLat = aPoi.position.lat();
+        mapLon = aPoi.position.lng();
+        map.setZoom(16);
+        map.setCenter(new google.maps.LatLng(mapLat, mapLon));
+        // map.panTo(new google.maps.LatLng(mapLat, mapLon));
+        // map.panTo();
+
+    }
 }
 
 /*
@@ -616,7 +654,7 @@ function setInfoWindowPoi(poi)
 
     contentTemplate += "\n" + category +
             "<span class='bubbleUpVoteWrapper'><img src='images/like-32.png'/><span id='bubbleUpVotes'></span></span><span  class='bubbleDownVoteWrapper'><img src='images/dislike-32.png'/><span id='bubbleDownVotes'></span></span>" +
-            "</a></div><div id='bubbleClose'><a href='' onclick='return overrideBubbleCloseClick();'><img src='images/close.png' width='25' height='25' alt='close' /></a></div>";
+            "</a><a data-rel='popup' onclick='showTransitOptions()'  data-transition='slideup' class='takeMeThere ui-btn ui-mini ui-corner-all ui-shadow ui-btn-inline ui-icon-navigation ui-btn-icon-left ui-btn-a transitPopup'>Take me there</a></div><div id='bubbleClose'><a href='' onclick='return overrideBubbleCloseClick();'><img src='images/close.png' width='25' height='25' alt='close' /></a></div>";
     return contentTemplate;
 }
 
@@ -690,9 +728,8 @@ function setListPagePois()
             contentTemplate +=
                     "<li" + className + ">" +
                     "<a href='' onclick='overrideDetailClick(\"" + poi.id + "\"); return false;'>" +
-                    "<span class='" + imageClass + " icon'></span>" +
-                    "<h3>" + poi.title + "</h3>" +
-                    "<h4>" + poi.description + "</h4>" +
+                    "<img src='images/" + imageClass + ".png'  />" +
+                    "<span>" + poi.title + "</span>" +
                     category +
                     "</a>" +
                     "</li>";
@@ -780,21 +817,18 @@ function overrideBubbleCloseClick() {
 
 /* Load list page using pois variable */
 function loadListPageData()
-{
-    //console.log("loadListPageData() called");
+{   
     var startTime = new Date();
 
     $('#list > ul').html(setListPagePois());
 
     var endTime = new Date();
-    var duration = endTime - startTime;
-    //console.log("loadListPageData took: ", duration);
+    var duration = endTime - startTime; 
 }
 
 /* Refreshes the list of POIS in the List Page */
 function refreshListPageView()
-{
-    //console.log("refreshListPageView() called");
+{   
     var startTime = new Date();
 
     if ($("#list > ul").hasClass("ui-listview")) {
@@ -803,7 +837,6 @@ function refreshListPageView()
 
     var endTime = new Date();
     var duration = endTime - startTime;
-    //console.log("refreshListPageView took: ", duration);
 }
 
 /* Refreshes the global map onject */
@@ -817,8 +850,7 @@ function refreshMap() {
 function loadDetailsPage() {
     /* pageId equals 0 when the Home Page or the List page 
      * is active
-     */
-    //console.log("loadDetailsPage() called");
+     */   
     var startTime = new Date();
 
     if (pageId != 0) {
@@ -827,8 +859,7 @@ function loadDetailsPage() {
         pageId = 0;
     }
     var endTime = new Date();
-    var loadDetailsPageDuration = endTime - startTime;
-    //console.log("loadDetailsPage took: ", loadDetailsPageDuration);
+    var loadDetailsPageDuration = endTime - startTime;   
 }
 
 
@@ -838,7 +869,8 @@ function seeOnMap()
     map.setZoom(16);
     infoBubble.setContent(setInfoWindowPoi(currentPoi));
     infoBubble.open(map, markersArray[currentPoiId]);
-    refreshPoiVotes(currentPoi);
+//    refreshPoiVotes(currentPoi);
+    refreshPoiVotes(currentPoiId);
 }
 
 
@@ -1085,8 +1117,12 @@ $(document).ready(function() {
 }); // end $(document).ready
 
 
-function updateProgressBar(labelText, value) {
-    //console.log(labelText, value)
+function showTransitOptions()
+{
+    $("#popupMenu").popup("open");
+}
+
+function updateProgressBar(labelText, value) {   
     $('#progressbar').show("slow", function() {
     });
     jQMProgressBar('progressbar').setValue(value);
@@ -1156,13 +1192,9 @@ function onVoteFailure(data, status)
 
 /*Called after a successful dataset fetch*/
 function onDatasetSuccess(data, status)
-{
-    //console.log("onDatasetSuccess() called");
+{   
     var startTime = new Date();
-
-    getPoisFromDataset(data);
-    
-    
+    getPoisFromDataset(data); 
 }
 
 function onDatasetFailure(data, status)
@@ -1172,8 +1204,7 @@ function onDatasetFailure(data, status)
 
 /* Sets the available filters  */
 function setFilters()
-{
-    console.log("setFiltersCalled, " + filters.length + " filters");
+{   
     startTime = new Date();
 
     /*enable filter selection*/
@@ -1206,7 +1237,7 @@ function setFilters()
 
                 /* Covers the case where this is also the last iteration */
                 if (filtersIndex === length - 1)
-                {
+                {                  
                     setFiltersCallback();
                 }
                 else {
@@ -1228,24 +1259,21 @@ function setFilters()
 }
 
 
-function setFiltersCallback() 
+function setFiltersCallback()
 {
     $('#map-filter > div > fieldset').html(filters_html);
     $('#map-filter > div > fieldset > input').checkboxradio({mini: true});
 
     var endTime = new Date();
     var setFiltersDuration = endTime - startTime;
-    //console.log("setFilters took: ", setFiltersDuration);
-
+  
     addMarkers();
 }
 
 /* Sets the available city filters  */
-function setCityFilters() 
-{
-    //console.log("setCityFilters() called");
+function setCityFilters()
+{    
     var startTime = new Date();
-
     var filters_html = "";
     for (i = 0; i < cities.length; i++) {
         var city = cities[i];
@@ -1263,7 +1291,6 @@ function setCityFilters()
 
     var endTime = new Date();
     var duration = endTime - startTime;
-    //console.log("setCityFilters took: ", duration);
 }
 
 /*  Centers the map to the given coordinates
@@ -1350,6 +1377,11 @@ function getLocalValue(key) {
     return localStorage.getItem(key);
 }
 
+/* Sets local variable's value */
+function setLocalValue(key, value) {
+    localStorage.setItem(key, value);
+}
+
 /* Empty local variable */
 function removeLocalValue(key) {
     localStorage.removeItem(key);
@@ -1417,8 +1449,7 @@ function touchScroll(id)
  * Used to update filters object list with newly selected filters
  */
 function setSelectedFilters(selectedFilterValues)
-{
-    //console.log("setSelectedFilters() called");
+{    
     var startTime = new Date();
 
     $.each(filters, function(index, filter) {
@@ -1432,5 +1463,110 @@ function setSelectedFilters(selectedFilterValues)
 
     var endTime = new Date();
     var duration = endTime - startTime;
-    //console.log("setSelectedFilters took: ", duration);
 }
+
+function initStartingPoint(transitType)
+{
+    $.mobile.loading("show", {
+        text: 'Loading your route',
+        textVisible: true
+    });
+    $("#popupMenu").popup("close");
+    infoBubble.close();
+    var startPoint;
+
+
+    /* Check if we can get geolocation from the browser */
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            $.mobile.loading("show", {
+                text: 'Loading your route',
+                textVisible: true
+            });
+
+            /* Load near me marker only once */
+            isNearMeMarkerLoaded = true;
+            var currentmarkerpos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            currentMarker.setMap(null);
+
+            var currentmarker = new google.maps.Marker({
+                position: currentmarkerpos,
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
+            startPoint = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            // startPoint = new google.maps.LatLng( 38.002969, 23.738236);
+            // Route the directions and pass the response to a
+            // function to create markers for each step.
+            calcRoute(startPoint, transitType);
+        }, function(error) {
+
+            startPoint = new google.maps.LatLng(mapLat, mapLon);
+            calcRoute(startPoint, transitType);
+        });
+    }
+
+    else
+    {
+        startPoint = new google.maps.LatLng(mapLat, mapLon);
+        calcRoute(startPoint, transitType);
+    }
+}
+
+function calcRoute(startPoint, transitType) {
+
+    endPoint = new google.maps.LatLng(currentTransit.lat, currentTransit.lon);
+
+    var request = {
+        origin: startPoint,
+        destination: endPoint,
+        travelMode: google.maps.TravelMode[transitType]
+    };
+    directionsService.route(request, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            //    var warnings = document.getElementById('warnings_panel');
+            //warnings.innerHTML = '<b>' + response.routes[0].warnings + '</b>';
+          
+            directionsDisplay.setDirections(response);
+            showSteps(response);
+            $.mobile.loading("hide");
+        }
+    });
+
+    // First, remove any existing markers from the map.
+    for (var i = 0; i < markerArray.length; i++) {
+        markerArray[i].setMap(null);
+    }
+    // Now, clear the array itself.
+    markerArray = [];
+}
+
+function showSteps(directionResult) {
+    // For each step, place a marker, and add the text to the marker's
+    // info window. Also attach the marker to an array so we
+    // can keep track of it and remove it when calculating new
+    // routes.
+    var myRoute = directionResult.routes[0].legs[0];
+
+    for (var i = 0; i < myRoute.steps.length; i++) {
+        var marker = new google.maps.Marker({
+            position: myRoute.steps[i].start_location,
+            map: map,
+            animation: google.maps.Animation.DROP
+        });
+        attachInstructionText(marker, myRoute.steps[i].instructions);
+        markerArray[i] = marker;
+    }
+}
+
+function attachInstructionText(marker, text) {
+    google.maps.event.addListener(marker, 'click', function() {
+        // Open an info window when the marker is clicked on,
+        // containing the text of the step.
+        stepDisplay.setContent(text);
+        stepDisplay.open(map, marker);
+        fixMapHeight();
+    });
+}
+
