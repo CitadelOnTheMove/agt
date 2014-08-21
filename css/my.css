@@ -9,7 +9,8 @@ html, body {
     background: transparent;
     width:100%;
     height:100%;
-    /*overflow:hidden;*/
+   /* overflow:hidden;*/
+
 }
 ul, ol {
     list-style: none;
@@ -23,10 +24,10 @@ header.ui-header, footer.ui-footer {
     width:100%;
     z-index: 999;
 }
-/*.ui-popup-container .ui-popup .ui-header, .ui-footer {
+.ui-popup-container .ui-popup .ui-header, .ui-footer {
     position: relative;
     width: auto;
-}*/
+}
 .ui-header {
     top:0;
 }
@@ -35,7 +36,7 @@ header.ui-header, footer.ui-footer {
 }
 .page {
     padding-top:78px;
-    background: #DAE8F6;
+    /*background: #DAE8F6;*/
     overflow: hidden;
 }
 #page1 {
@@ -58,10 +59,16 @@ header.ui-header, footer.ui-footer {
     overflow: hidden;
 }
 .map_canvas {  
+    /*    width:100%;
+        height:100%;
+        padding:0;
+        margin: 0;*/
+    top:0;
     width:100%;
     height:100%;
     padding:0;
-    margin: 0;
+    /*border: 3px solid lightgreen;*/
+    position: absolute;
 }
 .top-menu-pois {
     width:165px;
@@ -76,42 +83,42 @@ header.ui-header, footer.ui-footer {
 #view-switch, #view-switch-p2 {
     padding:0;
     margin:0;
-    text-align: center;
+    /*text-align: center;*/
 }
 #map-filter {
-    background:black;
-    display:none;
+    background:#E9E9E9;
+    display: none;
     position: absolute;
     width:100%;
     overflow:hidden;
     z-index:99;
-    padding-top:85px;
+    /*        padding-top:85px;*/
     padding-bottom:60px;
-    height:145px;
+    /*    height:145px;*/
 }
 
 #city-filter {
-    background:black;
-    display:none;
+    background:#c6c6c6;
+    display: none;
     position: absolute;
     width:100%;
     overflow:auto;
     z-index:99;
-    padding-top:85px;
-    padding-bottom:22px;
+    /*        padding-top:85px;*/
+    /*        padding-bottom:22px;*/
     height:150px;
 }
 
 #map-filter div.filters-list, #city-filter div.filters-list {
-    width:100%;
+    /*       width:90%;*/
     overflow:auto;
     height:160px;
 }
 
 #map-filter div.filters-list fieldset, #city-filter div.filters-list fieldset  {
-    padding-left: 5%;
-    width: 90%;
-    overflow: hidden;
+/*    padding-left: 5%;*/
+    /*        width: 90%;*/
+    overflow: auto;
 }
 .filter-footer {
     position:absolute !important;
@@ -120,11 +127,11 @@ header.ui-header, footer.ui-footer {
     border:0;
 }
 .list-container {
-    -webkit-border-radius: 12px;
+    /*-webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     border-radius: 12px;
-    /*border:2px solid #668953;*/
-    margin: 2%;
+    border:2px solid #668953;
+    margin: 2%;*/
     overflow: hidden;
 }
 #page3 .list-container {
@@ -135,8 +142,8 @@ header.ui-header, footer.ui-footer {
 }
 .list-scroll-container {
     overflow: hidden;
-    /*overflow: auto;*/
-    /*    background: #F8545B;*/
+    overflow: auto;
+    /*background: #F8545B;*/
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     border-radius: 12px;
@@ -147,25 +154,26 @@ header.ui-header, footer.ui-footer {
     -moz-border-radius: 0px;
     border-radius: 0px;
 }
-#list {
+/*#list {
     margin: 3%;
     overflow: hidden;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     border-radius: 12px;
-}
-#list .ui-li .ui-btn-inner a.ui-link-inherit, #list .ui-li-static.ui-li {
-    padding: 0 15px 0 4em;
-    width:85%;
+}*/
+/*#list .ui-li .ui-btn-inner a.ui-link-inherit, #list .ui-li-static.ui-li {
+        padding: 0 15px 0 4em;
+        width:85%;
 }
 #list form {
-    /*    background: #F8545B;*/
+        background: #F8545B;
 }
 #list form input {
-    /*color:white;*/
-}
-#list ul li {
-    padding-top:.5%;
+        color:white;
+}*/
+
+/*#list ul li {
+   padding-top:.5%;
     padding-bottom:.5%;
     border-bottom: 1px solid #333333;
 }
@@ -198,11 +206,11 @@ header.ui-header, footer.ui-footer {
 }
 #list.poi ul li .ui-li div a img {
     padding:.8% 1% 1% 1%;
-}
-/*.ui-btn-hover-b {
-    border:0;
-    background:#ffffff;
 }*/
+.ui-btn-hover-b {
+    border:0;
+    background:#90B17E;
+}
 #item {
     margin: 0;
     overflow: hidden;
@@ -308,18 +316,25 @@ header.ui-header, footer.ui-footer {
 }
 
 #bubbleClose {
-    width:25px;
-    height:25px;
+    /*    width:25px;
+        height:25px;
+    padding-right:5px;*/
     display:inline-block;
-    padding-top:5px;
-    padding-right:5px;
+    padding-top:6px;
+    width: 25px;
 }
-#poiBubble
-{
-    padding:15px;
-    width:175px;
-    text-shadow:none;
-    float:left;
+#poiBubble {
+    /*{   margin-top: 12px;
+        margin-left: 10px;
+        width: 170px;
+        text-shadow:none;
+        float:left;*/
+    float: left;
+    margin-left: 10px;
+    margin-top: 12px;
+    padding-right: 5px;
+    text-shadow: none;
+    width: 174px;
 }
 
 #poiBubble a 
@@ -331,7 +346,7 @@ header.ui-header, footer.ui-footer {
     font-size:14px;
     color:#fff;  
     font-weight: bold;
-    max-width: 170px;
+    /*    max-width: 170px;*/
 }
 
 #poiBubble a .address
@@ -394,6 +409,7 @@ header.ui-header, footer.ui-footer {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     border: medium none;
     text-align: right;
+    padding-bottom: 11px;
 }
 /*Overload jquery ui css*/
 
@@ -548,6 +564,11 @@ header.ui-header, footer.ui-footer {
 
 .hidden {
     display:none !important;
+}
+
+/* jquery mobile 1.4.2 fix*/
+.ui-icon-loading {
+    background: url("http://code.jquery.com/mobile/1.2.0/images/ajax-loader.gif") repeat scroll 0 0 / 2.875em 2.875em rgba(0, 0, 0, 0) !important;
 }
 
 @media (max-width:1024px) {
@@ -801,11 +822,11 @@ header.ui-header, footer.ui-footer {
     border-radius:20px;
 }
 .bubbleDownVoteWrapper img{ 
-    width:20px;
+    width:21px;
     margin-right:3px;
 }
 .bubbleUpVoteWrapper img{
-    width:20px; 
+    width:21px; 
     margin-right:3px;
 }
 #poiBubble .title {
@@ -920,4 +941,45 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     text-align: center;
     font-size: inherit;
     margin-bottom: .75em;
+}
+
+.ui-icon-car:after {
+    background-image: url("images/car.png");
+}
+
+.ui-icon-walk:after {
+    background-image: url("images/walk2.png");
+}
+
+.ui-icon-bus:after {
+    background-image: url("images/bus.png");
+}
+
+.ui-icon-filter:after {
+    background-image: url("images/filter.png");
+}
+.takeMeThere {
+    display: block;
+    /* font-size: 1.4em;
+     margin-top: 12px;*/
+    /*   font-size: 1.2em;
+       padding-left: 33px;
+       font-size: 1em;
+       margin-bottom: 12px;
+       margin-right: 27px;*/
+}
+
+.ui-bar-inherit {
+    z-index: 999;
+}
+
+.ui-checkbox, .ui-radio {
+    margin: 0;
+}
+
+#page2 .ui-content {padding:0;} 
+
+.ui-li-has-thumb img {
+    left: 20px !important;
+    top: 20px !important;
 }
