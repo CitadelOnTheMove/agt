@@ -24,6 +24,7 @@ class App {
     public $color;
     public $darkColor;
     public $image;
+    public $categoryNames;
 
     /**
      * Creates a new instance of the App object
@@ -36,8 +37,9 @@ class App {
      * @param string $color the main color of the app
      * @param string $darkColor the secondary color of the app
      * @param string $image the image of the app
+     * @param string $categoryNames the array of category names for this application
      */
-    public function __construct($uid, $name, $description, $userId, $datasetIds, $cityIds, $color, $darkColor, $image) {
+    public function __construct($uid, $name, $description, $userId, $datasetIds, $cityIds, $color, $darkColor, $image, $categoryNames) {
         $this->uid = $uid;
         $this->name = $name;
         $this->description = $description;
@@ -47,6 +49,7 @@ class App {
         $this->color = $color;
         $this->darkColor = $darkColor;
         $this->image = $image;
+        $this->categoryNames = $categoryNames;
     }
 
     /**
@@ -72,6 +75,7 @@ class App {
                 $image = $result['image'];
                 $datasetIds = array();
                 $cityIds = array();
+                $categoryNames = array();
 
                 // App found in database, now we load its settings
                 $sql = "SELECT * FROM apps_settings WHERE app_uid = :uid";
@@ -88,10 +92,12 @@ class App {
                                 break;
                             case AppSettingsDefinitions::DARKCOLOR: $darkColor = $row['value'];
                                 break;
+                            case AppSettingsDefinitions::CATEGORY: array_push($categoryNames, $row['value']);
+                                break;
                             default:; //Do nothing
                         }
                     }
-                    return new App($uid, $name, $description, $userId, $datasetIds, $cityIds, $color, $darkColor, $image);
+                    return new App($uid, $name, $description, $userId, $datasetIds, $cityIds, $color, $darkColor, $image, $categoryNames);
                 } catch (Exception $e) {
                     if (DEBUG)
                         $sth->debugDumpParams();
@@ -129,6 +135,14 @@ class App {
             // Removing the trailing comma
             $datasetIdsQueryString = rtrim($datasetIdsQueryString, ",");
 
+            $assocArray['categoryNames'] = explode(",", $assocArray['categoryNames']);
+             $categoryNamesQueryString = "?format=json&categoryNames=";
+            foreach ($assocArray['categoryNames'] as $categoryName) {
+                $categoryNamesQueryString .= $categoryName . ",";
+            }
+            // Removing the trailing comma
+            $categoryNamesQueryString = rtrim($categoryNamesQueryString, ",");
+
             // Clearing the cityIds array in case it has values, this can be removed when the appForm
             // stops providing cityIds
             $assocArray["cityIds"] = array();
@@ -158,7 +172,7 @@ class App {
                 
                 $cityName = $city["name"];
                 $cityLat = $city["lat"];
-                $cityLon = $city["lat"];
+                $cityLon = $city["lon"];
 
                 if (is_null($cityLat))
                     $cityLat = 0;
@@ -172,7 +186,7 @@ class App {
             
            
 
-            return new App(null, $assocArray['name'], $assocArray['description'], $userId, $assocArray['datasetIds'], $assocArray['cityIds'], $assocArray['color'], $assocArray['darkColor'], $image);
+            return new App(null, $assocArray['name'], $assocArray['description'], $userId, $assocArray['datasetIds'], $assocArray['cityIds'], $assocArray['color'], $assocArray['darkColor'], $image, $assocArray['categoryNames']);
         }
         return false;
     }
@@ -214,7 +228,6 @@ class App {
                 return false;
             }
         }
-
         foreach ($this->cityIds as &$cityId) {
             $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
             $sqlParams = array(':uid' => $this->uid,
@@ -257,6 +270,22 @@ class App {
                 $sth->debugDumpParams();
             Util::throwException(__FILE__, __LINE__, __METHOD__, "insert dark color  failed", $e->getMessage(), $e);
             return false;
+        }
+
+        foreach ($this->categoryNames as &$categoryName) {
+            $sql = "INSERT INTO apps_settings VALUES(null, :uid, :apps_settings_definition_id, :value)";
+            $sqlParams = array(':uid' => $this->uid,
+                ':apps_settings_definition_id' => AppSettingsDefinitions::CATEGORY,
+                ':value' => $categoryName);
+            try {
+                $sth = Database::$dbh->prepare($sql);
+                $sth->execute($sqlParams);
+            } catch (Exception $e) {
+                if (DEBUG)
+                    $sth->debugDumpParams();
+                Util::throwException(__FILE__, __LINE__, __METHOD__, "insert category failed", $e->getMessage(), $e);
+                return false;
+            }
         }
 
         return true;
