@@ -22,6 +22,7 @@ class AppInfo {
     
     // Added when dataset->city relationship ceased to exist in the AGT database
     public $datasetIds;
+    public $categoryNames;
 
     
     /**
@@ -36,7 +37,7 @@ class AppInfo {
      * @param type $cityNames
      * @param string $image the image of the app
      */
-    public function __construct($appId, $url, $name, $description, $created, $userId, $cities, $cityNames, $image, $datasetIds) {
+    public function __construct($appId, $url, $name, $description, $created, $userId, $cities, $cityNames, $image, $datasetIds, $categoryNames) {
         $this->appId = $appId;
         $this->url = $url;
         $this->name = $name;
@@ -46,7 +47,8 @@ class AppInfo {
         $this->cities = $cities;
         $this->cityNames = $cityNames;
         $this->image = $image;
-         $this->datasetIds = $datasetIds;
+        $this->datasetIds = $datasetIds;
+        $this->categoryNames = $categoryNames;
     }
 
 }
