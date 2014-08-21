@@ -8,5 +8,5 @@ class AppSettingsDefinitions {
     const DATASET = 2;
     const COLOR = 3;
     const DARKCOLOR = 4;
-
+    const CATEGORY = 5;
 }
