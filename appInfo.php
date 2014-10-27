@@ -41,8 +41,9 @@ try {
         $sth->execute();
     }
     $results = $sth->fetchAll(PDO::FETCH_ASSOC);
-$appDatasetsIds = array();
+
     foreach ($results as $row) {
+      $appDatasetsIds = array();
         $appId = $row['uid'];
         $appName = $row['name'];
         $description = $row['description'];
@@ -50,8 +51,7 @@ $appDatasetsIds = array();
         $userId = $row['userId'];
         $image = $row['image'];
 
-        $appDatasetsSql = "SELECT * FROM apps_settings 
-             JOIN datasets on apps_settings.value = datasets.id WHERE apps_settings.app_uid =:appId" .
+        $appDatasetsSql = "SELECT * FROM apps_settings WHERE apps_settings.app_uid =:appId" .
                 " AND apps_settings_definition_id = " . AppSettingsDefinitions::DATASET;
 
         $sqlParamsdataset[":appId"] = $appId;
