@@ -12,7 +12,7 @@ var selectedCityId;
 var retrievedCitiesDatasets = new Array();
 var startTime;
 var filtersIndex = 0;
-
+var jsonData = new Array();
 var markerArray = [];
 var directionsDisplay;
 var directionsService;
@@ -22,6 +22,11 @@ var dateFilterActive = false;
 var currentPoi;
 
 var currentMarker;
+var callbackAppId;
+var callbackCityId;
+var callbackDatasets;
+var callbackShortestIndex;
+var categories = [];
 
 function Transit(lat, lon, type) {
     this.lat = lat;
@@ -79,8 +84,8 @@ function activateDatasetPreviewMode()
  */
 function getPoisFromDataset(data)
 {
-    
-    if (data.status === "success")
+
+    if (data.status === "success" || data.status == "SUCCESS")
     {
         if (!poisArrayInitialised || datasetPreview) {
 
@@ -188,6 +193,86 @@ function getPoisFromDataset(data)
         console.log("Error loading data:" + data.error);
     }
 
+}
+
+/* Returns an array of poi objects.
+ * The poi object contains the data described in the 
+ * Citadel Common POI format
+ */
+function getPoisFromDatasetDiscovery(data)
+{
+    console.log(data);
+    console.log("getPoisFromDatasetDiscovery() called");
+    data.status = "success";
+    if (data.status === "success" || data.status == "SUCCESS")
+    {
+        $.each(data.filters, function(i, filterObject) {
+            console.log("pushing filter");
+            filters.push(filterObject);
+        });
+        var k = pois.length;
+        $.each(data.applicationData, function(i, datasetObject) {
+            var positionInDataset = 0;
+
+            var length = datasetObject.dataset.poi.length;
+            var index = 0;
+            var processPoisBatch = function() {
+                for (; index < length; index++) {
+                    var poi = datasetObject.dataset.poi[index];
+                    poi.positionInDataset = positionInDataset;
+                    positionInDataset++;
+                    poi.id = k;
+                    pois.push(poi);
+                    k++;
+
+                    if (index + 1 < length && index % 100 === 0 && index > 0) {
+                        updateProgressBar('Loading data...', ((index / length) * 5) + 10);
+
+                        if (index === length - 1)
+                        {
+                            getPoisFromDatasetDiscoveryCallback();
+                        }
+                        else {
+                            setTimeout(processPoisBatch, 5);
+                            index++;
+                            break;
+                        }
+                    }
+                    // Last iteration
+                    if (index === length - 1)
+                    {
+                        getPoisFromDatasetDiscoveryCallback();
+                    }
+                }
+            };
+            processPoisBatch();
+        });
+        
+        var index = (cities.length)-1;
+        console.log(index);
+        console.log(cities);
+        console.log(categories);
+        $('input[id=city-filter' + cities[index].id + ']').attr('checked', 'checked').checkboxradio("refresh");
+        setCityFilters();   
+        setFiltersByCityId(selectedCityId);
+        centerToCity($('input[id=city-filter' + cities[index].id + ']').val());
+    }
+
+
+    else if (data.status === "failed") {
+        alert(data.message);
+        console.log(data.error);
+    }
+    else {
+        alert(data.message);
+        console.log("Error loading data:" + data.error);
+    }
+
+}
+
+function getPoisFromDatasetDiscoveryCallback()
+{
+    addMarkers();
 }
 
 function getPoisFromDatasetCallback()
@@ -343,6 +428,246 @@ function showPosition(position)
     };
     map.setOptions(mapOptions);
     map.setCenter(myLatlng);
+}
+function getCitiesJsonPSuccess(data)
+{
+    jsonData = data;
+}
+
+function getCitiesFailure(data, status)
+{
+    alert("GET CITIES FAILURE:" +status);
+}
+
+function getCities(position)
+{
+
+}
+
+function getCategoriesAndDatasetsJsonPSuccess(data, status)
+{
+    var finalDatasets = [];
+    console.log("data: ");
+    console.log(data);
+    console.log("categories:");
+    console.log(data.categories);
+    console.log("app categories");
+    console.log(categories);
+        $.each(data.categories, function(j, datasets) {
+            console.log("category iteration: ");
+            console.log(datasets);
+            $.each(datasets, function(j, dataset) {
+            if ($.inArray(dataset.category, categories) !== -1) {
+                console.log(dataset.id +" is in category: ");
+                console.log(dataset.category);
+                finalDatasets.push(dataset.id);
+            }
+            else {
+                console.log(dataset.id +" is not in an appropriate category: ");
+            }
+			});
+        });
+        console.log("final datasets: ");
+        console.log(finalDatasets);
+		// if appropriate datasets found, use discovery.php to convert json into list of POIs
+        if (finalDatasets.length > 0) {
+			$.ajax({
+                type: "POST",
+                url: "discovery.php",
+                data: {uid: callbackAppId, cityId: callbackSelectedCityId, datasetIds: finalDatasets},
+                cache: false,
+                error: onDatasetFailure  
+            }).done(function(data) {
+				 //add POIs to application using onDatasetSuccessDiscovery
+                 console.log(data);
+                 cities.push(citiesJson[callbackShortestIndex]);
+                 onDatasetSuccessDiscovery(data);
+            });
+        }
+        else {
+            alert("No datasets matching the categories "+categories+" were found for the closest city.")
+        }
+}
+
+function getDatasetsSuccess(data)
+{
+    categories_html = "";
+
+    $.each(data.datasets, function(i, dataset) {
+        $.each(datasets, function(j, data) {
+            if (data.city == cityName)
+                datasets_html += "<li class='selectedDataset'><a class='ui-btn ui-btn-icon-right ui-icon-plus' href='#'>" + dataset.title + "</a><span class='datasetId' style='display:none;'>" + dataset.id + "</span><span class='datasetUrl' style='display:none;'>" + dataset.url + "</span></li>";
+        });
+    });
+}
+function getAllDatasets()
+{
+    return 	$.ajax({
+        type: "GET",
+        url: "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetDatasets?format=json&callback=?",
+        cache: false,
+        error: onDatasetFailure,
+        dataType: "json",
+    });
+}
+
+function getAppInfo()
+{
+    $.ajax({
+        type: "GET",
+        url: "http://localhost/agt-master-discovery/appInfoById.php?format=json&appId=" + appId + "&callback=?",
+        cache: false,
+        error: onDatasetFailure,
+        success: getCitiesJsonPSuccess,
+        dataType: "json",
+    }).done(function(data) {
+        if (data !== null) {
+            return data[0].categories;
+        }
+    }
+
+    )
+}
+;
+
+function datasetsToArray(allDatasets, selectedCity) {
+    var datasets = [];
+    var ds = allDatasets[0].datasets;
+    for (index = 0; index < ds.length; ++index) {
+        if (ds[index].cityId == selectedCity) {
+            datasets.push(ds[index].id);
+        }
+    }
+    alert(datasets);
+    return datasets;
+}
+
+/*Called after a successful dataset fetch*/
+function onDatasetSuccessDiscovery(data, status)
+{
+    console.log("onDatasetSuccessDiscovery() called");
+    var startTime = new Date();
+
+
+    getPoisFromDatasetDiscovery(data);
+
+}
+
+var $loading = $('#loadingDiv').hide();
+$(document)
+  .ajaxStart(function () {
+   $.mobile.loading("show");
+  })
+  .ajaxStop(function () {
+    $.mobile.loading("hide");
+  });
+  
+function discover(position)
+{
+    var cityAlreadyExists = false;
+	// Get dataset categories of current application
+    $.ajax({
+        type: "GET",
+		//local url for development
+        //url: "http://localhost/agt-master-discovery/appInfoById.php?format=json&appId=" + appId + "&callback=?",
+		url: "http://demos.citadelonthemove.eu/app-generator2/appInfoById.php?format=json&appId=" + appId + "&callback=?",
+        cache: false,
+        error: onDatasetFailure,
+    }).done(function(data) {
+        console.log(data);
+        //var obj = $.parseJSON(data);
+        catNames = data.app[0].categoryNames.split(",");
+        
+    categories = catNames;
+	// Get list of available cities
+    $.ajax({
+        type: "GET",
+		//local url for development
+        //url: "http://localhost/agt-master-discovery/cityInfo.php?format=json",
+        url: "http://demos.citadelonthemove.eu/app-generator2/cityInfo.php?callback=?",
+        cache: false,
+        error: getCitiesFailure		
+    }).done(function(data) {
+	console.log(data);
+        jsonData = data;
+        console.log("geolocation is supported");
+        clearTimeout(location_timeout);
+        myLatlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
+        citiesJson = jsonData.cities;
+        var datasetFound = false;
+        // Find the closest city to the user's location
+        var p1 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        var shortestDistance = 999999999999;
+        var shortestIndex = 999999999999;
+        for (i = 0; i < citiesJson.length; i++) {
+            var city = citiesJson[i];
+            var p2 = new google.maps.LatLng(city.lat, city.lon);
+            var distance = calcDistance(p1, p2);
+            if (parseInt(distance, 10) <= parseInt(shortestDistance, 10)) {
+                shortestDistance = distance;
+                shortestIndex = i;
+            }
+        }
+		// If city is close enough, use it as the active city
+        if (shortestDistance < maxCityDistance) {
+            var city = citiesJson[shortestIndex];
+            var cityId = city.id;
+            var cityName = city.name;
+            console.log(cities);
+            var index;
+            for (index = 0; index < cities.length; ++index) {
+                var currentCity = cities[index];
+		// If app already contains datasets from closest city, end function
+				if (currentCity.name === city.name) {
+					alert("No data was loaded: this app already contains data from "+city.name);
+					cityAlreadyExists = true;
+				}
+            }
+			if (cityAlreadyExists === false) {
+				var p2 = new google.maps.LatLng(city.lat, city.lon);
+				var distance = calcDistance(p1, p2);
+				selectedCityId = cityId;
+				selectedCity = cityId; 
+				//debug
+				console.log(cityId);    
+				console.log(cityName);
+				console.log("categories: "+categories);
+				retrievedCitiesDatasets.push(selectedCityId.toString());
+				callbackAppId = appId;
+				callbackSelectedCityId = selectedCityId;
+				callbackShortestIndex = shortestIndex;
+				// Get available datasets from selected city.  
+				$.ajax({
+					type: "GET",
+					url: "http://www.citadelonthemove.eu/DesktopModules/DatasetLibrary/API/Service/GetCityCategoriesAndDatasets?format=json&city="+cityName,
+					cache: false,
+					// currently throws parsererror but does not affect functionality. This may be due to cross-domain request. Commented out for now.
+					//error: getCitiesFailure,
+					dataType: "jsonp",
+					contentType: "application/json",
+				}).done(function(data) {
+				// JSONP handler getCategoriesAndDatasetsJsonPSuccess deals with identifying appropriate datasets and calls further functions on success to add them to the application.
+						datasetFound = true;
+				});
+			}
+			else {
+				alert("city already exists");
+			}
+			// set current marker
+			currentMarker = new google.maps.Marker({
+            position: myLatlng,
+            map: map
+        });
+        //define the map options
+        mapOptions = {
+            center: myLatlng,
+            zoom: mapZoom + 10
+        };
+        map.setOptions(mapOptions);
+        map.setCenter(myLatlng);
+        }
+    });
+    });
 }
 
 function showError(error) {
