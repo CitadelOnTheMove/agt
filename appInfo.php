@@ -62,7 +62,7 @@ try {
         
 
         foreach ($resultsDataset as $datasetRow) {
-            $appDatasetId = $datasetRow['id'];
+            $appDatasetId = $datasetRow['value'];
             array_push($appDatasetsIds, $appDatasetId);
         }
 
