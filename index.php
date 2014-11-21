@@ -94,6 +94,11 @@ $colors = printColors($appID);
         <script src="js/oms.min.js"></script>  
         <!-- jQuery Library --> 
         <script src="js/jquery-1.8.2.min.js"></script>
+		
+		<!-- Mobile Bookmark Bubble-->
+        <script src="js/bookmark_bubble.js"></script>
+        <script type="text/javascript" src="js/bookmark_set.js"></script>
+		
         <!-- jQuery Mobile Library -->
         <script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.min.js"></script>
 
@@ -131,10 +136,9 @@ $colors = printColors($appID);
             <!-- /Progress Bar for jQuery Mobile -->
             <div data-role="header" data-posistion="fixed" data-id="constantNav" data-fullscreen="true">
                 <span class="ui-title"><?php echo $currentAppName ?></span>
-                <a href="" id="filter" data-role="button" data-icon="filter" data-iconpos="notext"  data-theme="a" title="Categories" ></a>
-                <a href="" id="city" data-role="button" data-icon="bars" data-iconpos="left" data-theme="a" title="Select City" >Cities</a>              
-
-                <div data-role="navbar" class="navbar">
+                <a href="" id="filter" data-role="button" data-icon="filter" data-iconpos="left"  data-theme="a" title="Categories" >Categories</a>
+                <a href="" id="city" data-role="button" data-icon="bars" data-iconpos="left" data-theme="a" title="Select City" >Location</a>              
+		        <div data-role="navbar" class="navbar">
                     <ul>
                         <li><a href="#" class="pois-nearme ui-btn-active" data-theme="a">Map</a></li>
                         <li><a href="#page2" class="pois-list" data-theme="a">List</a></li>
@@ -158,6 +162,9 @@ $colors = printColors($appID);
                     <fieldset data-role="controlgroup" data-mini="true" data-theme="a">
 
                     </fieldset>
+				    <footer data-role="footer" data-posistion="fixed" data-fullscreen="true" class="filter-footer">
+						<a href="" id="nearme" data-icon="navigation" class="ui-btn-left"  data-theme="a" title="Where I am" >Where I am</a>
+                    </footer> 
                 </div>
 
             </div><!--city-filter-->
@@ -321,7 +328,21 @@ $colors = printColors($appID);
             /* Just call the initialization function when the page loads */
             $(window).load(function() {
                 globalInit();
+				$("#nearme").click(function(){
+				if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(discover, showError);
+				//showPosition(navigator.geolocation.getCurrentPosition(showPosition, showError));
+				}
+				}); 
             });
+
+			function getLocation() {
+				if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+				} else { 
+				x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
 
         </script>
     </body>
