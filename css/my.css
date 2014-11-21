@@ -849,6 +849,9 @@ header.ui-header, footer.ui-footer {
     padding:10px;
     border-radius: 5px;
     text-shadow:none;
+	position:absolute;
+	bottom:150px;
+	width:90%;
 }
 
 .warning {
