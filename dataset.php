@@ -109,7 +109,7 @@ try {
             }
             /* sort filters array alphabetically by category name */
             usort($filters, function($a, $b) {
-                        return strcmp($a->name, $b->name);
+                        return strcmp(strtolower(ltrim($a->name)), strtolower(ltrim($b->namstrcmpe)));
                     });
             /* only the first filter appears to be checked */
             $filters[0]->selected = true;
