@@ -1,5 +1,5 @@
 <?php
-
+header('Content-Type: application/json');
 /**
  * Fetches details of the given app
  * @return json AppInfo object

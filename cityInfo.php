@@ -1,5 +1,5 @@
 <?php
-
+header('Content-Type: application/json');
 include_once 'Config.php';
 include_once CLASSES . 'Util.class.php';
 include_once CLASSES . 'Database.class.php';
