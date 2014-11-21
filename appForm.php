@@ -301,7 +301,7 @@ if (isset($_SESSION['username'])) {
                     Database::connect();
 
                     // define variables and set to empty values
-                    $darkColorErr = $colorErr = $nameErr = $descriptionErr = $cityIdsErr = $datasetIdsErr = "";
+                    $darkColorErr = $colorErr = $themeErr = $nameErr = $descriptionErr = $cityIdsErr = $datasetIdsErr = "";
 
                     $error = false;
                     // Check all required fields
@@ -319,6 +319,10 @@ if (isset($_SESSION['username'])) {
                             $descriptionErr = "Application Description is required";
                             $error = true;
                         }
+                        if (empty($_POST["theme"])) {
+                            $themeErr = "Theme is required";
+                            $error = true;
+                        }
                         if (empty($_POST["color"])) {
                             $colorErr = "Color is required";
                             $error = true;
@@ -332,7 +336,8 @@ if (isset($_SESSION['username'])) {
                         if (!$error) {
                             $image = null;
                             if ((isset($_POST["name"])) && (isset($_POST["description"])) &&
-                                    (isset($_POST["datasetIds"])) && (isset($_POST["color"])) &&
+                                    (isset($_POST["datasetIds"])) && (isset($_POST["theme"])) &&
+                                    (isset($_POST["color"])) &&
                                     (isset($_POST["darkColor"]))) {
 
                                 if (isset($_FILES["image"])) {
@@ -383,7 +388,8 @@ if (isset($_SESSION['username'])) {
                                     Database::commit();
                                     echo '<div class="success">Your application was created successfully!';
                                     echo '<br><br>';
-                                    echo ' <a href="index.php?uid=' . $newApp->uid . '" target="_blank" rel="external">See my app!</a>';
+                                    echo ' <a href="index.php?uid=' . $newApp->uid . '" target="_blank" rel="external">See my app</a> or';
+                                    echo ' <a href="download.php?uid=' . $newApp->uid . '&theme='.$_POST["theme"].'" target="_blank" rel="external">Download the code!</a>';
                                     echo ' <a style="float:right" href="appForm.php" rel="external">Create a new app</a></div>';
                                 } else {
                                     Database::rollback();
@@ -419,6 +425,17 @@ if (isset($_SESSION['username'])) {
                                 </select>
                             </div>
                             <br>
+							
+							<legend><b>Select the theme of your app:</b> <span class="error">* <?php echo $themeErr; ?></span></legend>
+                            <div class="ui-field-contain" id="themeSelectMenu" > 
+                                <select name="theme" id="themeSelection">
+                                    <option value="poi">Points of Interest</option>
+                                    <option value="events">Events</option>
+                                    <option value="parking">Parking</option>
+                                </select>
+                            </div>
+                            <br>
+
 
                             <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-inset="false">
                                 <legend><b>Selected datasets </b><span id="datasetsCounter">(0)</span></legend>
@@ -428,10 +445,10 @@ if (isset($_SESSION['username'])) {
                             </div>
 
                             <br>
-
+							
                             <p><span class="error">* required field.</span></p>                        
 
-                            <legend><b>Select datasets grouped by category:</b> <span class="error">* <?php echo $datasetIdsErr; ?></span></legend><br/>
+                            <legend><b>Select datasets:</b> <span class="error">* <?php echo $datasetIdsErr; ?></span></legend><br/>
                             <?php
                             echo '<i>Select a Category to see the available datasets.</i>'
                             ?>
@@ -453,8 +470,7 @@ if (isset($_SESSION['username'])) {
                                     </div>
                                 </div>
                             </div><!-- /popup -->
-
-
+                                                        
                             <legend><b>Select the basic color of your app:</b><span class="error">* <?php echo $colorErr; ?></span></legend><br/>
                             <input type="color" class="full" name="color">
 
@@ -478,6 +494,7 @@ if (isset($_SESSION['username'])) {
                             <input type="file" name="image"/>
                             <br/><br/>
 
+                            <input id="themeSelection" type="hidden" />
                             <input id="datasetIds" type="hidden"  />
                             <input id="categoryNames" type="hidden"  />
                             <input id="cities" type="hidden"  />
