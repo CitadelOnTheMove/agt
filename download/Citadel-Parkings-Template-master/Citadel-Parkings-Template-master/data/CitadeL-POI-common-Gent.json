@@ -1,0 +1,263 @@
+{
+  "dataset": {
+    "id": "http://data.gent.be/datasets/parkeergarages",
+    "updated": "20091018T00:00:00-5:00",
+    "created": "20040122T09:38:21-5:00",
+    "lang": "nl-NL",
+    "author": {
+      "id": "http://www.parkeerbedrijf.gent.be",
+      "value": "IVA Mobiliteitsbedrijf Stad Gent"
+    },
+    "license": {
+      "href": "http://www.creativecommons.org/CC-A/3.0/license/xml",
+      "term": "CC BY 3.0"
+    },
+    "link": {
+      "href": "http://www.parkeerbedrijf.gent.be",
+      "term": "source"
+    },
+	"updatefrequency":"semester",
+    "poi": [
+      {
+        "id": "citadel_parking_1",
+        "title": "P01 Vrijdagmarkt",
+        "description": "24/24 open.",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "51.057071972308215 3.725840449333191"
+            }
+          },
+          "address":{
+		       "value":"Vrijdagmarkt 1",
+			   "postal":"9000",
+			   "city":"Gent"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Phone",
+            "type": "tel",
+            "text": "09/2662900",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          },
+          {
+            "term": "Capacity",
+            "type": "string",
+            "text": "629",
+	    "tplIdentifier" : "#Citadel_parkCapacity"
+          },
+          {
+            "term": "Floors",
+            "type": "string",
+            "text": "3",
+	    "tplIdentifier" : "#Citadel_parkFloors"
+          },
+          {
+            "term": "parkingType",
+            "type": "string",
+            "text": "underground",
+	    "tplIdentifier" : "#Citadel_parkType" 
+          }          
+        ]
+      },
+      {
+        "id": "citadel_parking_2",
+        "title": "P02 Reep",
+        "description": "24/24 open. 20 parkeerplaatsen voor gehandicapten (betalend).",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "51.05161273330509 3.7311136722564697"
+            }
+          },
+          "address":{
+		       "value":"Seminariestraat 9",
+			"postal":"9000",
+			"city":"Gent"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "telephone",
+            "type": "tel",
+            "text": "09 266 29 50",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          },
+          {
+            "term": "capacity",
+            "type": "string",
+            "text": "486",
+	   "tplIdentifier" : "#Citadel_parkCapacity"
+          },
+          {
+            "term": "Floors",
+            "type": "string",
+            "text": "2",
+	    "tplIdentifier" : "#Citadel_parkFloors"
+          },
+          {
+            "term": "parkingType",
+            "type": "string",
+            "text": "underground",
+	    "tplIdentifier" : "#Citadel_parkType" 
+          }
+        ]
+      },
+      {
+        "id": "citadel_parking_3",
+        "title": "P07 Sint-Michiels",
+        "description": "24/24 open.12 parkeerplaatsen voor gehandicapten (betalend).",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "51.053470767682654 3.7187111377716064"
+            }
+          },
+          "address":{
+		       "value":"Sint-Michielsplein 8",
+			"postal":"9000",
+			"city":"Gent"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "telephone",
+            "type": "tel",
+            "text": "09 266 29 20",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          },
+          {
+            "term": "capacity",
+            "type": "string",
+            "text": "472",
+	   "tplIdentifier" : "#Citadel_parkCapacity"
+          },
+          {
+            "term": "Floors",
+            "type": "string",
+            "text": "3",
+	    "tplIdentifier" : "#Citadel_parkFloors"
+          },
+          {
+            "term": "parkingType",
+            "type": "string",
+            "text": "underground",
+	    "tplIdentifier" : "#Citadel_parkType" 
+          }
+        ]
+      },
+      {
+        "id": "citadel_parking_4",
+        "title": "P08 Ramen",
+        "description": "24/24 open.13 parkeerplaatsen voor gehandicapten (betalend).",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "51.054944328147584 3.7164849042892456"
+            }
+          },
+          "address":{
+		       "value":"Ramen 23",
+			"postal":"9000",
+			"city":"Gent"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "telephone",
+            "type": "tel",
+            "text": "09 266 29 70",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          },
+          {
+            "term": "capacity",
+            "type": "string",
+            "text": "280",
+	   "tplIdentifier" : "#Citadel_parkCapacity"
+          },
+          {
+            "term": "Floors",
+            "type": "string",
+            "text": "6",
+	    "tplIdentifier" : "#Citadel_parkFloors"
+          },
+          {
+            "term": "parkingType",
+            "type": "string",
+            "text": "underground",
+	    "tplIdentifier" : "#Citadel_parkType" 
+          }
+        ]
+      },
+      {
+        "id": "citadel_parking_5",
+        "title": "P10 Sint-Pietersplein",
+        "description": "24/24 open.9 parkeerplaatsen voor gehandicapten (betalend).",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "51.04174130808671 3.725668787956238"
+            }
+          },
+          "address":{
+		       "value":"Sint-Pietersplein 65",
+			"postal":"9000",
+			"city":"Gent"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "telephone",
+            "type": "tel",
+            "text": "09 266 29 60",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          },
+          {
+            "term": "capacity",
+            "type": "string",
+            "text": "700",
+	   "tplIdentifier" : "#Citadel_parkCapacity"
+          },
+          {
+            "term": "Floors",
+            "type": "string",
+            "text": "3",
+	    "tplIdentifier" : "#Citadel_parkFloors"
+          },
+          {
+            "term": "parkingType",
+            "type": "string",
+            "text": "underground",
+	    "tplIdentifier" : "#Citadel_parkType" 
+          }
+        ]
+      }  
+    ]
+  }
+}

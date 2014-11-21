@@ -1,0 +1,140 @@
+{
+  "dataset": {
+    "id": "athens_parking",
+    "updated": "20121030T09:38:21-5:00",
+    "created": "20121030T09:38:21-5:00",
+    "lang": "el-GR",
+    "author": {
+      "id": "http://www.cityofathens.gr/",
+      "value": "Ploigos"
+    },
+    "license": {},
+    "link": {
+      "href": "http://www.cityofathens.gr/",
+      "term": "source"
+    },
+	"updatefrequency":"",
+    "poi": [
+      {
+        "id": "citadel_parking_Athens_1",
+        "title": "POLIS PARK",
+        "description": "",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.992208 23.731598"
+            }
+          },
+          "address":{
+		       "value":"ΠΛΑΤΕΙΑ ΑΙΓΥΠΤΟΥ",
+			   "postal":"",
+			   "city":"Αθήνα"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Τηλ",
+            "type": "tel",
+            "text": "2108237117",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          }  
+        ]
+      },
+      {
+        "id": "citadel_parking_athens_2",
+        "title": "POLIS PARK",
+        "description": "",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.984287 23.767942"
+            }
+          },
+          "address":{
+		       "value":"ΠΛΑΤΕΙΑ ΝΟΣΟΚΟΜΕΙΟΥ ΠΑΙΔΩΝ",
+			"postal":"",
+			"city":"Αθήνα"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Τηλ",
+            "type": "tel",
+            "text": "2107713007",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          }    
+        ]
+      },
+      {
+        "id": "citadel_parking_athens_3",
+        "title": "POLIS PARK",
+        "description": "",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.985974 23.730790"
+            }
+          },
+          "address":{
+		       "value":"ΠΛΑΤΕΙΑ ΚΑΝΙΓΓΟΣ",
+			"postal":"",
+			"city":"Αθήνα"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Τηλ",
+            "type": "tel",
+            "text": "210-3816330",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          }
+        ]
+      },
+      {
+        "id": "citadel_parking_athens_4",
+        "title": "ΣΤΑΘΜΟΣ ΑΥΤΟΚΙΝΗΤΩΝ ΣΥΝΤΑΓΜΑΤΟΣ-ATHENS - PARKING 24h",
+        "description": "",
+        "category": [
+          "Parking"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.973333 23.731389"
+            }
+          },
+          "address":{
+		       "value":"NAVARHOU NIKODIMOU",
+			"postal":"",
+			"city":"Αθήνα"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Τηλ",
+            "type": "tel",
+            "text": "210-3816330",
+	    "tplIdentifier" : "#Citadel_telephone" 
+          }
+        ]
+      }  	  
+    ]
+  }
+}

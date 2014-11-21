@@ -1,0 +1,250 @@
+{
+  "dataset": {
+    "id": "http://www.cityofathens.gr/en/",
+    "updated": "20121030T09:38:21-5:00",
+    "created": "20121030T09:38:21-5:00",
+    "lang": "en-GB",
+    "author": {
+      "id": "http://www.cityofathens.gr/en/",
+      "value": "City of Athens"
+    },
+    "license": {},
+    "link": {},
+	"updatefrequency":"",
+    "poi": [
+      {
+        "id": "citadel_event_athens_1",
+        "title": "\"Going out in Athens\"",
+        "description": "The City of Athens is continuing for a second season the successful project \"Going out in Athens\".Every Tuesday for 3 months all inhabitants workers and visitors have the opportunity to enjoy menus, drinks, and coffee in affordable prices 10 euros for the menu 5 euros per drink and 2 euros for all kind of coffee same for all restaurants and coffee bars participating in this action. ",
+        "category": [
+          "open"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.975583 23.734696"
+            }
+          },
+          "address":{
+		       "value":"",
+			   "postal":"",
+			   "city":"Athens"
+		  }
+        },
+        "attribute": [        
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http://www.breathtakingathens.com/node/5001585",
+	        "tplIdentifier" : "#Citadel_website" 
+          },
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "2 Oct 2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "18 Dec 2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },    
+          {
+            "term": "Foto",
+            "type": "string",
+            "text": "http://www.breathtakingathens.com/files/avb/node_images/afisa_vgainoume_athina-en.jpg",
+	        "tplIdentifier" : "#Citadel_image" 
+          }  		  
+        ]
+      },{
+        "id": "citadel_event_athens_2",
+        "title": "\"Back in our city\"",
+        "description": "",
+        "category": [
+          "open"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.975823 23.732523"
+            }
+          },
+          "address":{
+		       "value":"",
+			   "postal":"",
+			   "city":"Athens"
+		  }
+        },
+        "attribute": [             
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http://www.breathtakingathens.com/node/5001582",
+	        "tplIdentifier" : "#Citadel_website" 
+          },
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "6 Oct 2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "21 Oct 2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },
+		  {
+            "term": "Start time",
+            "type": "string",
+            "text": "09:00",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "End time",
+            "type": "string",
+            "text": "21:00",
+	        "tplIdentifier" : "" 
+          }                 
+        ]
+      },
+	  {
+        "id": "citadel_event_athens_3",
+        "title": "Athens Print Fest",
+        "description": "",
+        "category": [
+          "festival"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.975823 23.732523"
+            }
+          },
+          "address":{
+		       "value":"",
+			   "postal":"",
+			   "city":"Athens"
+		  }
+        },
+        "attribute": [        
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http://www.breathtakingathens.com/node/5001576",
+	        "tplIdentifier" : "#Citadel_website" 
+          },
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "1 Oct 2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "1 Oct 2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          }               
+        ]
+      },
+	  {
+        "id": "citadel_event_athens_4",
+        "title": "Bill Balaskas \"Parthenon Rising\"",
+        "description": "",
+        "category": [
+          "presentation"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.975823 23.732523"
+            }
+          },
+          "address":{
+		       "value":"",
+			   "postal":"",
+			   "city":"Athens"
+		  }
+        },
+        "attribute": [      
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http://www.breathtakingathens.com/node/5001581",
+	        "tplIdentifier" : "#Citadel_website" 
+          },
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "2 Oct 2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "10 Nov 2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          }               
+        ]
+      },
+	  {
+        "id": "citadel_event_athens_5",
+        "title": "Dinos of Patagonia in Athens",
+        "description": "",
+        "category": [
+          "exhibition"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "37.984045 23.780572"
+            }
+          },
+          "address":{
+		       "value":"",
+			   "postal":"",
+			   "city":"Athens"
+		  }
+        },
+        "attribute": [      
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http://www.breathtakingathens.com/node/5001583",
+	        "tplIdentifier" : "#Citadel_website" 
+          },
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "1 Oct 2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "30 Mar 2013",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },
+		  {
+            "term": "Venue",
+            "type": "string",
+            "text": "Riding Center (opposite Badminton) Olympic Properties, Goudi Park, Athens",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          }   		  
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1125 @@
+{
+  "dataset": {
+    "id": "http://www.issy.fr",
+    "updated": "20121030T09:38:21-5:00",
+    "created": "20121030T09:38:21-5:00",
+    "lang": "fr-FR",
+    "author": {
+      "id": "http://www.issy.fr",
+      "value": "Issy"
+    },
+    "license": {},
+    "link": {},
+	"updatefrequency":"",
+    "poi": [
+      {
+        "id": "citadel_event_issy_1",
+        "title": "Je me demande",
+        "description": "",
+        "category": [
+          "théâtre"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.8275910 2.27699460"
+            }
+          },
+          "address":{
+		       "value":"31, bd Gambetta",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 40 93 44 50",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.espace-icare.com",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Espace Icare",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "1/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "6/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Sort",
+            "type": "string",
+            "text": "philosophie",
+	        "tplIdentifier" : "" 
+          }                  
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_2",
+        "title": "Soirée Jeu",
+        "description": "",
+        "category": [
+          "animation"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.82228629999999 2.2792540"
+            }
+          },
+          "address":{
+		       "value":"18, rue de l'Abbé Derry",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 41 23 81 50",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },                   
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Ludothèque",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "6/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "6/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },                  
+          {
+            "term": "Sort",
+            "type": "string",
+            "text": "jeux de société",
+	        "tplIdentifier" : "" 
+          }                  
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_3",
+        "title": "Eddy Ray Cooper",
+        "description": "",
+        "category": [
+          "concert"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.82453060 2.27434190"
+            }
+          },
+          "address":{
+		       "value":"24, chemin de l'Accès à la Gare",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 41 46 17 20",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.clavim.asso.fr",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "l'Entrepont",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "11/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "11/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "adhérent 6€ ; tout public 9€",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Sort",
+            "type": "string",
+            "text": "country, folk",
+	        "tplIdentifier" : "" 
+          }                  
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_4",
+        "title": "Chercher le courant",
+        "description": "",
+        "category": [
+          "projection"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.81805520 2.262330"
+            }
+          },
+          "address":{
+		       "value":"45-47, rue de l'Egalité",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 46 38 21 05",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },                  
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "La halle des Epinettes",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "RER C Issy val de Seine",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "12/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "12/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Sort",
+            "type": "string",
+            "text": "documentaire",
+	        "tplIdentifier" : "" 
+          }                  
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_5",
+        "title": "Chaque chose est une pause",
+        "description": "",
+        "category": [
+          "spectacle"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.8275910 2.27699460"
+            }
+          },
+          "address":{
+		       "value":"31, bd Gambetta",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 40 93 44 50",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.espace-icare.com",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Espace Icare",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "15/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "18/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Sort",
+            "type": "string",
+            "text": "danse",
+	        "tplIdentifier" : "" 
+          }                  
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_1",
+        "title": "Billy Eliott",
+        "description": "",
+        "category": [
+          "projection"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.8275910 2.27699460"
+            }
+          },
+          "address":{
+		       "value":"31, bd Gambetta",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 40 93 44 50",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.espace-icare.com",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Espace Icare",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "20/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "20/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Sort",
+            "type": "string",
+            "text": "film",
+	        "tplIdentifier" : "" 
+          }                  
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_7",
+        "title": "Cendrillon, la chatte des cendres",
+        "description": "",
+        "category": [
+          "théâtre"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.8275910 2.27699460"
+            }
+          },
+          "address":{
+		       "value":"31, bd Gambetta",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 40 93 44 50",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.espace-icare.com",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "image",
+            "type": "image",
+            "text": "images/events1.jpg",
+	        "tplIdentifier" : "#Citadel_image" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Espace Icare",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "24/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "26/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          }             
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_8",
+        "title": "Dernières avant vegas",
+        "description": "",
+        "category": [ "spectacle" ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.82295260 2.26951420"
+            }
+          },
+          "address":{
+		       "value":"25, avenue Victor Cresson",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 40 68 22 22",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.viparis.com\/Viparis\/salon-paris\/site\/Palais-Congres-Issy\/fr\/112",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Palais des Congrès d'Issy",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "25/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "25/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h-23h",
+	        "tplIdentifier" : "" 
+          }, 
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "humour",
+	        "tplIdentifier" : "" 
+          }   
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_9",
+        "title": "Les coulisses de la création",
+        "description": "",
+        "category": [
+          "conférence"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.8235550 2.27301990"
+            }
+          },
+          "address":{
+		       "value":"16, rue Auguste Gervais",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 41 23 83 60",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.issy.com\/musee\/",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Musée de la Carte à jouer",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "25/10/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "25/10/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "18h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          }, 
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "tables rondes",
+	        "tplIdentifier" : "" 
+          }                
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_10",
+        "title": "Rendez-vous du futur : Patrick Viveret",
+        "description": "",
+        "category": [
+          "rencontre","conférence"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.81897840 2.25401970"
+            }
+          },
+          "address":{
+		       "value":"20, cours Saint-Vincent",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 58 88 30 00",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },  
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Le cube",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "RER C Issy val de Seine",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "6/11/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "6/11/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "19h30-20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          }, 
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "émission interractive de télévision",
+	        "tplIdentifier" : "" 
+          }               
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_11",
+        "title": "Nolwenn Leroy",
+        "description": "",
+        "category": [
+          "concert"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.82295260 2.26951420"
+            }
+          },
+          "address":{
+		       "value":"25, avenue Victor Cresson",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 40 68 22 22",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },          
+          {
+            "term": "url",
+            "type": "url",
+            "text": "http:\/\/www.viparis.com\/Viparis\/salon-paris\/site\/Palais-Congres-Issy\/fr\/112",
+	        "tplIdentifier" : "#Citadel_website" 
+          },          
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Palais des Congrès d'Issy",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "10/11/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "10/11/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h-23h",
+	        "tplIdentifier" : "" 
+          },          
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "chansons celtiques et anglo-saxonnes",
+	        "tplIdentifier" : "" 
+          }                
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_12",
+        "title": "L'idée républicaine dans le monde",
+        "description": "",
+        "category": [
+          "conférence"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.82610080 2.26993990"
+            }
+          },
+          "address":{
+		       "value":"33, rue du gouverneur général Eboué",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 41 23 80 69",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },                    
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Médiathèque centre-ville",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "13/11/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "13/11/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          }, 
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "politique et société",
+	        "tplIdentifier" : "" 
+          }                
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_13",
+        "title": "Victor Segalen",
+        "description": "",
+        "category": [
+          "conférence"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.82610080 2.26993990"
+            }
+          },
+          "address":{
+		       "value":"33, rue du gouverneur général Eboué",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 41 23 80 69",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },                    
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "Médiathèque centre-ville",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "M12 Mairie d'Issy",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "22/11/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "22/11/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          }, 
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "soirée littéraire",
+	        "tplIdentifier" : "" 
+          }                
+        ]
+      },	  
+	  {
+        "id": "citadel_event_issy_14",
+        "title": "Scène ouverte",
+        "description": "",
+        "category": [
+          "concert"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.81805520 2.262330"
+            }
+          },
+          "address":{
+		       "value":"45-47, rue de l'Egalité",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 46 38 21 05",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },                  
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "La halle des Epinettes",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "RER C Issy val de Seine",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "16/11/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "16/11/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h30",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          }, 
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "jam-sessions",
+	        "tplIdentifier" : "" 
+          }                
+        ]
+      },
+	  {
+        "id": "citadel_event_issy_15",
+        "title": "We want sex equality",
+        "description": "",
+        "category": [
+          "projection"
+        ],
+        "location": {
+          "point": {
+            "term": "centroid",
+            "pos": {
+              "srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
+              "posList": "48.81805520 2.262330"
+            }
+          },
+          "address":{
+		       "value":"45-47, rue de l'Egalité",
+			   "postal":"92130",
+			   "city":"Issy-Les-Moulineaux"
+		  }
+        },
+        "attribute": [
+          {
+            "term": "Tel",
+            "type": "tel",
+            "text": "01 46 38 21 05",
+	        "tplIdentifier" : "#Citadel_telephone" 
+          },                  
+          {
+            "term": "Place",
+            "type": "string",
+            "text": "La halle des Epinettes",
+	        "tplIdentifier" : "#Citadel_eventPlace" 
+          },          
+          {
+            "term": "Transports",
+            "type": "string",
+            "text": "RER C Issy val de Seine",
+	        "tplIdentifier" : "#Citadel_nearTransport" 
+          },          
+          {
+            "term": "Start date",
+            "type": "date",
+            "text": "24/11/2012",
+	        "tplIdentifier" : "#Citadel_eventStart" 
+          },          
+          {
+            "term": "End date",
+            "type": "date",
+            "text": "24/11/2012",
+	        "tplIdentifier" : "#Citadel_eventEnd" 
+          },          
+          {
+            "term": "Schedule",
+            "type": "string",
+            "text": "20h",
+	        "tplIdentifier" : "" 
+          },          
+          {
+            "term": "Rates",
+            "type": "string",
+            "text": "entrée libre",
+	        "tplIdentifier" : "" 
+          }, 
+		  {
+            "term": "Sort",
+            "type": "string",
+            "text": "comédie",
+	        "tplIdentifier" : "" 
+          }                
+        ]
+      }
+    ]
+  }
+}
